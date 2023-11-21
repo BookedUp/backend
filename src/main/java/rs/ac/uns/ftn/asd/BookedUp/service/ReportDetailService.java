@@ -37,7 +37,6 @@ public class ReportDetailService implements IReportDetailService{
         if (ReportDetailToUpdate == null) {
             throw new Exception("The requested entity was not found.");
         }
-        ReportDetailToUpdate.setAccommodationId(reportDetail.getAccommodationId());
         ReportDetailToUpdate.setProfit(reportDetail.getProfit());
         ReportDetailToUpdate.setNumberOfReservations(reportDetail.getNumberOfReservations());
 

@@ -2,16 +2,14 @@ package rs.ac.uns.ftn.asd.BookedUp.domain;
 
 public class ReportDetail {
     private Long id;
-    private Long accommodationId;
     private double profit;
     private int numberOfReservations;
 
     public ReportDetail() {
     }
 
-    public ReportDetail(Long id, Long accommodationId, double profit, int numberOfReservations) {
+    public ReportDetail(Long id, double profit, int numberOfReservations) {
         this.id = id;
-        this.accommodationId = accommodationId;
         this.profit = profit;
         this.numberOfReservations = numberOfReservations;
     }
@@ -23,14 +21,6 @@ public class ReportDetail {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getAccommodationId() {
-        return accommodationId;
-    }
-
-    public void setAccommodationId(Long accommodationId) {
-        this.accommodationId = accommodationId;
     }
 
     public double getProfit() {
@@ -49,7 +39,6 @@ public class ReportDetail {
         this.numberOfReservations = numberOfReservations;
     }
     public void copyValues(ReportDetail reportDetail) {
-        this.accommodationId = reportDetail.getAccommodationId();
         this.profit = reportDetail.getProfit();
         this.numberOfReservations = reportDetail.getNumberOfReservations();
     }

@@ -20,11 +20,11 @@ public class ReportDetailRepository implements IReportDetailRepository {
 
     @Override
     public ReportDetail create(ReportDetail reportDetail) {
-        Long id = reportDetail.getAccommodationId();
+        Long id = reportDetail.getId();
 
         if (id == null) {
             id = counter.incrementAndGet();
-            reportDetail.setAccommodationId(id);
+            reportDetail.setId(id);
         }
 
         this.reportDetails.put(id, reportDetail);
@@ -38,7 +38,7 @@ public class ReportDetailRepository implements IReportDetailRepository {
 
     @Override
     public ReportDetail update(ReportDetail reportDetail) {
-        Long id = reportDetail.getAccommodationId();
+        Long id = reportDetail.getId();
 
         if (id != null) {
             this.reportDetails.put(id, reportDetail);
