@@ -37,14 +37,14 @@ public class UserController {
 
     /*url: /api/users POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createGreeting(@RequestBody User user) throws Exception {
+    public ResponseEntity<User> createUser(@RequestBody User user) throws Exception {
         User savedUser = userService.create(user);
         return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
 
-    /* url: /api/greetings/1 PUT*/
+    /* url: /api/users/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateGreeting(@RequestBody User user, @PathVariable Long id)
+    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id)
             throws Exception {
         User userForUpdate = userService.getById(id);
         userForUpdate.copyValues(user);
@@ -58,9 +58,9 @@ public class UserController {
         return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
     }
 
-    /** url: /api/greetings/1 DELETE*/
+    /** url: /api/users/1 DELETE*/
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<User> deleteGreeting(@PathVariable("id") Long id) {
+    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
