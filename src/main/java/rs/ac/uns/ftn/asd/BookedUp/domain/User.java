@@ -4,7 +4,7 @@ public class User {
     private Long id;
     private String firstName;
     private String lastName;
-    private String address;
+    private Address address;
     private Integer phone;
 
     private String email;
@@ -16,7 +16,7 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String address, Integer phone, String email, String password, Role role) {
+    public User(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,11 +52,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
