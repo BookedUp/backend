@@ -8,7 +8,7 @@ public class BookedUpApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookedUpApplication.class, args);
-		System.out.println("Test");
+		System.out.println("Test crud-functionality");
 
 	}
 
