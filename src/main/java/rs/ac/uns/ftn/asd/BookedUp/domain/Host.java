@@ -62,4 +62,44 @@ public class Host extends User {
         this.requests = host.getRequests();
     }
 
+    // Method to create a new accommodation
+    public void createAccommodation(Accommodation accommodation) {
+        // TODO: Implement method to create a new accommodation
+    }
+
+    // Method to update accommodation information
+    public void updateAccommodation(Long accId, Accommodation updatedAccommodation) {
+        // TODO: Implement method to update accommodation information
+    }
+
+    // Method to delete an accommodation
+    public void deleteAccommodation(Long accommodationId) {
+        // TODO: Implement method to delete an accommodation
+    }
+
+    // Method to accept a reservation
+    public void acceptReservation(Long reservationId) {
+        // TODO: Implement method to accept a reservation
+    }
+
+    // Method to reject a reservation
+    public void rejectReservation(Long reservationId) {
+        // TODO: Implement method to reject a reservation
+    }
+
+    // Method to delete the host account
+    public void deleteAccount() {
+        // TODO: Implement method to delete the owner account
+    }
+
+    // Method to report a guest
+    public void reportGuest(Long guestId, String reportReason) {
+        // TODO: Implement method to report a guest
+    }
+
+    // Method to report a comment on the owner's accommodation
+    public void reportReview(Long reviewId, String reportReason) {
+        // TODO: Implement method to report a comment
+    }
+
 }
