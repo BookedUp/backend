@@ -1,51 +1,53 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import java.util.Date;
 import java.util.List;
 
 public class Accommodation {
     private Long id;
     private String name;
-    private Address address;
     private String description;
-    private List<Amenity> amenities; // Enum - wifi, kitchen, air conditioning, etc.
-    private List<String> photos;
+    private Address location;
+    private double price;
     private int minGuests;
     private int maxGuests;
-    private AccommodationType accommodationType; // Enum
-    private List<DateRange> availability;
-    private double price;
-    private PriceType priceType; // Enum
-    private AccommodationStatus status; // Enum
-    private List<PriceChange> priceChanges;
-    private String cancellationDeadline;
+    private int cancellationDeadline;
     private boolean automaticReservationAcceptance;
-    private List<Long> reservationIds;
-    private List<Long> reviewIds;
+    private AccommodationStatus status;
+    private PriceType priceType;
+    private AccommodationType type;
+    private List<Amenity> amenities;
+    private List<Photo> photos;
+    private List<DateRange> availability;
+    private List<PriceChange> priceChanges;
+    private List<Reservation> reservations;
+    private List<Review> reviews;
     private double averageRating;
+
 
     public Accommodation() {
     }
 
     public Accommodation(
             Long id, String name, Address address, String description,
-            List<Amenity> amenities, List<String> photos,
+            List<Amenity> amenities, List<Photo> photos,
             int minGuests, int maxGuests,
             AccommodationType accommodationType,
             List<DateRange> availability, double price,
             PriceType priceType, AccommodationStatus status,
-            List<PriceChange> priceChanges, String cancellationDeadline,
+            List<PriceChange> priceChanges, int cancellationDeadline,
             boolean automaticReservationAcceptance,
-            List<Long> reservationIds, List<Long> reviewIds,
+            List<Reservation> reservations, List<Review> reviews,
             double averageRating) {
         this.id = id;
         this.name = name;
-        this.address = address;
+        this.location = address;
         this.description = description;
         this.amenities = amenities;
         this.photos = photos;
         this.minGuests = minGuests;
         this.maxGuests = maxGuests;
-        this.accommodationType = accommodationType;
+        this.type = accommodationType;
         this.availability = availability;
         this.price = price;
         this.priceType = priceType;
@@ -53,8 +55,8 @@ public class Accommodation {
         this.priceChanges = priceChanges;
         this.cancellationDeadline = cancellationDeadline;
         this.automaticReservationAcceptance = automaticReservationAcceptance;
-        this.reservationIds = reservationIds;
-        this.reviewIds = reviewIds;
+        this.reservations = reservations;
+        this.reviews = reviews;
         this.averageRating = averageRating;
     }
 
@@ -75,11 +77,11 @@ public class Accommodation {
     }
 
     public Address getAddress() {
-        return address;
+        return location;
     }
 
     public void setAddress(Address address) {
-        this.address = address;
+        this.location = address;
     }
 
     public String getDescription() {
@@ -98,11 +100,11 @@ public class Accommodation {
         this.amenities = amenities;
     }
 
-    public List<String> getPhotos() {
+    public List<Photo> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<String> photos) {
+    public void setPhotos(List<Photo> photos) {
         this.photos = photos;
     }
 
@@ -120,14 +122,6 @@ public class Accommodation {
 
     public void setMaxGuests(int maxGuests) {
         this.maxGuests = maxGuests;
-    }
-
-    public AccommodationType getAccommodationType() {
-        return accommodationType;
-    }
-
-    public void setAccommodationType(AccommodationType accommodationType) {
-        this.accommodationType = accommodationType;
     }
 
     public List<DateRange> getAvailability() {
@@ -170,11 +164,11 @@ public class Accommodation {
         this.priceChanges = priceChanges;
     }
 
-    public String getCancellationDeadline() {
+    public int getCancellationDeadline() {
         return cancellationDeadline;
     }
 
-    public void setCancellationDeadline(String cancellationDeadline) {
+    public void setCancellationDeadline(int cancellationDeadline) {
         this.cancellationDeadline = cancellationDeadline;
     }
 
@@ -185,23 +179,6 @@ public class Accommodation {
     public void setAutomaticReservationAcceptance(boolean automaticReservationAcceptance) {
         this.automaticReservationAcceptance = automaticReservationAcceptance;
     }
-
-    public List<Long> getReservationIds() {
-        return reservationIds;
-    }
-
-    public void setReservationIds(List<Long> reservationIds) {
-        this.reservationIds = reservationIds;
-    }
-
-    public List<Long> getReviewIds() {
-        return reviewIds;
-    }
-
-    public void setReviewIds(List<Long> reviewIds) {
-        this.reviewIds = reviewIds;
-    }
-
     public double getAverageRating() {
         return averageRating;
     }
@@ -210,17 +187,31 @@ public class Accommodation {
         this.averageRating = averageRating;
     }
 
+    public AccommodationType getType() { return type; }
+
+    public void setType(AccommodationType type) {
+        this.type = type;
+    }
+
+    public List<Reservation> getReservations() {return reservations;}
+
+    public void setReservations(List<Reservation> reservations) {this.reservations = reservations;}
+
+    public List<Review> getReviews() {return reviews;}
+
+    public void setReviews(List<Review> reviews) {this.reviews = reviews;}
+
     // Function to copy values from another Accommodation
     public void copyValues(Accommodation accommodation) {
         this.id = accommodation.getId();
         this.name = accommodation.getName();
-        this.address = accommodation.getAddress();
+        this.location = accommodation.getAddress();
         this.description = accommodation.getDescription();
         this.amenities = accommodation.getAmenities();
         this.photos = accommodation.getPhotos();
         this.minGuests = accommodation.getMinGuests();
         this.maxGuests = accommodation.getMaxGuests();
-        this.accommodationType = accommodation.getAccommodationType();
+        this.type = accommodation.getType();
         this.availability = accommodation.getAvailability();
         this.price = accommodation.getPrice();
         this.priceType = accommodation.getPriceType();
@@ -228,8 +219,28 @@ public class Accommodation {
         this.priceChanges = accommodation.getPriceChanges();
         this.cancellationDeadline = accommodation.getCancellationDeadline();
         this.automaticReservationAcceptance = accommodation.isAutomaticReservationAcceptance();
-        this.reservationIds = accommodation.getReservationIds();
-        this.reviewIds = accommodation.getReviewIds();
+        this.reservations = accommodation.getReservations();
+        this.reviews = accommodation.getReviews();
         this.averageRating = accommodation.getAverageRating();
+    }
+
+    // Method to update availability
+    public void updateAvailability(Date startDate, Date endDate) {
+        // TODO: Implement method to update availability
+    }
+
+    // Method to update the base price
+    public void updatePrice(double basePrice) {
+        // TODO: Implement method to update the base price
+    }
+
+    // Method to update price details (e.g., discounts, promotions)
+    public void updatePriceDetails(PriceChange priceDetails) {
+        // TODO: Implement method to update price details
+    }
+
+    // Method to update additional details
+    public void updateMoreDetails() {
+        // TODO: Implement method to update more details
     }
 }

@@ -47,15 +47,15 @@ public class AccommodationService implements IAcommodationService{
         accommodationToUpdate.setPhotos(accommodation.getPhotos());
         accommodationToUpdate.setMinGuests(accommodation.getMinGuests());
         accommodationToUpdate.setMaxGuests(accommodation.getMaxGuests());
-        accommodationToUpdate.setAccommodationType(accommodation.getAccommodationType());
+        accommodationToUpdate.setType(accommodation.getType());
         accommodationToUpdate.setPriceType(accommodation.getPriceType());
         accommodationToUpdate.setAvailability(accommodation.getAvailability());
         accommodationToUpdate.setPrice(accommodation.getPrice());
         accommodationToUpdate.setStatus(accommodation.getStatus());
         accommodationToUpdate.setCancellationDeadline(accommodation.getCancellationDeadline());
         accommodationToUpdate.setAutomaticReservationAcceptance(accommodation.isAutomaticReservationAcceptance());
-        accommodationToUpdate.setReservationIds(accommodation.getReservationIds());
-        accommodationToUpdate.setReviewIds(accommodation.getReviewIds());
+        accommodationToUpdate.setReservations(accommodation.getReservations());
+        accommodationToUpdate.setReviews(accommodation.getReviews());
         accommodationToUpdate.setAverageRating(accommodation.getAverageRating());
         accommodationToUpdate.setPriceChanges(accommodation.getPriceChanges());
 
