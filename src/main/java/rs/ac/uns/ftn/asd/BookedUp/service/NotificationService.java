@@ -35,11 +35,11 @@ public class NotificationService implements INotificationService {
         if (notificationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
-        notificationToUpdate.setFromId(notification.getFromId());
-        notificationToUpdate.setToId(notification.getToId());
-        notificationToUpdate.setMessage(notificationToUpdate.getMessage());
-        notificationToUpdate.setDate(notification.getDate());
-        notificationToUpdate.setTitle(notificationToUpdate.getTitle());
+        notificationToUpdate.setFrom(notification.getFrom());
+        notificationToUpdate.setTo(notification.getTo());
+        notificationToUpdate.setTitle(notification.getTitle());
+        notificationToUpdate.setMessage(notification.getMessage());
+        notificationToUpdate.setTimestamp(notification.getTimestamp());
         notificationToUpdate.setType(notification.getType());
 
         return notificationRepository.create(notificationToUpdate);

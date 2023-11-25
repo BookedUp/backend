@@ -35,11 +35,13 @@ public class ReservationService implements IReservationService {
         if (reservationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
-        reservationToUpdate.setStart(reservation.getStart());
-        reservationToUpdate.setEnd(reservation.getEnd());
+        reservationToUpdate.setCreatedTime(reservation.getCreatedTime());
+        reservationToUpdate.setStartDate(reservation.getStartDate());
+        reservationToUpdate.setEndDate(reservation.getEndDate());
+        reservationToUpdate.setTotalPrice(reservation.getTotalPrice());
         reservationToUpdate.setGuestsNumber(reservation.getGuestsNumber());
-        reservationToUpdate.setAccommodationId(reservation.getAccommodationId());
-        reservationToUpdate.setGuestId(reservation.getGuestId());
+        reservationToUpdate.setAccommodation(reservation.getAccommodation());
+        reservationToUpdate.setGuest(reservation.getGuest());
         reservationToUpdate.setStatus(reservation.getStatus());
 
         return reservationRepository.create(reservationToUpdate);

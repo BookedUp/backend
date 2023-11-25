@@ -37,7 +37,7 @@ public class AccommodationReportService implements IAccommodationReportService{
         if (reportToUpdate == null) {
             throw new Exception("The requested entity was not found.");
         }
-        reportToUpdate.setAccommodationId(reportDetail.getAccommodationId());
+        reportToUpdate.setAccommodation(reportDetail.getAccommodation());
         reportToUpdate.setYear(reportDetail.getYear());
         reportToUpdate.setDetails(reportDetail.getDetails());
         reportToUpdate.setProfit(reportDetail.getProfit());

@@ -36,13 +36,15 @@ public class ReviewService implements IReviewService {
         if (reviewToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
+
+        reviewToUpdate.setUser(review.getUser());
+        reviewToUpdate.setReview(review.getReview());
         reviewToUpdate.setComment(review.getComment());
-        reviewToUpdate.setHostRating(review.getHostRating());
-        reviewToUpdate.setAccommodationRating(review.getAccommodationRating());
-        reviewToUpdate.setGuestId(review.getGuestId());
-        reviewToUpdate.setAccommodationId(review.getAccommodationId());
-        reviewToUpdate.setHostId(review.getHostId());
-        reviewToUpdate.setStatus(review.getStatus());
+        reviewToUpdate.setDate(review.getDate());
+        reviewToUpdate.setAccommodation(review.getAccommodation());
+        reviewToUpdate.setHost(review.getHost());
+        reviewToUpdate.setType(review.getType());
+        reviewToUpdate.setReviewActive(review.getReviewActive());
 
         return reviewRepository.create(reviewToUpdate);
     }
