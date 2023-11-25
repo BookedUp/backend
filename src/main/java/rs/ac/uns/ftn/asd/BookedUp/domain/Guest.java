@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -62,6 +63,46 @@ public class Guest extends User {
         this.favourites = guest.getFavourites();
         this.reviews = guest.getReviews();
         this.notifications = guest.getNotifications();
+    }
+
+    // Method to delete the guest account
+    public void deleteAccount() {
+        // TODO: Implement method to delete the guest account
+    }
+
+    // Method to create a reservation
+    public void createReservation(Long accommodationId, Date checkInDate, Date checkOutDate) {
+        // TODO: Implement method to create a reservation
+    }
+
+    // Method to cancel a reservation
+    public void cancelReservation(Long reservationId) {
+        // TODO: Implement method to cancel a reservation
+    }
+
+    // Method to review an accommodation
+    public void reviewAccommodation(Long accId, int rating, String comment) {
+        // TODO: Implement method to review an accommodation
+    }
+
+    // Method to review an owner
+    public void reviewOwner(Long ownerId, String reviewText, int rating) {
+        // TODO: Implement method to review an owner
+    }
+
+    // Method to delete a review
+    public void deleteReview(Long reviewId) {
+        // TODO: Implement method to delete a review
+    }
+
+    // Method to report an owner
+    public void reportOwner(Long ownerId, String reportReason) {
+        // TODO: Implement method to report an owner
+    }
+
+    // Method to save an accommodation to favorites
+    public void saveToFavorites(Long accommodationId) {
+        // TODO: Implement method to save an accommodation to favorites
     }
 }
 
