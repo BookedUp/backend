@@ -3,13 +3,13 @@ package rs.ac.uns.ftn.asd.BookedUp.domain;
 public class UserReport {
     private Long id;
     private String reason;
-    private Long reportedUser;
+    private User reportedUser;
     private boolean status;
 
     public UserReport() {
     }
 
-    public UserReport(Long id, String reason, Long reportedUser, boolean status) {
+    public UserReport(Long id, String reason, User reportedUser, boolean status) {
         this.id = id;
         this.reason = reason;
         this.reportedUser = reportedUser;
@@ -32,11 +32,11 @@ public class UserReport {
         this.reason = reason;
     }
 
-    public Long getReportedUser() {
+    public User getReportedUser() {
         return reportedUser;
     }
 
-    public void setReportedUser(Long reportedUser) {
+    public void setReportedUser(User reportedUser) {
         this.reportedUser = reportedUser;
     }
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class AccommodationReport {
     private Long id;
-    private Long accommodationId;
+    private Accommodation accommodation;
     private int year;
     private double profit;
     private int numberOfReservations;
@@ -14,9 +14,9 @@ public class AccommodationReport {
 
     public AccommodationReport() {
     }
-    public AccommodationReport(Long id, Long accommodationId, int year, double profit, int numberOfReservations, List<ReportDetail> details){
+    public AccommodationReport(Long id, Accommodation accommodation, int year, double profit, int numberOfReservations, List<ReportDetail> details){
         this.id = id;
-        this.accommodationId = accommodationId;
+        this.accommodation = accommodation;
         this.year = year;
         this.profit = profit;
         this.numberOfReservations = numberOfReservations;
@@ -31,12 +31,12 @@ public class AccommodationReport {
         this.id = id;
     }
 
-    public Long getAccommodationId() {
-        return accommodationId;
+    public Accommodation getAccommodation() {
+        return accommodation;
     }
 
-    public void setAccommodationId(Long accommodationId) {
-        this.accommodationId = accommodationId;
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
     }
 
     public int getYear() {
@@ -72,7 +72,7 @@ public class AccommodationReport {
     }
 
     public void copyValues(AccommodationReport accommodationReport) {
-        this.accommodationId = accommodationReport.getAccommodationId();
+        this.accommodation = accommodationReport.getAccommodation();
         this.year = accommodationReport.getYear();
         this.profit = accommodationReport.getProfit();
         this.numberOfReservations = accommodationReport.getNumberOfReservations();

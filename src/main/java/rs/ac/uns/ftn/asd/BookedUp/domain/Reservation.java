@@ -1,29 +1,32 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Reservation {
     private Long id;
-    private Date start;
-    private Date end;
-    private Integer guestsNumber;
-
-    private Long accommodationId;
-    private Long guestId;
-
+    private LocalDateTime createdTime;
+    private Date startDate;
+    private Date endDate;
+    private double totalPrice;
+    private int guestsNumber;
+    private Accommodation accommodation;
+    private Guest guest;
     private ReservationStatus status;
 
 
     public Reservation() {
     }
 
-    public Reservation(Long id, Date start, Date end, Integer guestsNumber, Long accommodationId, Long guestId, ReservationStatus status) {
+    public Reservation(Long id, LocalDateTime createdTime, Date startDate, Date endDate, double totalPrice, int guestsNumber, Accommodation accommodation, Guest guest, ReservationStatus status) {
         this.id = id;
-        this.start = start;
-        this.end = end;
+        this.createdTime = createdTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalPrice = totalPrice;
         this.guestsNumber = guestsNumber;
-        this.accommodationId = accommodationId;
-        this.guestId = guestId;
+        this.accommodation = accommodation;
+        this.guest = guest;
         this.status = status;
     }
 
@@ -35,45 +38,12 @@ public class Reservation {
         this.id = id;
     }
 
-    public Date getStart() {
-        return start;
-    }
-
-    public void setStart(Date start) {
-        this.start = start;
-    }
-
-    public Date getEnd() {
-        return end;
-    }
-
-    public void setEnd(Date end) {
-        this.end = end;
-    }
-
     public Integer getGuestsNumber() {
         return guestsNumber;
     }
 
     public void setGuestsNumber(Integer guestsNumber) {
         this.guestsNumber = guestsNumber;
-    }
-
-
-    public Long getAccommodationId() {
-        return accommodationId;
-    }
-
-    public void setAccommodationId(Long accommodationId) {
-        this.accommodationId = accommodationId;
-    }
-
-    public Long getGuestId() {
-        return guestId;
-    }
-
-    public void setGuestId(Long guestId) {
-        this.guestId = guestId;
     }
 
     public ReservationStatus getStatus() {
@@ -85,14 +55,72 @@ public class Reservation {
     }
 
 
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Accommodation getAccommodation() {
+        return accommodation;
+    }
+
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
 
     public void copyValues(Reservation reservation) {
         this.id = reservation.getId();
-        this.start = reservation.getStart();
-        this.end = reservation.getEnd();
+        this.createdTime = reservation.getCreatedTime();
+        this.startDate = reservation.getStartDate();
+        this.endDate = reservation.getEndDate();
+        this.totalPrice = reservation.getTotalPrice();
         this.guestsNumber = reservation.getGuestsNumber();
-        this.accommodationId = reservation.getAccommodationId();
-        this.guestId = reservation.getGuestId();
+        this.accommodation = reservation.getAccommodation();
+        this.guest = reservation.getGuest();
         this.status = reservation.getStatus();
+    }
+
+    // Method to check cancellation possibility
+    public void isCancellationPossible() {
+        // TODO: Implement method to check if cancellation is possible
+    }
+    // Method to check reviewing possibility
+    public void isReviewingPossible() {
+        // TODO: Implement method to check if reviewing is possible
     }
 }

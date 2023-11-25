@@ -4,24 +4,23 @@ import java.util.Date;
 
 public class Notification {
     private Long id;
-    private Long fromId;
-    private Long toId;
-    private String message;
-    private Date date;
-
+    private User from;
+    private User to;
     private String title;
+    private String message;
+    private Date timestamp;
     private NotificationType type;
 
     public Notification() {
     }
 
-    public Notification(Long id, Long fromId, Long toId, String message, Date date, String title, NotificationType type) {
+    public Notification(Long id, User from, User to, String title, String message, Date timestamp, NotificationType type) {
         this.id = id;
-        this.fromId = fromId;
-        this.toId = toId;
-        this.message = message;
-        this.date = date;
+        this.from = from;
+        this.to = to;
         this.title = title;
+        this.message = message;
+        this.timestamp = timestamp;
         this.type = type;
     }
 
@@ -33,60 +32,26 @@ public class Notification {
         this.id = id;
     }
 
-    public Long getFromId() {
-        return fromId;
-    }
-
-    public void setFromId(Long fromId) {
-        this.fromId = fromId;
-    }
-
-    public Long getToId() {
-        return toId;
-    }
-
-    public void setToId(Long toId) {
-        this.toId = toId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public NotificationType getType() {
-        return type;
-    }
-
-    public void setType(NotificationType type) {
-        this.type = type;
-    }
+    public User getFrom(){return from;}
+    public void setFrom(User from){this.from = from;}
+    public User getTo(){return to;}
+    public void setTo(User to){this.to = to;}
+    public String getTitle(){return title;}
+    public void setTitle(String title){this.title = title;}
+    public String getMessage() {return message;}
+    public void setMessage(String message) {this.message = message;}
+    public Date getTimestamp(){return timestamp;}
+    public void setTimestamp(Date timestamp){this.timestamp = timestamp;}
+    public NotificationType getType() {return type;}
+    public void setType(NotificationType type) {this.type = type;}
 
     public void copyValues(Notification notification) {
-        this.fromId = notification.getFromId();
-        this.toId = notification.getToId();
-        this.message = notification.getMessage();
-        this.date = notification.getDate();
+        this.id = notification.getId();
+        this.from = notification.getFrom();
+        this.to = notification.getTo();
         this.title = notification.getTitle();
+        this.message = notification.getMessage();
+        this.timestamp = notification.getTimestamp();
         this.type = notification.getType();
     }
 }
