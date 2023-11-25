@@ -3,9 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
-import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.repository.GuestRepository;
-import rs.ac.uns.ftn.asd.BookedUp.repository.UserRepository;
 
 import java.util.Collection;
 
@@ -48,9 +46,11 @@ public class GuestService implements IGuestService{
         guestToUpdate.setPhone(guest.getPhone());
         guestToUpdate.setRole(guest.getRole());
         guestToUpdate.setBlocked(guest.isBlocked());
-        guestToUpdate.setReservationIds(guest.getReservationIds());
-        guestToUpdate.setReviewIds(guest.getReviewIds());
-        guestToUpdate.setFavoriteAccommodationIds(guest.getFavoriteAccommodationIds());
+        guestToUpdate.setRequests(guest.getRequests());
+        guestToUpdate.setReservations(guest.getReservations());
+        guestToUpdate.setFavourites(guest.getFavourites());
+        guestToUpdate.setReviews(guest.getReviews());
+        guestToUpdate.setNotifications(guest.getNotifications());
 
         Guest updatedGuest = guestRepository.create(guestToUpdate);
         return updatedGuest;
