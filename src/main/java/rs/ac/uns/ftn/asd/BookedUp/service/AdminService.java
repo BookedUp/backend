@@ -46,7 +46,8 @@ public class AdminService implements IAdminService{
         adminToUpdate.setPassword(admin.getPassword());
         adminToUpdate.setPhone(admin.getPhone());
         adminToUpdate.setRole(admin.getRole());
-        adminToUpdate.setReports(admin.getReports());
+        adminToUpdate.setUserReports(admin.getUserReports());
+        adminToUpdate.setReviewReports(admin.getReviewReports());
         adminToUpdate.setRequests(admin.getRequests());
 
         Admin updatedAdmin = adminRepository.create(adminToUpdate);

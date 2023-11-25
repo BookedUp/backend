@@ -3,27 +3,38 @@ package rs.ac.uns.ftn.asd.BookedUp.domain;
 import java.util.List;
 
 public class Admin extends User{
-    private List<UserReport> reports;
+    private List<UserReport> userReports;
+    private List<ReviewReport> reviewReports;
     private List<Reservation> requests;
     public Admin(){ super(); }
     public Admin(
             Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role,
-            List<UserReport> reports, List<Reservation> requests) {
+            List<UserReport> userReports, List<ReviewReport> reviewReports, List<Reservation> requests) {
         super(id, firstName, lastName, address, phone, email, password, role);
-        this.reports = reports;
+        this.userReports = userReports;
+        this.reviewReports = reviewReports;
         this.requests = requests;
     }
 
-    public List<UserReport> getReports() {return reports;}
+    public List<UserReport> getUserReports() {return userReports;}
 
-    public void setReports(List<UserReport> reports) {this.reports = reports;}
+    public void setUserReports(List<UserReport> userReports) {this.userReports = userReports;}
+
+    public List<ReviewReport> getReviewReports() {
+        return reviewReports;
+    }
+
+    public void setReviewReports(List<ReviewReport> reviewReports) {
+        this.reviewReports = reviewReports;
+    }
 
     public List<Reservation> getRequests() {return requests;}
 
     public void setRequests(List<Reservation> requests) {this.requests = requests;}
     public void copyValues(Admin admin) {
         super.copyValues(admin);
-        this.reports = admin.getReports();
+        this.userReports = admin.getUserReports();
+        this.reviewReports = admin.getReviewReports();
         this.requests = admin.getRequests();
     }
 
