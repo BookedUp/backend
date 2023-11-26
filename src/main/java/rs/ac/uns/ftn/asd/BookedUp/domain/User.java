@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import java.util.List;
+
 public class User {
     private Long id;
     private String firstName;
@@ -99,5 +101,29 @@ public class User {
         this.email = user.getEmail();
         this.role = user.getRole();
         this.password = user.getPassword();
+    }
+
+    // Method to register a new user
+    public void register(String email, String password, String firstName, String lastName, int phone, Role role, Address address) {
+        // TODO: Implement method to register a new admin
+    }
+
+    // Method to authenticate the user
+    public boolean login(String enteredUsername, String enteredPassword) {
+        // TODO: Implement method to authenticate the admin
+        // Return true if authentication is successful, false otherwise
+        return false;
+    }
+
+    // Method to update user account information
+    public void updateAccount(String newData) {
+        // TODO: Implement method to update admin account information
+    }
+
+    // Method to search for accommodations based on some criteria
+    public List<Accommodation> searchAccommodations(String searchCriteria) {
+        // TODO: Implement method to search for accommodations
+        // Return a list of accommodations based on the search criteria
+        return null;
     }
 }

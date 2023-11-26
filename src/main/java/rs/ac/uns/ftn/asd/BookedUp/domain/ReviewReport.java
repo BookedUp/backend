@@ -1,18 +1,18 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
-public class UserReport {
+public class ReviewReport {
     private Long id;
     private String reason;
-    private User reportedUser;
+    private Review reportedReview;
     private boolean status;
 
-    public UserReport() {
+    public ReviewReport() {
     }
 
-    public UserReport(Long id, String reason, User reportedUser, boolean status) {
+    public ReviewReport(Long id, String reason, Review reportedReview, boolean status) {
         this.id = id;
         this.reason = reason;
-        this.reportedUser = reportedUser;
+        this.reportedReview = reportedReview;
         this.status = status;
     }
 
@@ -32,12 +32,13 @@ public class UserReport {
         this.reason = reason;
     }
 
-    public User getReportedUser() {
-        return reportedUser;
+
+    public Review getReportedReview() {
+        return reportedReview;
     }
 
-    public void setReportedUser(User reportedUser) {
-        this.reportedUser = reportedUser;
+    public void setReportedReview(Review reportedReview) {
+        this.reportedReview = reportedReview;
     }
 
     public boolean isStatus() {
@@ -47,9 +48,11 @@ public class UserReport {
     public void setStatus(boolean status) {
         this.status = status;
     }
-    public void copyValues(UserReport userReport) {
-        this.reason = userReport.getReason();
-        this.reportedUser = userReport.getReportedUser();
-        this.status = userReport.isStatus();
+
+    public void copyValues(ReviewReport reviewReport) {
+        this.reason = reviewReport.getReason();
+        this.reportedReview = reviewReport.getReportedReview();
+        this.status = reviewReport.isStatus();
     }
+
 }

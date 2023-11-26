@@ -50,8 +50,10 @@ public class HostService implements IHostService{
         hostToUpdate.setPhone(host.getPhone());
         hostToUpdate.setRole(host.getRole());
         hostToUpdate.setBlocked(host.isBlocked());
-        hostToUpdate.setAccommodationIds(host.getAccommodationIds());
         hostToUpdate.setAverageRating(host.getAverageRating());
+        hostToUpdate.setProperties(host.getProperties());
+        hostToUpdate.setNotifications(host.getNotifications());
+        hostToUpdate.setRequests(host.getRequests());
 
         Host updatedHost = hostRepository.create(hostToUpdate);
         return updatedHost;

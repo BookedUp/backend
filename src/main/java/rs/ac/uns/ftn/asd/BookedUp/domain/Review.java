@@ -1,30 +1,32 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import java.time.LocalDateTime;
+
 public class Review {
 
     private Long id;
+    private User user;
+    private int review;
     private String comment;
-    private Integer hostRating;
-    private Integer accommodationRating;
-    private Long guestId;
-
-    private Long accommodationId;
-    private Long hostId;
-
-    private ReviewStatus status;
+    private LocalDateTime date;
+    private Host host;
+    private Accommodation accommodation;
+    private ReviewType type;
+    private Boolean isReviewActive;
 
     public Review() {
     }
 
-    public Review(Long id, String comment, Integer hostRating, Integer accommodationRating, Long guestId, Long accommodationId, Long hostId, ReviewStatus status) {
+    public Review(Long id, User user, int review, String comment, LocalDateTime date, Host host, Accommodation accommodation, ReviewType type, Boolean isReviewActive) {
         this.id = id;
+        this.user = user;
+        this.review = review;
         this.comment = comment;
-        this.hostRating = hostRating;
-        this.accommodationRating = accommodationRating;
-        this.guestId = guestId;
-        this.accommodationId = accommodationId;
-        this.hostId = hostId;
-        this.status = status;
+        this.date = date;
+        this.host = host;
+        this.accommodation = accommodation;
+        this.type = type;
+        this.isReviewActive = isReviewActive;
     }
 
     public Long getId() {
@@ -42,63 +44,39 @@ public class Review {
     public void setComment(String comment) {
         this.comment = comment;
     }
+    public User getUser() {return user;}
 
-    public Integer getHostRating() {
-        return hostRating;
-    }
+    public void setUser(User user) {this.user = user;}
 
-    public void setHostRating(Integer hostRating) {
-        this.hostRating = hostRating;
-    }
+    public int getReview() {return review;}
 
-    public Integer getAccommodationRating() {
-        return accommodationRating;
-    }
+    public void setReview(int review) {this.review = review;}
 
-    public void setAccommodationRating(Integer accommodationRating) {
-        this.accommodationRating = accommodationRating;
-    }
+    public LocalDateTime getDate() {return date;}
 
-    public Long getGuestId() {
-        return guestId;
-    }
+    public void setDate(LocalDateTime date) {this.date = date;}
+    public Host getHost(){return host;}
+    public void setHost(Host host){this.host = host;}
+    public Accommodation getAccommodation(){return this.accommodation;}
+    public void setAccommodation(Accommodation accommodation){this.accommodation = accommodation;}
 
-    public void setGuestId(Long guestId) {
-        this.guestId = guestId;
-    }
+    public ReviewType getType() {return type;}
 
-    public Long getAccommodationId() {
-        return accommodationId;
-    }
+    public void setType(ReviewType type) {this.type = type;}
 
-    public void setAccommodationId(Long accommodationId) {
-        this.accommodationId = accommodationId;
-    }
+    public Boolean getReviewActive() {return isReviewActive;}
 
-    public Long getHostId() {
-        return hostId;
-    }
-
-    public void setHostId(Long hostId) {
-        this.hostId = hostId;
-    }
-
-    public ReviewStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ReviewStatus status) {
-        this.status = status;
-    }
+    public void setReviewActive(Boolean reviewActive) {isReviewActive = reviewActive;}
 
     public void copyValues(Review review) {
         this.id = review.getId();
-        this.guestId = review.getGuestId();
+        this.user = review.getUser();
+        this.review = review.getReview();
         this.comment = review.getComment();
-        this.hostRating = review.getHostRating();
-        this.hostId = review.getHostId();
-        this.accommodationRating = review.getAccommodationRating();
-        this.accommodationId = review.getAccommodationId();
-        this.status = review.getStatus();
+        this.date = review.getDate();
+        this.host = review.getHost();
+        this.accommodation = review.getAccommodation();
+        this.type = review.getType();
+        this.isReviewActive = review.getReviewActive();
     }
 }

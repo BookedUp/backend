@@ -3,13 +3,13 @@ package rs.ac.uns.ftn.asd.BookedUp.domain;
 public class Address {
     private String country;
     private String city;
-    private Integer postalCode;
+    private String postalCode;
     private String streetAndNumber;
 
     public Address() {
     }
 
-    public Address(String country, String city, Integer postalCode, String streetAndNumber) {
+    public Address(String country, String city, String postalCode, String streetAndNumber) {
         this.country = country;
         this.city = city;
         this.postalCode = postalCode;
@@ -32,11 +32,11 @@ public class Address {
         this.city = city;
     }
 
-    public Integer getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(Integer postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 

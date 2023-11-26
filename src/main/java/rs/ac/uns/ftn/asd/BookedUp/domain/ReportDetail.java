@@ -2,14 +2,16 @@ package rs.ac.uns.ftn.asd.BookedUp.domain;
 
 public class ReportDetail {
     private Long id;
+    private String key;
     private double profit;
     private int numberOfReservations;
 
     public ReportDetail() {
     }
 
-    public ReportDetail(Long id, double profit, int numberOfReservations) {
+    public ReportDetail(Long id, String key, double profit, int numberOfReservations) {
         this.id = id;
+        this.key = key;
         this.profit = profit;
         this.numberOfReservations = numberOfReservations;
     }
@@ -39,8 +41,17 @@ public class ReportDetail {
         this.numberOfReservations = numberOfReservations;
     }
     public void copyValues(ReportDetail reportDetail) {
+        this.key = reportDetail.getKey();
         this.profit = reportDetail.getProfit();
         this.numberOfReservations = reportDetail.getNumberOfReservations();
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
 
