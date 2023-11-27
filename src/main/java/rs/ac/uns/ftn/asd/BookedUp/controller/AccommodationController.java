@@ -1,21 +1,31 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Address;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Photo;
+import rs.ac.uns.ftn.asd.BookedUp.dto.CreateAccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accommodations")
 public class AccommodationController {
     @Autowired
     private AccommodationService accommodationService;
+
+    private AccommodationMapper accommodationMapper;
 
     /*url: /api/accommodations GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,10 +47,22 @@ public class AccommodationController {
     }
 
     /*url: /api/accommodations POST*/
+    @PreAuthorize("hasRole('HOST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Accommodation> createAccommodation(@RequestBody Accommodation accommodation) throws Exception {
-        Accommodation savedAccommodation = accommodationService.create(accommodation);
-        return new ResponseEntity<Accommodation>(savedAccommodation, HttpStatus.CREATED);
+    public ResponseEntity<CreateAccommodationDTO> createAccommodation(@Valid @RequestBody CreateAccommodationDTO createAccommodationDTO) throws Exception {
+        Accommodation accommodation = null;
+
+
+        try {
+
+           accommodation = AccommodationMapper.fromDTOToEntity(createAccommodationDTO);
+           accommodation = accommodationService.create(accommodation);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CreateAccommodationDTO(),HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(AccommodationMapper.fromEntityToDTO(accommodation), HttpStatus.OK);
     }
 
     /* url: /api/accommodations/1 PUT*/
