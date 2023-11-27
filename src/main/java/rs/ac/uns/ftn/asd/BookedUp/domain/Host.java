@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
+
 import java.util.List;
 
 public class Host extends User {
@@ -60,6 +62,16 @@ public class Host extends User {
         this.properties = host.getProperties();
         this.notifications = host.getNotifications();
         this.requests = host.getRequests();
+    }
+
+    public void copyValuesFromDTO(UserDetailedInDTO userDTO) {
+        super.copyValuesFromDTO(userDTO);
+        this.setRole(Role.ADMIN);
+        this.setBlocked(false);
+        this.setAverageRating(0);
+        this.setNotifications(null);
+        this.setProperties(null);
+        this.setRequests(null);
     }
 
     // Method to create a new accommodation
