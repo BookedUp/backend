@@ -61,10 +61,12 @@ public class UserService implements IUserService{
     }
 
     public boolean registerGuest(UserDetailedInDTO userDTO) {
+        //make sure to put user.role to guest
         return true;
     }
 
     public boolean registerHost(UserDetailedInDTO userDTO) {
+        //make sure to put user.role to host
         return false;
     }
 }
