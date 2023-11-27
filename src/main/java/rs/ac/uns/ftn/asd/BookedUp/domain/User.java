@@ -137,7 +137,6 @@ public class User {
             this.phone = userDTO.getPhone();
             this.email = userDTO.getEmail();
             this.password = userDTO.getPassword();
-            this.role = userDTO.getRole();
         }
     }
 }
