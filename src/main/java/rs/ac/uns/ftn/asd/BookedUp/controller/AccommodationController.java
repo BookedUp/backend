@@ -7,17 +7,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Address;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Photo;
-import rs.ac.uns.ftn.asd.BookedUp.dto.CreateAccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/accommodations")
@@ -25,6 +21,7 @@ public class AccommodationController {
     @Autowired
     private AccommodationService accommodationService;
 
+    @Autowired
     private AccommodationMapper accommodationMapper;
 
     /*url: /api/accommodations GET*/
@@ -48,24 +45,33 @@ public class AccommodationController {
 
     /*url: /api/accommodations POST*/
     @PreAuthorize("hasRole('HOST')")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreateAccommodationDTO> createAccommodation(@Valid @RequestBody CreateAccommodationDTO createAccommodationDTO) throws Exception {
+    @RequestMapping(method=RequestMethod.POST)
+    public ResponseEntity<AccommodationDTO> createAccommodation(@Valid @RequestBody AccommodationDTO createAccommodationDTO) throws Exception {
         Accommodation accommodation = null;
 
+        if(!this.validateCreateAccommodationDTO(createAccommodationDTO)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         try {
 
-           accommodation = AccommodationMapper.fromDTOToEntity(createAccommodationDTO);
+           accommodation = accommodationMapper.toEntity(createAccommodationDTO);
            accommodation = accommodationService.create(accommodation);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(new CreateAccommodationDTO(),HttpStatus.BAD_REQUEST);
+            e.printStackTrace();
+            return new ResponseEntity<>(new AccommodationDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(AccommodationMapper.fromEntityToDTO(accommodation), HttpStatus.OK);
+        return new ResponseEntity<>(accommodationMapper.toDto(accommodation), HttpStatus.OK);
+    }
+
+    private boolean validateCreateAccommodationDTO(AccommodationDTO createAccommodationDTO) {
+        return true;
     }
 
     /* url: /api/accommodations/1 PUT*/
+    @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Accommodation> updateAccommodation(@RequestBody Accommodation accommodation, @PathVariable Long id)
             throws Exception {
@@ -83,9 +89,13 @@ public class AccommodationController {
 
     /** url: /api/accommodations/1 DELETE*/
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Accommodation> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<Accommodation> deleteAccommodation(@PathVariable("id") Long id) {
         accommodationService.delete(id);
         return new ResponseEntity<Accommodation>(HttpStatus.NO_CONTENT);
     }
+
+
+
+
 }
 

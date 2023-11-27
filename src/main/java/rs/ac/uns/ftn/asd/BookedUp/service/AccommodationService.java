@@ -36,6 +36,7 @@ public class AccommodationService implements IAcommodationService{
 
     @Override
     public Accommodation update(Accommodation accommodation) throws Exception {
+        System.out.println(accommodation.getId() + "SEREMISE");
         Accommodation accommodationToUpdate = getById(accommodation.getId());
         if (accommodationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
