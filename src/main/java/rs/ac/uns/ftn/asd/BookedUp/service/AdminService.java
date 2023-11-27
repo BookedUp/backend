@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Admin;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.AdminRepository;
 
 import java.util.Collection;
@@ -26,7 +27,7 @@ public class AdminService implements IAdminService{
     @Override
     public Admin create(Admin admin) throws Exception {
         if (admin.getId() != null) {
-            throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
+            throw new Exception("Id must be null when persisting a new entity.");
         }
         Admin savedAdmin = adminRepository.create(admin);
         return savedAdmin;
@@ -36,7 +37,7 @@ public class AdminService implements IAdminService{
     public Admin update(Admin admin) throws Exception {
         Admin adminToUpdate = getById(admin.getId());
         if (adminToUpdate == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
+            throw new Exception("The requested entity was not found.");
         }
 
         adminToUpdate.setFirstName(admin.getFirstName());
@@ -59,4 +60,18 @@ public class AdminService implements IAdminService{
         adminRepository.delete(id);
 
     }
+
+    public void updateAdminInformation(Admin admin, UserDetailedInDTO userDTO) throws Exception {
+        if (admin != null && userDTO != null) {
+            // Check and update specific fields based on your logic
+            if (userDTO.getFirstName() != null) {
+                admin.setFirstName(userDTO.getFirstName());
+            }
+            if (userDTO.getLastName() != null) {
+                admin.setLastName(userDTO.getLastName());
+            }
+            adminRepository.update(admin);
+        }
+    }
+
 }
