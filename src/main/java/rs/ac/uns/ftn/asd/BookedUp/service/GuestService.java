@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.GuestRepository;
 
 import java.util.Collection;
@@ -26,7 +27,7 @@ public class GuestService implements IGuestService{
     @Override
     public Guest create(Guest guest) throws Exception {
         if (guest.getId() != null) {
-            throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
+            throw new Exception("Id must be null when persisting a new entity.");
         }
         Guest savedGuest = guestRepository.create(guest);
         return savedGuest;
@@ -36,7 +37,7 @@ public class GuestService implements IGuestService{
     public Guest update(Guest guest) throws Exception {
         Guest guestToUpdate = getById(guest.getId());
         if (guestToUpdate == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
+            throw new Exception("The requested entity was not found.");
         }
         guestToUpdate.setFirstName(guest.getFirstName());
         guestToUpdate.setLastName(guest.getLastName());
@@ -60,5 +61,8 @@ public class GuestService implements IGuestService{
     public void delete(Long id) {
         guestRepository.delete(id);
 
+    }
+
+    public void updateGuestInformation(Guest user, UserDetailedInDTO userDTO) {
     }
 }

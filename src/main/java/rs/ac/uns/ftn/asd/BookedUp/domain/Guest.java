@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
+
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -63,6 +65,17 @@ public class Guest extends User {
         this.favourites = guest.getFavourites();
         this.reviews = guest.getReviews();
         this.notifications = guest.getNotifications();
+    }
+
+    public void copyValuesFromDTO(UserDetailedInDTO userDTO) {
+        super.copyValuesFromDTO(userDTO);
+        this.setRole(Role.ADMIN);
+        this.setBlocked(false);
+        this.setRequests(null);
+        this.setNotifications(null);
+        this.setReservations(null);
+        this.setReviews(null);
+        this.setFavourites(null);
     }
 
     // Method to delete the guest account

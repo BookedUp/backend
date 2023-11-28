@@ -1,15 +1,17 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
+
 import java.util.List;
 
 public class Admin extends User{
     private List<UserReport> userReports;
     private List<ReviewReport> reviewReports;
-    private List<Reservation> requests;
+    private List<Accommodation> requests;
     public Admin(){ super(); }
     public Admin(
             Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role,
-            List<UserReport> userReports, List<ReviewReport> reviewReports, List<Reservation> requests) {
+            List<UserReport> userReports, List<ReviewReport> reviewReports, List<Accommodation> requests) {
         super(id, firstName, lastName, address, phone, email, password, role);
         this.userReports = userReports;
         this.reviewReports = reviewReports;
@@ -28,14 +30,22 @@ public class Admin extends User{
         this.reviewReports = reviewReports;
     }
 
-    public List<Reservation> getRequests() {return requests;}
+    public List<Accommodation> getRequests() {return requests;}
 
-    public void setRequests(List<Reservation> requests) {this.requests = requests;}
+    public void setRequests(List<Accommodation> requests) {this.requests = requests;}
     public void copyValues(Admin admin) {
         super.copyValues(admin);
         this.userReports = admin.getUserReports();
         this.reviewReports = admin.getReviewReports();
         this.requests = admin.getRequests();
+    }
+
+    public void copyValuesFromDTO(UserDetailedInDTO userDTO) {
+        super.copyValuesFromDTO(userDTO);
+        this.setRole(Role.ADMIN);
+        this.setUserReports(null);
+        this.setReviewReports(null);
+        this.setRequests(null);
     }
 
     // Method to block a user

@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
+
 import java.util.List;
 
 public class User {
@@ -125,5 +127,16 @@ public class User {
         // TODO: Implement method to search for accommodations
         // Return a list of accommodations based on the search criteria
         return null;
+    }
+
+    public void copyValuesFromDTO(UserDetailedInDTO userDTO) {
+        if (userDTO != null) {
+            this.firstName = userDTO.getFirstName();
+            this.lastName = userDTO.getLastName();
+            this.address = userDTO.getAddress();
+            this.phone = userDTO.getPhone();
+            this.email = userDTO.getEmail();
+            this.password = userDTO.getPassword();
+        }
     }
 }
