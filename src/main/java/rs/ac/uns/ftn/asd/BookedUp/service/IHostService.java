@@ -1,13 +1,15 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
 
 import java.util.Collection;
 
 public interface IHostService {
-    Collection<Host> getAll();
-    Host getById(Long id);
-    Host create(Host host) throws Exception;
-    Host update(Host host) throws Exception;
+    Collection<HostDTO> getAll();
+    HostDTO getById(Long id);
+    HostDTO create(HostDTO hostDto) throws Exception;
+    HostDTO update(HostDTO hostDto) throws Exception;
     void delete(Long id);
 }

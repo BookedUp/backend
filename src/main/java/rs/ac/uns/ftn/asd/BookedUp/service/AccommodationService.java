@@ -28,6 +28,7 @@ public class AccommodationService implements IAcommodationService{
         Collection<AccommodationDTO> accommodationDTOS = new ArrayList<>();
 
         for (Accommodation accommodation : accommodations) {
+            System.out.println("STATUS: " + accommodation.getStatus());
             AccommodationDTO accommodationDTO = accommodationMapper.toDto(accommodation);
             accommodationDTOS.add(accommodationDTO);
         }
@@ -84,6 +85,32 @@ public class AccommodationService implements IAcommodationService{
     @Override
     public void delete(Long id) {
         accommodationRepository.delete(id);
+    }
+
+    @Override
+    public AccommodationDTO approve(AccommodationDTO accommodationDTO) throws Exception {
+        if (accommodationDTO == null) {
+            throw new Exception("Trazeni entitet nije pronadjen.");
+        }
+        Accommodation accommodation = accommodationMapper.toEntity(accommodationDTO);
+        Accommodation accommodationToUpdate = accommodationRepository.getById(accommodation.getId());
+        accommodationToUpdate.setStatus(AccommodationStatus.ACTIVE);
+        Accommodation updatedAcommodation = accommodationRepository.create(accommodationToUpdate);
+        System.out.println(updatedAcommodation.getStatus());
+        return accommodationMapper.toDto(updatedAcommodation);
+    }
+
+    @Override
+    public AccommodationDTO reject(AccommodationDTO accommodationDTO) throws  Exception{
+        if (accommodationDTO == null) {
+            throw new Exception("Trazeni entitet nije pronadjen.");
+        }
+        Accommodation accommodation = accommodationMapper.toEntity(accommodationDTO);
+        Accommodation accommodationToUpdate = accommodationRepository.getById(accommodation.getId());
+        accommodationToUpdate.setStatus(AccommodationStatus.REJECTED);
+        Accommodation updatedAcommodation = accommodationRepository.create(accommodationToUpdate);
+        System.out.println(updatedAcommodation.getStatus());
+        return accommodationMapper.toDto(updatedAcommodation);
     }
 
 

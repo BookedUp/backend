@@ -11,4 +11,8 @@ public interface IAcommodationService {
     AccommodationDTO create(AccommodationDTO accommodationDto) throws Exception;
     AccommodationDTO update(AccommodationDTO accommodationDto) throws Exception;
     void delete(Long id);
+
+    AccommodationDTO approve(AccommodationDTO accommodationDTO) throws Exception;
+
+    AccommodationDTO reject(AccommodationDTO accommodationDTO) throws Exception;
 }

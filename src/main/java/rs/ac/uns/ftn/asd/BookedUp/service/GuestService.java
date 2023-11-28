@@ -3,39 +3,56 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
+import rs.ac.uns.ftn.asd.BookedUp.dto.GuestDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.GuestMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.GuestRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
 public class GuestService implements IGuestService{
     @Autowired
     private GuestRepository guestRepository;
+
+    @Autowired
+    private GuestMapper guestMapper;
     @Override
-    public Collection<Guest> getAll() {
+    public Collection<GuestDTO> getAll() {
         Collection<Guest> guests = guestRepository.getAll();
-        return guests;
+        Collection<GuestDTO> guestDTOS = new ArrayList<>();
+
+        for (Guest guest : guests) {
+            GuestDTO guestDTO= guestMapper.toDto(guest);
+            guestDTOS.add(guestDTO);
+        }
+
+        return guestDTOS;
     }
 
     @Override
-    public Guest getById(Long id) {
+    public GuestDTO getById(Long id) {
         Guest guest = guestRepository.getById(id);
-        return guest;
+        return guestMapper.toDto(guest);
     }
 
     @Override
-    public Guest create(Guest guest) throws Exception {
-        if (guest.getId() != null) {
+    public GuestDTO create(GuestDTO guestDto) throws Exception {
+        if (guestDto.getId() != null) {
             throw new Exception("Id must be null when persisting a new entity.");
         }
+        Guest guest = guestMapper.toEntity(guestDto);
         Guest savedGuest = guestRepository.create(guest);
-        return savedGuest;
+        return guestMapper.toDto(savedGuest);
     }
 
     @Override
-    public Guest update(Guest guest) throws Exception {
-        Guest guestToUpdate = getById(guest.getId());
+    public GuestDTO update(GuestDTO guestDto) throws Exception {
+        Guest guest = guestMapper.toEntity(guestDto);
+        Guest guestToUpdate = guestRepository.getById(guest.getId());
         if (guestToUpdate == null) {
             throw new Exception("The requested entity was not found.");
         }
@@ -54,7 +71,7 @@ public class GuestService implements IGuestService{
         guestToUpdate.setNotifications(guest.getNotifications());
 
         Guest updatedGuest = guestRepository.create(guestToUpdate);
-        return updatedGuest;
+        return guestMapper.toDto(updatedGuest);
     }
 
     @Override
@@ -63,6 +80,6 @@ public class GuestService implements IGuestService{
 
     }
 
-    public void updateGuestInformation(Guest user, UserDetailedInDTO userDTO) {
+    public void updateGuestInformation(Guest user, UserDTO userDTO) {
     }
 }

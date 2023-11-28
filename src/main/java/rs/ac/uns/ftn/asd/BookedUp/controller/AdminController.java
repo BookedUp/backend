@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.service.AdminService;
 import java.util.List;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class AdminController {
 
     /*url: /api/admins POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Admin> createAdmin(@RequestBody UserDetailedInDTO userDTO) throws Exception {
+    public ResponseEntity<Admin> createAdmin(@RequestBody UserDTO userDTO) throws Exception {
         // Convert UserDTO to Admin
         Admin admin = new Admin();
         admin.copyValuesFromDTO(userDTO);
@@ -52,7 +52,7 @@ public class AdminController {
 
     /* url: /api/admins/1 PUT*/
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateAdmin(@PathVariable Long id, @RequestBody UserDetailedInDTO adminDTO) throws Exception {
+    public ResponseEntity<String> updateAdmin(@PathVariable Long id, @RequestBody UserDTO adminDTO) throws Exception {
         // Retrieve admin information based on ID
         Admin admin = adminService.getById(id);
 

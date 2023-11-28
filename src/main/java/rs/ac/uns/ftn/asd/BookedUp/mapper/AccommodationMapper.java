@@ -20,13 +20,13 @@ public class AccommodationMapper  implements MapperInterface<Accommodation, Acco
         List<Review> reviews = new ArrayList<Review>();
 
 
-        return new Accommodation(dto.getId(), dto.getName(),dto.getAddress(), dto.getDescription(), dto.getAmenities(), dto.getPhotos(), dto.getMinGuests(), dto.getMaxGuests(), dto.getType(), dto.getAvailability(), 0.0, PriceType.PER_NIGHT, dto.getStatus(), dto.getPriceChanges(), 3, dto.isAutomaticReservationAcceptance(), reservations,reviews, 0.0 );
+        return new Accommodation(dto.getId(), dto.getName(),dto.getAddress(), dto.getDescription(), dto.getAmenities(), dto.getPhotos(), dto.getMinGuests(), dto.getMaxGuests(), dto.getType(), dto.getAvailability(), 0.0, dto.getPriceType(), null, dto.getPriceChanges(), 0, dto.isAutomaticReservationAcceptance(), reservations,reviews, 0.0 );
 
     }
 
     @Override
     public AccommodationDTO toDto(Accommodation entity) {
-        return new AccommodationDTO(entity.getId(), entity.getName(), entity.getDescription(), entity.getAddress(), entity.getAmenities(), entity.getPhotos(), entity.getMinGuests(), entity.getMaxGuests(), entity.getType(), entity.getAvailability(), entity.getPriceChanges(), entity.getStatus(), entity.isAutomaticReservationAcceptance());
+        return new AccommodationDTO(entity.getId(), entity.getName(), entity.getDescription(), entity.getAddress(), entity.getAmenities(), entity.getPhotos(), entity.getMinGuests(), entity.getMaxGuests(), entity.getType(), entity.getAvailability(), entity.getPriceType(), entity.getPriceChanges(), entity.isAutomaticReservationAcceptance());
     }
 
 

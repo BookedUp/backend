@@ -15,8 +15,6 @@ public class ReservationMapper implements MapperInterface<Reservation, Reservati
 
     AccommodationMapper accommodationMapper = new AccommodationMapper();
 
-    ReservationService reservationService = new ReservationService();
-
     @Override
     public Reservation toEntity(ReservationDTO dto) {
         if (dto == null) {

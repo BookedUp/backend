@@ -3,7 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Admin;
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.AdminRepository;
 
 import java.util.Collection;
@@ -61,7 +61,7 @@ public class AdminService implements IAdminService{
 
     }
 
-    public void updateAdminInformation(Admin admin, UserDetailedInDTO userDTO) throws Exception {
+    public void updateAdminInformation(Admin admin, UserDTO userDTO) throws Exception {
         if (admin != null && userDTO != null) {
             // Check and update specific fields based on your logic
             if (userDTO.getFirstName() != null) {

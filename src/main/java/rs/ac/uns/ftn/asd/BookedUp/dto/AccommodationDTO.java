@@ -16,16 +16,14 @@ public class AccommodationDTO {
     private int maxGuests;
     private AccommodationType type;
     private List<DateRange> availability;
+    private PriceType priceType;
     private List<PriceChange> priceChanges;
-
-    private AccommodationStatus status;
-
     private boolean automaticReservationAcceptance;
 
     public AccommodationDTO() {
     }
 
-    public AccommodationDTO(Long id, String name, String description, Address address, List<Amenity> amenities, List<Photo> photos, int minGuests, int maxGuests, AccommodationType type, List<DateRange> availability, List<PriceChange> priceChanges, AccommodationStatus status, boolean automaticReservationAcceptance) {
+    public AccommodationDTO(Long id, String name, String description, Address address, List<Amenity> amenities, List<Photo> photos, int minGuests, int maxGuests, AccommodationType type, List<DateRange> availability, PriceType priceType, List<PriceChange> priceChanges, boolean automaticReservationAcceptance) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,12 +34,12 @@ public class AccommodationDTO {
         this.maxGuests = maxGuests;
         this.type = type;
         this.availability = availability;
+        this.priceType = priceType;
         this.priceChanges = priceChanges;
-        this.status = status;
         this.automaticReservationAcceptance = automaticReservationAcceptance;
     }
 
-    public AccommodationDTO(String name, String description, Address address, List<Amenity> amenities, List<Photo> photos, int minGuests, int maxGuests, AccommodationType type, List<DateRange> availability, List<PriceChange> priceChanges, AccommodationStatus status, boolean automaticReservationAcceptance) {
+    public AccommodationDTO(String name, String description, Address address, List<Amenity> amenities, List<Photo> photos, int minGuests, int maxGuests, AccommodationType type, List<DateRange> availability, PriceType priceType, List<PriceChange> priceChanges, boolean automaticReservationAcceptance) {
         this.name = name;
         this.description = description;
         this.address = address;
@@ -51,8 +49,8 @@ public class AccommodationDTO {
         this.maxGuests = maxGuests;
         this.type = type;
         this.availability = availability;
+        this.priceType = priceType;
         this.priceChanges = priceChanges;
-        this.status = status;
         this.automaticReservationAcceptance = automaticReservationAcceptance;
     }
 
@@ -152,12 +150,12 @@ public class AccommodationDTO {
         this.automaticReservationAcceptance = automaticReservationAcceptance;
     }
 
-    public AccommodationStatus getStatus() {
-        return status;
+    public PriceType getPriceType() {
+        return priceType;
     }
 
-    public void setStatus(AccommodationStatus status) {
-        this.status = status;
+    public void setPriceType(PriceType priceType) {
+        this.priceType = priceType;
     }
 
     public void copyValues(AccommodationDTO dto) {
@@ -172,5 +170,6 @@ public class AccommodationDTO {
         this.availability = dto.getAvailability();
         this.priceChanges = dto.getPriceChanges();
         this.automaticReservationAcceptance = dto.isAutomaticReservationAcceptance();
+        this.priceType = dto.getPriceType();
     }
 }

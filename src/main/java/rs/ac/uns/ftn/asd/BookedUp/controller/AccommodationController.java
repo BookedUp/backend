@@ -2,12 +2,14 @@ package rs.ac.uns.ftn.asd.BookedUp.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
@@ -15,7 +17,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accommodations")
@@ -104,9 +108,8 @@ public class AccommodationController {
             if (accommodationDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            accommodationDto.setStatus(AccommodationStatus.ACTIVE);
 
-            approvedAccommodationDto = accommodationService.update(accommodationDto);
+            approvedAccommodationDto = accommodationService.approve(accommodationDto);
 
             return new ResponseEntity<>(approvedAccommodationDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -125,9 +128,8 @@ public class AccommodationController {
             if (accommodationDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            accommodationDto.setStatus(AccommodationStatus.REJECTED);
 
-            rejectedAccommodationDto = accommodationService.update(accommodationDto);
+            rejectedAccommodationDto = accommodationService.reject(accommodationDto);
 
             return new ResponseEntity<>(rejectedAccommodationDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -162,6 +164,31 @@ public class AccommodationController {
         }
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchAccommodations(
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Integer guestsNumber,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @RequestParam(required = false) List<String> amenities,
+            @RequestParam(required = false) AccommodationType type,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice
+    ) {
+        try {
+            // Implementirajte logiku pretrage i filtriranja smeštaja koristeći AccommodationService
+//            List<AccommodationDTO> filteredAccommodations = accommodationService.searchAndFilterAccommodations(
+//                    location, guestsNumber, startDate, endDate, amenities, type, minPrice, maxPrice);
+
+            HashMap<String, String> response = new HashMap<>();
+            response.put("message", "Search completed successfully!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

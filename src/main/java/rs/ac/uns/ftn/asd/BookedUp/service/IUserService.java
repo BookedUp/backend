@@ -1,15 +1,16 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 
 import java.util.Collection;
 
 public interface IUserService {
 
-    Collection<User> getAll();
-    User getById(Long id);
-    User create(User user) throws Exception;
-    User update(User user) throws Exception;
+    Collection<UserDTO> getAll();
+    UserDTO getById(Long id);
+    UserDTO create(UserDTO userDto) throws Exception;
+    UserDTO update(UserDTO userDto) throws Exception;
     void delete(Long id);
 
 

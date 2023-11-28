@@ -2,10 +2,15 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.HostMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.HostRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -15,30 +20,42 @@ import java.util.concurrent.atomic.AtomicLong;
 public class HostService implements IHostService{
     @Autowired
     private HostRepository hostRepository;
+
+    @Autowired
+    private HostMapper hostMapper;
     @Override
-    public Collection<Host> getAll() {
+    public Collection<HostDTO> getAll() {
         Collection<Host> hosts = hostRepository.getAll();
-        return hosts;
+        Collection<HostDTO> hostDTOS = new ArrayList<>();
+
+        for (Host host : hosts) {
+            HostDTO hostDTO = hostMapper.toDto(host);
+            hostDTOS.add(hostDTO);
+        }
+
+        return hostDTOS;
     }
 
     @Override
-    public Host getById(Long id) {
+    public HostDTO getById(Long id) {
         Host host = hostRepository.getById(id);
-        return host;
+        return hostMapper.toDto(host);
     }
 
     @Override
-    public Host create(Host host) throws Exception {
-        if (host.getId() != null) {
+    public HostDTO create(HostDTO hostDto) throws Exception {
+        if (hostDto.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
+        Host host = hostMapper.toEntity(hostDto);
         Host savedHost = hostRepository.create(host);
-        return savedHost;
+        return hostMapper.toDto(savedHost);
     }
 
     @Override
-    public Host update(Host host) throws Exception {
-        Host hostToUpdate = getById(host.getId());
+    public HostDTO update(HostDTO hostDto) throws Exception {
+        Host host = hostMapper.toEntity(hostDto);
+        Host hostToUpdate = hostRepository.getById(host.getId());
         if (hostToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
@@ -56,11 +73,14 @@ public class HostService implements IHostService{
         hostToUpdate.setRequests(host.getRequests());
 
         Host updatedHost = hostRepository.create(hostToUpdate);
-        return updatedHost;
+        return hostMapper.toDto(updatedHost);
     }
 
     @Override
     public void delete(Long id) {
         hostRepository.delete(id);
     }
+
+
+
 }

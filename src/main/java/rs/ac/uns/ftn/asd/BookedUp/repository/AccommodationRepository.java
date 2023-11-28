@@ -20,7 +20,6 @@ public class AccommodationRepository implements IAccommodationRepository{
 
     @Override
     public Accommodation getById(Long id) {
-        System.out.println(id + "REP");
         return this.accommodations.get(id);
     }
 

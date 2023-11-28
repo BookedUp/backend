@@ -1,6 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 
 import java.util.List;
 
@@ -129,7 +129,7 @@ public class User {
         return null;
     }
 
-    public void copyValuesFromDTO(UserDetailedInDTO userDTO) {
+    public void copyValuesFromDTO(UserDTO userDTO) {
         if (userDTO != null) {
             this.firstName = userDTO.getFirstName();
             this.lastName = userDTO.getLastName();
