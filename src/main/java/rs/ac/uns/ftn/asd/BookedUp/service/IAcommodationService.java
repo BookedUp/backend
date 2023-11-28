@@ -10,4 +10,8 @@ public interface IAcommodationService {
     Accommodation create(Accommodation accommodation) throws Exception;
     Accommodation update(Accommodation accommodation) throws Exception;
     void delete(Long id);
+
+    void accept(Long id) throws Exception;
+
+    void reject(Long id) throws Exception;
 }

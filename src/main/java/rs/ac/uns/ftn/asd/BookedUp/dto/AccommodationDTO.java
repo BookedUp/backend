@@ -16,13 +16,14 @@ public class AccommodationDTO {
     private int maxGuests;
     private AccommodationType type;
     private List<DateRange> availability;
-    private double price;
+    private List<PriceChange> priceChanges;
+
+    private boolean automaticReservationAcceptance;
 
     public AccommodationDTO() {
     }
 
-    public AccommodationDTO(String name, String description, Address address, List<Amenity> amenities, List<Photo> photos, int minGuests, int maxGuests, AccommodationType type, List<DateRange> availability, double price) {
-        //this.id = id;
+    public AccommodationDTO(String name, String description, Address address, List<Amenity> amenities, List<Photo> photos, int minGuests, int maxGuests, AccommodationType type, List<DateRange> availability, List<PriceChange> priceChanges, boolean automaticReservationAcceptance) {
         this.name = name;
         this.description = description;
         this.address = address;
@@ -32,10 +33,25 @@ public class AccommodationDTO {
         this.maxGuests = maxGuests;
         this.type = type;
         this.availability = availability;
-        this.price = price;
+        this.priceChanges = priceChanges;
+        this.automaticReservationAcceptance = automaticReservationAcceptance;
     }
 
+    public List<PriceChange> getPriceChanges() {
+        return priceChanges;
+    }
 
+    public void setPriceChanges(List<PriceChange> priceChanges) {
+        this.priceChanges = priceChanges;
+    }
+
+    public boolean isAutomaticReservationAcceptance() {
+        return automaticReservationAcceptance;
+    }
+
+    public void setAutomaticReservationAcceptance(boolean automaticReservationAcceptance) {
+        this.automaticReservationAcceptance = automaticReservationAcceptance;
+    }
 
     public String getName() {
         return name;
@@ -109,13 +125,6 @@ public class AccommodationDTO {
         this.availability = availability;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 
 
 }

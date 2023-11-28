@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.repository.AccommodationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.UserRepository;
@@ -36,7 +37,6 @@ public class AccommodationService implements IAcommodationService{
 
     @Override
     public Accommodation update(Accommodation accommodation) throws Exception {
-        System.out.println(accommodation.getId() + "SEREMISE");
         Accommodation accommodationToUpdate = getById(accommodation.getId());
         if (accommodationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
@@ -68,4 +68,41 @@ public class AccommodationService implements IAcommodationService{
     public void delete(Long id) {
         accommodationRepository.delete(id);
     }
+
+    @Override
+    public void accept(Long id) throws Exception {
+        Accommodation accommodation = accommodationRepository.getById(id);
+        if (accommodation != null){
+            //TO DO
+        } else {
+            throw new Exception("Request for acceptance not found!");
+        }
+
+    }
+
+    @Override
+    public void reject(Long id) throws Exception {
+        Accommodation accommodation = accommodationRepository.getById(id);
+        if (accommodation != null){
+            //TO DO
+        } else {
+            throw new Exception("Rejection request not found!");
+        }
+    }
+
+//    public Accommodation approveAccommodation(Long accommodationId) {
+//        Accommodation accommodation = accommodationRepository.getById(accommodationId);
+//
+//        if (accommodation != null) {
+//            accommodation.setStatus(AccommodationStatus.ACTIVE);
+//
+//            try {
+//                accommodationRepository.update(accommodation);
+//                return accommodation;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
 }
