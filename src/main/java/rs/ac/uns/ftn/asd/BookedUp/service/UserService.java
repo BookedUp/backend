@@ -2,7 +2,8 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDetailedInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.UserRepository;
 
 import java.util.Collection;
@@ -53,5 +54,19 @@ public class UserService implements IUserService{
     @Override
     public void delete(Long id) {
         userRepository.delete(id);
+    }
+
+    public boolean authenticateUser(String email, String password) {
+        return true;
+    }
+
+    public boolean registerGuest(UserDetailedInDTO userDTO) {
+        //make sure to put user.role to guest
+        return true;
+    }
+
+    public boolean registerHost(UserDetailedInDTO userDTO) {
+        //make sure to put user.role to host
+        return false;
     }
 }
