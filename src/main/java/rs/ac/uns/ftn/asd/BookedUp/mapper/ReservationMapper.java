@@ -26,15 +26,15 @@ public class ReservationMapper implements MapperInterface<Reservation, Reservati
         Accommodation accommodation = accommodationMapper.toEntity(dto.getAccommodationDTO());
 
         Reservation reservation = new Reservation();
-
+        reservation.setId(dto.getId());
         reservation.setAccommodation(accommodation);
         reservation.setStartDate(dto.getStartDate());
         reservation.setEndDate(dto.getEndDate());
         reservation.setGuestsNumber(dto.getGuestsNumber());
+        reservation.setStatus(dto.getStatus());
         reservation.setCreatedTime(null);
         reservation.setTotalPrice(0);
         reservation.setGuest(new Guest());
-        reservation.setStatus(ReservationStatus.CREATED);
 
         return reservation;
     }
@@ -48,11 +48,12 @@ public class ReservationMapper implements MapperInterface<Reservation, Reservati
         AccommodationDTO accommodationDTO = accommodationMapper.toDto(entity.getAccommodation());
 
         ReservationDTO reservationDTO = new ReservationDTO();
-
+        reservationDTO.setId(entity.getId());
         reservationDTO.setAccommodationDTO(accommodationDTO);
         reservationDTO.setStartDate(entity.getStartDate());
         reservationDTO.setEndDate(entity.getEndDate());
         reservationDTO.setGuestsNumber(entity.getGuestsNumber());
+        reservationDTO.setStatus(entity.getStatus());
 
         return reservationDTO;
     }

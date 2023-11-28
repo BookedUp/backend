@@ -1,22 +1,23 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
+import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 
 import java.util.Collection;
 import java.util.List;
 
 public interface IReservationService {
-    Collection<Reservation> getAll();
+    Collection<ReservationDTO> getAll();
 
-    Reservation getById(Long id);
+    ReservationDTO getById(Long id);
 
-    Reservation create(Reservation reservation) throws Exception;
+    ReservationDTO create(ReservationDTO reservationDto) throws Exception;
 
-    Reservation update(Reservation reservation) throws Exception;
+    ReservationDTO update(ReservationDTO reservationDto) throws Exception;
 
     void delete(Long id);
 
-    List<Reservation> getOverlappingReservations(Reservation reservation);
+    List<ReservationDTO> getOverlappingReservations(ReservationDTO reservationDto);
 
-    Reservation cancelReservation(Reservation reservation) throws Exception;
+    ReservationDTO cancelReservation(ReservationDTO reservationDto) throws Exception;
 }

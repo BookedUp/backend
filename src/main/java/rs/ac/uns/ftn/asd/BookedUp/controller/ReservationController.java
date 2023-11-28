@@ -13,7 +13,6 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.ReservationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.ReservationService;
 
 import java.util.Collection;
@@ -26,48 +25,42 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-    @Autowired
-    private ReservationMapper reservationMapper;
-
     /*url: /api/reservations GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Reservation>> getReservation() {
-        Collection<Reservation> reservations = reservationService.getAll();
-        return new ResponseEntity<Collection<Reservation>>(reservations, HttpStatus.OK);
+    public ResponseEntity<Collection<ReservationDTO>> getReservations() {
+        Collection<ReservationDTO> reservationsDTO = reservationService.getAll();
+        return new ResponseEntity<Collection<ReservationDTO>>(reservationsDTO, HttpStatus.OK);
     }
 
     /* url: /api/reservations/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reservation> getReservation(@PathVariable("id") Long id) {
-        Reservation reservation = reservationService.getById(id);
+    public ResponseEntity<ReservationDTO> getReservation(@PathVariable("id") Long id) {
+        ReservationDTO reservationDto = reservationService.getById(id);
 
-        if (reservation == null) {
-            return new ResponseEntity<Reservation>(HttpStatus.NOT_FOUND);
+        if (reservationDto == null) {
+            return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Reservation>(reservation, HttpStatus.OK);
+        return new ResponseEntity<ReservationDTO>(reservationDto, HttpStatus.OK);
     }
 
     /*url: /api/reservations POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody ReservationDTO reservationDto) throws Exception {
-        Reservation reservation = null;
-
+        ReservationDTO createdReservationDto = null;
         if(!this.validateReservationDTO(reservationDto)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         try {
-
-            reservation = reservationMapper.toEntity(reservationDto);
-            reservation = reservationService.create(reservation);
+            createdReservationDto = reservationService.create(reservationDto);
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new ReservationDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(reservationMapper.toDto(reservation), HttpStatus.OK);
+        return new ResponseEntity<>(createdReservationDto, HttpStatus.OK);
     }
 
     private boolean validateReservationDTO(ReservationDTO reservationDto) {
@@ -77,18 +70,18 @@ public class ReservationController {
 
     /* url: /api/reservations/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reservation> updateReservation(@RequestBody Reservation reservation, @PathVariable Long id)
+    public ResponseEntity<ReservationDTO> updateReservation(@RequestBody ReservationDTO reservationDto, @PathVariable Long id)
             throws Exception {
-        Reservation reservationForUpdate = reservationService.getById(id);
-        reservationForUpdate.copyValues(reservation);
+        ReservationDTO reservationForUpdate = reservationService.getById(id);
+        reservationForUpdate.copyValues(reservationDto);
 
-        Reservation updatedReservation = reservationService.update(reservationForUpdate);
+        ReservationDTO updatedReservation = reservationService.update(reservationForUpdate);
 
         if (updatedReservation == null) {
-            return new ResponseEntity<Reservation>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ReservationDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<Reservation>(updatedReservation, HttpStatus.OK);
+        return new ResponseEntity<ReservationDTO>(updatedReservation, HttpStatus.OK);
     }
 
     /** url: /api/reservations/1 DELETE*/
@@ -107,36 +100,39 @@ public class ReservationController {
             @RequestParam Boolean confirmation) {
 
         try {
-            Reservation reservation = reservationService.getById(id);
+            ReservationDTO reservationDto = reservationService.getById(id);
+            ReservationDTO updatedReservationDto = null;
 
-            if (reservation == null) {
+
+            if (reservationDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            if (reservation.getAccommodation().isAutomaticReservationAcceptance()) {
+            if (reservationDto.getAccommodationDTO().isAutomaticReservationAcceptance()) {
                 // Ako je aktivirana automatska potvrda, odmah potvrdi rezervaciju
-                reservation.setStatus(ReservationStatus.ACCEPTED);
-                reservationService.update(reservation);
-                return new ResponseEntity<>(reservationMapper.toDto(reservation), HttpStatus.OK);
+                reservationDto.setStatus(ReservationStatus.ACCEPTED);
+
+                updatedReservationDto = reservationService.update(reservationDto);
+                return new ResponseEntity<>(updatedReservationDto, HttpStatus.OK);
             } else {
                 // Ako je aktivna ručna potvrda, vlasnik može prihvatiti ili odbiti rezervaciju
                 if (confirmation) {
                     // Ako je zahtev prihvaćen, automatski odbij ostale zahteve koji se preklapaju
-                    List<Reservation> overlappingReservations = reservationService.getOverlappingReservations(reservation);
-                    for (Reservation overlappingReservation : overlappingReservations) {
-                        if (!overlappingReservation.getId().equals(reservation.getId())) {
+                    List<ReservationDTO> overlappingReservations = reservationService.getOverlappingReservations(reservationDto);
+                    for (ReservationDTO overlappingReservation : overlappingReservations) {
+                        if (!overlappingReservation.getId().equals(reservationDto.getId())) {
                             overlappingReservation.setStatus(ReservationStatus.REJECTED);
                             reservationService.update(overlappingReservation);
                         }
                     }
 
-                    reservation.setStatus(ReservationStatus.ACCEPTED);
+                    reservationDto.setStatus(ReservationStatus.ACCEPTED);
                 } else {
-                    reservation.setStatus(ReservationStatus.REJECTED);
+                    reservationDto.setStatus(ReservationStatus.REJECTED);
                 }
 
-                reservationService.update(reservation);
-                return new ResponseEntity<>(reservationMapper.toDto(reservation), HttpStatus.OK);
+                updatedReservationDto = reservationService.update(reservationDto);
+                return new ResponseEntity<>(updatedReservationDto, HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,18 +144,18 @@ public class ReservationController {
     @PutMapping("/{id}/cancel")
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long id) {
         try {
-            Reservation reservation = reservationService.getById(id);
+            ReservationDTO reservationDto = reservationService.getById(id);
+            ReservationDTO updatedReservationDto = null;
 
-            if (reservation == null) {
+            if (reservationDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
             Guest guest = new Guest(); // Prilagoditi kako dobavljamo trenutnog gosta
             //implementirati proveru da li je moguce otkazati rezervaciju (cancellationDeadline)
 
-            reservation = reservationService.cancelReservation(reservation);
-            ReservationDTO canceledReservationDTO = reservationMapper.toDto(reservation);
-            return new ResponseEntity<>(canceledReservationDTO, HttpStatus.OK);
+            updatedReservationDto = reservationService.cancelReservation(reservationDto);
+            return new ResponseEntity<>(updatedReservationDto, HttpStatus.OK);
 //
         } catch (Exception e) {
             e.printStackTrace();

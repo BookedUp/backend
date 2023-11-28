@@ -1,10 +1,13 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.ReservationStatus;
 
 import java.util.Date;
 
 public class ReservationDTO {
+
+    private Long id;
 
     private AccommodationDTO accommodationDTO;
 
@@ -14,14 +17,34 @@ public class ReservationDTO {
 
     private Integer guestsNumber;
 
+    private ReservationStatus status;
+
     public ReservationDTO() {
     }
 
-    public ReservationDTO(AccommodationDTO accommodationDTO, Date startDate, Date endDate, Integer guestsNumber) {
+    public ReservationDTO(AccommodationDTO accommodationDTO, Date startDate, Date endDate, Integer guestsNumber, ReservationStatus status) {
         this.accommodationDTO = accommodationDTO;
         this.startDate = startDate;
         this.endDate = endDate;
         this.guestsNumber = guestsNumber;
+        this.status = status;
+    }
+
+    public ReservationDTO(Long id, AccommodationDTO accommodationDTO, Date startDate, Date endDate, Integer guestsNumber, ReservationStatus status) {
+        this.id = id;
+        this.accommodationDTO = accommodationDTO;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.guestsNumber = guestsNumber;
+        this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public AccommodationDTO getAccommodationDTO() {
@@ -54,5 +77,21 @@ public class ReservationDTO {
 
     public void setGuestsNumber(Integer guestsNumber) {
         this.guestsNumber = guestsNumber;
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
+    public void copyValues(ReservationDTO dto) {
+        this.accommodationDTO = dto.getAccommodationDTO();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+        this.guestsNumber = dto.getGuestsNumber();
+        this.status = dto.getStatus();
     }
 }

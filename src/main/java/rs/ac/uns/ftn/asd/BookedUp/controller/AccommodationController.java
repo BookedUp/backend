@@ -28,65 +28,63 @@ public class AccommodationController {
 
     /*url: /api/accommodations GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Accommodation>> getAccommodations() {
-        Collection<Accommodation> accommodations = accommodationService.getAll();
-        return new ResponseEntity<Collection<Accommodation>>(accommodations, HttpStatus.OK);
+    public ResponseEntity<Collection<AccommodationDTO>> getAccommodations() {
+        Collection<AccommodationDTO> accommodationDTOS = accommodationService.getAll();
+        return new ResponseEntity<Collection<AccommodationDTO>>(accommodationDTOS, HttpStatus.OK);
     }
 
     /* url: /api/accommodations/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Accommodation> getAccommodation(@PathVariable("id") Long id) {
-        Accommodation accommodation = accommodationService.getById(id);
+    public ResponseEntity<AccommodationDTO> getAccommodation(@PathVariable("id") Long id) {
+        AccommodationDTO accommodationDto = accommodationService.getById(id);
 
-        if (accommodation == null) {
-            return new ResponseEntity<Accommodation>(HttpStatus.NOT_FOUND);
+        if (accommodationDto == null) {
+            return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Accommodation>(accommodation, HttpStatus.OK);
+        return new ResponseEntity<AccommodationDTO>(accommodationDto, HttpStatus.OK);
     }
 
     /*url: /api/accommodations POST*/
     @PreAuthorize("hasRole('HOST')")
     @RequestMapping(method=RequestMethod.POST)
-    public ResponseEntity<AccommodationDTO> createAccommodation(@Valid @RequestBody AccommodationDTO createAccommodationDTO) throws Exception {
-        Accommodation accommodation = null;
+    public ResponseEntity<AccommodationDTO> createAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO) throws Exception {
+        AccommodationDTO createdAccommodationDTO = null;
 
-        if(!this.validateCreateAccommodationDTO(createAccommodationDTO)) {
+        if(!this.validateCreateAccommodationDTO(accommodationDTO)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         try {
-
-           accommodation = accommodationMapper.toEntity(createAccommodationDTO);
-           accommodation = accommodationService.create(accommodation);
+           createdAccommodationDTO = accommodationService.create(accommodationDTO);
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new AccommodationDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(accommodationMapper.toDto(accommodation), HttpStatus.OK);
+        return new ResponseEntity<>(createdAccommodationDTO, HttpStatus.OK);
     }
 
-    private boolean validateCreateAccommodationDTO(AccommodationDTO createAccommodationDTO) {
+    private boolean validateCreateAccommodationDTO(AccommodationDTO accommodationDTO) {
         return true;
     }
 
     /* url: /api/accommodations/1 PUT*/
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Accommodation> updateAccommodation(@RequestBody Accommodation accommodation, @PathVariable Long id)
+    public ResponseEntity<AccommodationDTO> updateAccommodation(@RequestBody AccommodationDTO accommodationDto, @PathVariable Long id)
             throws Exception {
-        Accommodation accommodationForUpdate = accommodationService.getById(id);
-        accommodationForUpdate.copyValues(accommodation);
+        AccommodationDTO accommodationForUpdate = accommodationService.getById(id);
+        accommodationForUpdate.copyValues(accommodationDto);
 
-        Accommodation updatedAccommodation = accommodationService.update(accommodationForUpdate);
+        AccommodationDTO updatedAccommodation = accommodationService.update(accommodationForUpdate);
 
         if (updatedAccommodation == null) {
-            return new ResponseEntity<Accommodation>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<AccommodationDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<Accommodation>(updatedAccommodation, HttpStatus.OK);
+        return new ResponseEntity<AccommodationDTO>(updatedAccommodation, HttpStatus.OK);
     }
 
     /** url: /api/accommodations/1 DELETE*/
@@ -100,17 +98,17 @@ public class AccommodationController {
     @PatchMapping("/{id}/approve")
     public ResponseEntity<AccommodationDTO> approveAccommodation(@PathVariable Long id) {
         try {
-            Accommodation accommodation = accommodationService.getById(id);
+            AccommodationDTO accommodationDto = accommodationService.getById(id);
+            AccommodationDTO approvedAccommodationDto = null;
 
-            if (accommodation == null) {
+            if (accommodationDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            accommodation.setStatus(AccommodationStatus.ACTIVE);
+            accommodationDto.setStatus(AccommodationStatus.ACTIVE);
 
-            accommodation = accommodationService.update(accommodation);
-            AccommodationDTO approvedAccommodationDTO = accommodationMapper.toDto(accommodation);
+            approvedAccommodationDto = accommodationService.update(accommodationDto);
 
-            return new ResponseEntity<>(approvedAccommodationDTO, HttpStatus.OK);
+            return new ResponseEntity<>(approvedAccommodationDto, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -121,17 +119,17 @@ public class AccommodationController {
     @PatchMapping("/{id}/reject")
     public ResponseEntity<AccommodationDTO> rejectAccommodation(@PathVariable Long id) {
         try {
-            Accommodation accommodation = accommodationService.getById(id);
+            AccommodationDTO accommodationDto = accommodationService.getById(id);
+            AccommodationDTO rejectedAccommodationDto = null;
 
-            if (accommodation == null) {
+            if (accommodationDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            accommodation.setStatus(AccommodationStatus.REJECTED);
+            accommodationDto.setStatus(AccommodationStatus.REJECTED);
 
-            accommodation = accommodationService.update(accommodation);
-            AccommodationDTO approvedAccommodationDTO = accommodationMapper.toDto(accommodation);
+            rejectedAccommodationDto = accommodationService.update(accommodationDto);
 
-            return new ResponseEntity<>(approvedAccommodationDTO, HttpStatus.OK);
+            return new ResponseEntity<>(rejectedAccommodationDto, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -143,19 +141,20 @@ public class AccommodationController {
     @RequestMapping(value = "/{id}/confirmation", method = RequestMethod.PUT)
     public ResponseEntity<AccommodationDTO> updateConfirmationType(
             @PathVariable Long id,
-            @RequestParam Boolean manualConfirmation) {
+            @RequestParam Boolean automaticConfirmation) {
 
         try {
-            Accommodation accommodation = accommodationService.getById(id);
+            AccommodationDTO accommodationDto = accommodationService.getById(id);
+            AccommodationDTO updatedAccommodationDto = null;
 
-            if (accommodation == null) {
+            if (accommodationDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            accommodation.setAutomaticReservationAcceptance(manualConfirmation);
-            accommodation = accommodationService.update(accommodation);
+            accommodationDto.setAutomaticReservationAcceptance(automaticConfirmation);
+            updatedAccommodationDto = accommodationService.update(accommodationDto);
 
-            return new ResponseEntity<>(accommodationMapper.toDto(accommodation), HttpStatus.OK);
+            return new ResponseEntity<>(updatedAccommodationDto, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
