@@ -30,6 +30,17 @@ public class Reservation {
         this.status = status;
     }
 
+    public Reservation(LocalDateTime createdTime, Date startDate, Date endDate, double totalPrice, int guestsNumber, Accommodation accommodation, Guest guest, ReservationStatus status) {
+        this.createdTime = createdTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalPrice = totalPrice;
+        this.guestsNumber = guestsNumber;
+        this.accommodation = accommodation;
+        this.guest = guest;
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

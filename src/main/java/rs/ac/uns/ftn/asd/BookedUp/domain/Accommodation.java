@@ -28,6 +28,8 @@ public class Accommodation {
     public Accommodation() {
     }
 
+
+
     public Accommodation(
             Long id, String name, Address address, String description,
             List<Amenity> amenities, List<Photo> photos,
@@ -48,6 +50,27 @@ public class Accommodation {
         this.minGuests = minGuests;
         this.maxGuests = maxGuests;
         this.type = accommodationType;
+        this.availability = availability;
+        this.price = price;
+        this.priceType = priceType;
+        this.status = status;
+        this.priceChanges = priceChanges;
+        this.cancellationDeadline = cancellationDeadline;
+        this.automaticReservationAcceptance = automaticReservationAcceptance;
+        this.reservations = reservations;
+        this.reviews = reviews;
+        this.averageRating = averageRating;
+    }
+
+    public Accommodation(String name, Address address, String description, List<Amenity> amenities, List<Photo> photos, int minGuests, int maxGuests, AccommodationType type, List<DateRange> availability, double price, PriceType priceType, AccommodationStatus status, List<PriceChange> priceChanges, int cancellationDeadline, boolean automaticReservationAcceptance, List<Reservation> reservations, List<Review> reviews, double averageRating) {
+        this.name = name;
+        this.location = address;
+        this.description = description;
+        this.amenities = amenities;
+        this.photos = photos;
+        this.minGuests = minGuests;
+        this.maxGuests = maxGuests;
+        this.type = type;
         this.availability = availability;
         this.price = price;
         this.priceType = priceType;
@@ -203,7 +226,6 @@ public class Accommodation {
 
     // Function to copy values from another Accommodation
     public void copyValues(Accommodation accommodation) {
-        this.id = accommodation.getId();
         this.name = accommodation.getName();
         this.location = accommodation.getAddress();
         this.description = accommodation.getDescription();
