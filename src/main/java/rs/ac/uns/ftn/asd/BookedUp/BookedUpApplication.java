@@ -292,6 +292,7 @@ public class BookedUpApplication {
 
 	public static Notification createNotificationToGuest(User from, User to){
 		Notification notification = new Notification();
+		notification.setId(28L);
 		notification.setFrom(from);
 		notification.setTo(to);
 		notification.setTitle("Reservation Accepted!");
@@ -303,6 +304,7 @@ public class BookedUpApplication {
 
 	public static Notification createNotificationToHost(User from, User to){
 		Notification notification = new Notification();
+		notification.setId(33L);
 		notification.setFrom(from);
 		notification.setTo(to);
 		notification.setTitle("Reservation Created!");
