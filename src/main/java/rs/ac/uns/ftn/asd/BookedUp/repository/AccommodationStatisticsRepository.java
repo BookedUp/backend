@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class AccommodationReportRepository implements IAccommodationReportRepository{
+public class AccommodationStatisticsRepository implements IAccommodationStatisticsRepository {
     private static AtomicLong counter = new AtomicLong();
     private final ConcurrentMap<Long, AccommodationStatistics> reports = new ConcurrentHashMap<>();
 

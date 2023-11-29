@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
-import rs.ac.uns.ftn.asd.BookedUp.domain.ReviewType;
-import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.enums.ReviewType;
 
 import java.time.LocalDateTime;
 

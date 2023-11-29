@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.mapper;
 import org.springframework.stereotype.Component;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,7 @@ public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
         guest.setNotifications(notifications);
         guest.setReservations(reservations);
         guest.setReviews(reviews);
+        guest.setNotificatonEnable(dto.isNotificationEnable());
 
         return guest;
     }
@@ -117,6 +119,7 @@ public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
         guestDto.setNotifications(notificationDTOS);
         guestDto.setReservations(reservationDTOS);
         guestDto.setReviews(reviewDTOS);
+        guestDto.setNotificationEnable(entity.isNotificatonEnable());
 
         return guestDto;
 

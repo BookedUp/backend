@@ -33,7 +33,7 @@ public class ReviewMapper implements MapperInterface<Review, ReviewDTO> {
         review.setHost(host);
         review.setAccommodation(accommodation);
         review.setType(dto.getType());
-        review.setReviewActive(true);
+        review.setIsReviewActive(true);
 
         return review;
 

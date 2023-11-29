@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.asd.BookedUp.domain;
+package rs.ac.uns.ftn.asd.BookedUp.enums;
 
 public enum ReviewType {
     ACCOMMODATION,

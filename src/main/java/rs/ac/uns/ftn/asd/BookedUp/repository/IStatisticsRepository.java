@@ -4,7 +4,7 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.Statistics;
 
 import java.util.Collection;
 
-public interface IReportRepository {
+public interface IStatisticsRepository {
 
     Collection<Statistics> getAll();
     Statistics create(Statistics report);

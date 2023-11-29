@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
@@ -297,7 +298,27 @@ public class GuestController {
             }
         }
 
+    @PutMapping("/{id}/notification-settings")
+    @PreAuthorize("hasRole('GUEST')")
+    public ResponseEntity<GuestDTO> updateNotificationSettings(@PathVariable Long id, @RequestParam Boolean enable) {
+        try {
+            GuestDTO guestDto = guestService.getById(id);
+            GuestDTO updatedGuestDto = null;
 
+            if (guestDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            guestDto.setNotificationEnable(enable);
+            updatedGuestDto = guestService.update(guestDto);
+
+            return new ResponseEntity<>(updatedGuestDto, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 }

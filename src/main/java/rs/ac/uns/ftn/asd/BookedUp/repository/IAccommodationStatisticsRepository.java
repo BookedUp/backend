@@ -4,7 +4,7 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationStatistics;
 
 import java.util.Collection;
 
-public interface IAccommodationReportRepository {
+public interface IAccommodationStatisticsRepository {
     Collection<AccommodationStatistics> getAll();
     AccommodationStatistics create(AccommodationStatistics report);
     AccommodationStatistics getById(Long id);

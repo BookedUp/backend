@@ -1,8 +1,17 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccommodationStatistics {
     private Long id;
     private Accommodation accommodation;
@@ -11,64 +20,6 @@ public class AccommodationStatistics {
     private int numberOfReservations;
     private List<StatisticsDetail> details;
 
-    public AccommodationStatistics() {
-    }
-    public AccommodationStatistics(Long id, Accommodation accommodation, int year, double profit, int numberOfReservations, List<StatisticsDetail> details){
-        this.id = id;
-        this.accommodation = accommodation;
-        this.year = year;
-        this.profit = profit;
-        this.numberOfReservations = numberOfReservations;
-        this.details = details;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Accommodation getAccommodation() {
-        return accommodation;
-    }
-
-    public void setAccommodation(Accommodation accommodation) {
-        this.accommodation = accommodation;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public double getProfit() {
-        return profit;
-    }
-
-    public void setProfit(double profit) {
-        this.profit = profit;
-    }
-
-    public int getNumberOfReservations() {
-        return numberOfReservations;
-    }
-
-    public void setNumberOfReservations(int numberOfReservations) {
-        this.numberOfReservations = numberOfReservations;
-    }
-
-    public List<StatisticsDetail> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<StatisticsDetail> details) {
-        this.details = details;
-    }
 
     public void copyValues(AccommodationStatistics accommodationReport) {
         this.accommodation = accommodationReport.getAccommodation();

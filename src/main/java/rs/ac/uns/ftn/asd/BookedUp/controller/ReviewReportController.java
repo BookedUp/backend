@@ -85,7 +85,7 @@ public class ReviewReportController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}/confirmation", method = RequestMethod.PUT)
     public ResponseEntity<ReviewReportDTO> updateConfirmation(
             @PathVariable Long id,

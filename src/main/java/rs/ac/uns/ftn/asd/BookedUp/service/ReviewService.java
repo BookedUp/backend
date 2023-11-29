@@ -64,7 +64,7 @@ public class ReviewService implements IReviewService {
         reviewToUpdate.setAccommodation(review.getAccommodation());
         reviewToUpdate.setHost(review.getHost());
         reviewToUpdate.setType(review.getType());
-        reviewToUpdate.setReviewActive(review.getReviewActive());
+        reviewToUpdate.setIsReviewActive(review.getIsReviewActive());
 
         Review updatedReview = reviewRepository.create(reviewToUpdate);
         return reviewMapper.toDto(updatedReview);

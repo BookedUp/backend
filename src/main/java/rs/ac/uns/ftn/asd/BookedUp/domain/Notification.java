@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.uns.ftn.asd.BookedUp.enums.NotificationType;
 
 import java.util.Date;
 
@@ -19,7 +20,6 @@ public class Notification {
     private String message;
     private Date timestamp;
     private NotificationType type;
-
     private boolean active;
 
 

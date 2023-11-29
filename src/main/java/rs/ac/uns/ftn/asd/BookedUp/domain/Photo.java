@@ -1,61 +1,20 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Photo {
     private Long id;
-    private String url; // URL or file path of the photo
-    private String caption; // Caption or description for the photo
-    private int width; // Width of the photo in pixels
-    private int height; //Height of photo in pixels
-
-    public Photo(){}
-
-    public Photo(long id, String url, String caption, int width, int height){
-        this.id = id;
-        this.url = url;
-        this.caption = caption;
-        this.width = width;
-        this.height = height;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
-
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
+    private String url;
+    private String caption;
+    private int width;
+    private int height;
 
     public void copyValues(Photo photo){
         this.id = photo.getId();
