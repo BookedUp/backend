@@ -1,12 +1,15 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 
 @Getter
 @Setter
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     private Long id;
     private String firstName;
@@ -15,24 +18,9 @@ public class UserDTO {
     private Integer phone;
     private String email;
     private String password;
-
-    // Additional fields as needed
-
-
-    public UserDTO() {
-    }
+    private boolean isBlocked;
 
     public UserDTO(String firstName, String lastName, Address address, Integer phone, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.password = password;
-    }
-
-    public UserDTO(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -48,6 +36,7 @@ public class UserDTO {
         this.phone = dto.getPhone();
         this.email = dto.getEmail();
         this.password = dto.getPassword();
+        this.isBlocked = dto.isBlocked();
     }
 }
 

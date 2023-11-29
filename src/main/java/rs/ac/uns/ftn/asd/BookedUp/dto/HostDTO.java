@@ -1,68 +1,32 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
-import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Address;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Notification;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 
 import java.util.List;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@Data
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
 public class HostDTO extends UserDTO {
 
     private double averageRating;
     private List<AccommodationDTO> properties;
-    private List<Notification> notifications;
+    private List<NotificationDTO> notifications;
     private List<ReservationDTO> requests;
+    private List<StatisticsDTO> statistics;
+    private List<AccommodationStatisticsDTO> accommodationStatistics;
 
-    public HostDTO() {
-    }
+    private boolean reservationCreatedNotificationEnabled = true;
+    private boolean cancellationNotificationEnabled = true;
+    private boolean hostRatingNotificationEnabled = true;
+    private boolean accommodationRatingNotificationEnabled = true;
 
-    public HostDTO(double averageRating, List<AccommodationDTO> properties, List<Notification> notifications, List<ReservationDTO> requests) {
-        this.averageRating = averageRating;
-        this.properties = properties;
-        this.notifications = notifications;
-        this.requests = requests;
-    }
 
-    public HostDTO(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, double averageRating, List<AccommodationDTO> properties, List<Notification> notifications, List<ReservationDTO> requests) {
-        super(id, firstName, lastName, address, phone, email, password);
-        this.averageRating = averageRating;
-        this.properties = properties;
-        this.notifications = notifications;
-        this.requests = requests;
-    }
-
-    public double getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(double averageRating) {
-        this.averageRating = averageRating;
-    }
-
-    public List<AccommodationDTO> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<AccommodationDTO> properties) {
-        this.properties = properties;
-    }
-
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
-    public List<ReservationDTO> getRequests() {
-        return requests;
-    }
-
-    public void setRequests(List<ReservationDTO> requests) {
-        this.requests = requests;
-    }
 
     public void copyValues(HostDTO dto) {
         super.copyValues(dto);
@@ -70,5 +34,11 @@ public class HostDTO extends UserDTO {
         this.requests = dto.getRequests();
         this.notifications = dto.getNotifications();
         this.averageRating = dto.getAverageRating();
+        this.reservationCreatedNotificationEnabled = dto.isReservationCreatedNotificationEnabled();
+        this.cancellationNotificationEnabled = dto.isCancellationNotificationEnabled();
+        this.hostRatingNotificationEnabled = dto.isHostRatingNotificationEnabled();
+        this.accommodationRatingNotificationEnabled = dto.isAccommodationRatingNotificationEnabled();
+        this.statistics = dto.getStatistics();
+        this.accommodationStatistics = dto.getAccommodationStatistics();
     }
 }

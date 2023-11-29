@@ -1,17 +1,18 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.Review;
+import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
 
 import java.util.Collection;
 
 public interface IReviewService {
-    Collection<Review> getAll();
+    Collection<ReviewDTO> getAll();
 
-    Review getById(Long id);
+    ReviewDTO getById(Long id);
 
-    Review create(Review review) throws Exception;
+    ReviewDTO create(ReviewDTO reviewDTO) throws Exception;
 
-    Review update(Review review) throws Exception;
+    ReviewDTO update(ReviewDTO reviewDTO) throws Exception;
 
     void delete(Long id);
 }

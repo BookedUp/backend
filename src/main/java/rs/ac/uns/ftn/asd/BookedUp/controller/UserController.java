@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +15,7 @@ import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/users")
@@ -126,5 +129,33 @@ public class UserController {
         }
 
         return new ResponseEntity<UserDTO>(updatedUser, HttpStatus.OK);
+    }
+
+    @PutMapping(
+            value = "/{id}/block",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> blockUser(@NotNull(message = "Field (id) is required")
+                                       @Positive(message = "Id must be positive")
+                                       @PathVariable(value="id") Long id) throws Exception {
+        userService.blockUser(id);
+        HashMap<String, String> response = new HashMap<>();
+        response.put("message","User is successfully blocked!");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping(
+            value = "/{id}/unblock",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> unblockUser(@NotNull(message = "Field (id) is required")
+                                         @Positive(message = "Id must be positive")
+                                         @PathVariable(value="id") Long id) throws Exception {
+        userService.unblockUser(id);
+        HashMap<String, String> response = new HashMap<>();
+        response.put("message","User is successfully unblocked!");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -61,6 +61,7 @@ public class UserService implements IUserService{
         userToUpdate.setPassword(user.getPassword());
         userToUpdate.setPhone(user.getPhone());
         userToUpdate.setRole(user.getRole());
+        userToUpdate.setBlocked(user.isBlocked());
 
         User updatedUser = userRepository.create(userToUpdate);
         return userMapper.toDto(updatedUser);
@@ -69,6 +70,33 @@ public class UserService implements IUserService{
     @Override
     public void delete(Long id) {
         userRepository.delete(id);
+    }
+
+    @Override
+    public void blockUser(Long id) throws Exception{
+        User user = userRepository.getById(id);
+        if (user == null) {
+            throw new Exception("Trazeni entitet nije pronadjen.");
+        }
+
+        user.setBlocked(true);
+
+        User updatedUser = userRepository.create(user);
+
+
+    }
+
+    @Override
+    public void unblockUser(Long id) throws Exception {
+        User user = userRepository.getById(id);
+        if (user == null) {
+            throw new Exception("Trazeni entitet nije pronadjen.");
+        }
+
+        user.setBlocked(false);
+
+        User updatedUser = userRepository.create(user);
+
     }
 
     public boolean authenticateUser(String email, String password) {

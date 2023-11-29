@@ -1,15 +1,16 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.UserReport;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserReportDTO;
 
 import java.util.Collection;
 
 public interface IUserReportService {
 
-    Collection<UserReport> getAll();
-    UserReport getById(Long id);
-    UserReport create(UserReport userReport) throws Exception;
-    UserReport update(UserReport userReport) throws Exception;
+    Collection<UserReportDTO> getAll();
+    UserReportDTO getById(Long id);
+    UserReportDTO create(UserReportDTO userReportDTO) throws Exception;
+    UserReportDTO update(UserReportDTO userReportDTO) throws Exception;
     void delete(Long id);
 
 }

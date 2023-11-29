@@ -22,6 +22,7 @@ public class UserMapper implements MapperInterface<User, UserDTO> {
         user.setPassword(dto.getPassword());
         user.setEmail(dto.getEmail());
         user.setRole(null);
+        user.setBlocked(dto.isBlocked());
 
         return user;
     }
@@ -40,6 +41,7 @@ public class UserMapper implements MapperInterface<User, UserDTO> {
         userDTO.setEmail(entity.getEmail());
         userDTO.setPassword(entity.getPassword());
         userDTO.setPhone(entity.getPhone());
+        userDTO.setBlocked(entity.isBlocked());
 
         return userDTO;
     }

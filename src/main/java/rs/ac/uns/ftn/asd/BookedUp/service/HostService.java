@@ -71,6 +71,10 @@ public class HostService implements IHostService{
         hostToUpdate.setProperties(host.getProperties());
         hostToUpdate.setNotifications(host.getNotifications());
         hostToUpdate.setRequests(host.getRequests());
+        hostToUpdate.setReservationCreatedNotificationEnabled(host.isReservationCreatedNotificationEnabled());
+        hostToUpdate.setCancellationNotificationEnabled(host.isCancellationNotificationEnabled());
+        hostToUpdate.setHostRatingNotificationEnabled(host.isHostRatingNotificationEnabled());
+        hostToUpdate.setAccommodationRatingNotificationEnabled(host.isAccommodationRatingNotificationEnabled());
 
         Host updatedHost = hostRepository.create(hostToUpdate);
         return hostMapper.toDto(updatedHost);

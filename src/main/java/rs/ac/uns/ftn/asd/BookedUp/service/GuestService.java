@@ -69,6 +69,7 @@ public class GuestService implements IGuestService{
         guestToUpdate.setFavourites(guest.getFavourites());
         guestToUpdate.setReviews(guest.getReviews());
         guestToUpdate.setNotifications(guest.getNotifications());
+        guestToUpdate.setNotificatonEnable(guest.isNotificatonEnable());
 
         Guest updatedGuest = guestRepository.create(guestToUpdate);
         return guestMapper.toDto(updatedGuest);
@@ -80,6 +81,4 @@ public class GuestService implements IGuestService{
 
     }
 
-    public void updateGuestInformation(Guest user, UserDTO userDTO) {
-    }
 }

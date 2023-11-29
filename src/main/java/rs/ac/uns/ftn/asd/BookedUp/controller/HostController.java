@@ -5,17 +5,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.HostService;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/hosts")
@@ -142,4 +144,108 @@ public class HostController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/{id}/notification-settings")
+    @PreAuthorize("hasRole('GUEST')")
+    public ResponseEntity<HostDTO> updateNotificationSettings(@PathVariable Long id, @RequestParam String notificationType, @RequestParam Boolean enable) {
+        try {
+            HostDTO hostDto = hostService.getById(id);
+            HostDTO updatedHostDto = null;
+
+            if (hostDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            switch (notificationType) {
+                case "reservationCreated":
+                    hostDto.setReservationCreatedNotificationEnabled(enable);
+                    break;
+                case "cancellation":
+                    hostDto.setCancellationNotificationEnabled(enable);
+                    break;
+                case "hostRating":
+                    hostDto.setHostRatingNotificationEnabled(enable);
+                    break;
+                case "accommodationRating":
+                    hostDto.setAccommodationRatingNotificationEnabled(enable);
+                    break;
+                default:
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            updatedHostDto = hostService.update(hostDto);
+            return new ResponseEntity<>(updatedHostDto, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+//    @GetMapping("/{id}/statistics")
+//    public ResponseEntity<List<StatisticsDTO>> getStatistics(@PathVariable Long id) {
+//        try {
+//            HostDTO hostDto = hostService.getById(id);
+//
+//            if (hostDto == null) {
+//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//            }
+//            return new ResponseEntity<>(hostDto.getStatistics(), HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
+    @GetMapping("/{id}/statistics")
+    public ResponseEntity<List<StatisticsDTO>> getStatistics(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
+
+        try {
+            HostDTO hostDto = hostService.getById(id);
+
+            if (hostDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            List<StatisticsDTO> filteredStatistics = hostDto.getStatistics().stream()
+                    .filter(statistics -> isWithinDateRange(statistics.getFromDate(), fromDate, toDate))
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(filteredStatistics, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private boolean isWithinDateRange(Date date, Date fromDate, Date toDate) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localFromDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localToDate = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return !localDate.isBefore(localFromDate) && !localDate.isAfter(localToDate);
+    }
+
+
+    @GetMapping("/{id}/{accommodation_id}/accommodation-statistics")
+    public ResponseEntity<List<AccommodationStatisticsDTO>> getAccommodationStatistics(@PathVariable Long id) {
+        try {
+            HostDTO hostDto = hostService.getById(id);
+
+            if (hostDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(hostDto.getAccommodationStatistics(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }
