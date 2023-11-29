@@ -1,17 +1,18 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.Notification;
+import rs.ac.uns.ftn.asd.BookedUp.dto.NotificationDTO;
 
 import java.util.Collection;
 
 public interface INotificationService {
-    Collection<Notification> getAll();
+    Collection<NotificationDTO> getAll();
 
-    Notification getById(Long id);
+    NotificationDTO getById(Long id);
 
-    Notification create(Notification notification) throws Exception;
+    NotificationDTO create(NotificationDTO notificationDTO) throws Exception;
 
-    Notification update(Notification notification) throws Exception;
+    NotificationDTO update(NotificationDTO notificationDTO) throws Exception;
 
     void delete(Long id);
 }

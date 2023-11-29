@@ -6,6 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Review;
+import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
 import rs.ac.uns.ftn.asd.BookedUp.service.ReviewService;
 
 import java.util.Collection;
@@ -18,44 +20,58 @@ public class ReviewController {
 
     /*url: /api/reviews GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Review>> getReviews() {
-        Collection<Review> reviews = reviewService.getAll();
-        return new ResponseEntity<Collection<Review>>(reviews, HttpStatus.OK);
+    public ResponseEntity<Collection<ReviewDTO>> getReviews() {
+        Collection<ReviewDTO> reviewDTOs = reviewService.getAll();
+        return new ResponseEntity<Collection<ReviewDTO>>(reviewDTOs, HttpStatus.OK);
     }
 
     /* url: /api/reviews/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Review> getReview(@PathVariable("id") Long id) {
-        Review review = reviewService.getById(id);
+    public ResponseEntity<ReviewDTO> getReview(@PathVariable("id") Long id) {
+        ReviewDTO reviewDTO = reviewService.getById(id);
 
-        if (review == null) {
-            return new ResponseEntity<Review>(HttpStatus.NOT_FOUND);
+        if (reviewDTO == null) {
+            return new ResponseEntity<ReviewDTO>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Review>(review, HttpStatus.OK);
+        return new ResponseEntity<ReviewDTO>(reviewDTO, HttpStatus.OK);
     }
 
     /*url: /api/reviews POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Review> createReview(@RequestBody Review review) throws Exception {
-        Review savedReview = reviewService.create(review);
-        return new ResponseEntity<Review>(savedReview, HttpStatus.CREATED);
+    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) throws Exception {
+        ReviewDTO createdReviewDto = null;
+        if(!this.validateReviewDTO(reviewDTO)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            createdReviewDto = reviewService.create(reviewDTO);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ReviewDTO(),HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(createdReviewDto, HttpStatus.OK);
     }
+
+
 
     /* url: /api/reviews/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Review> updateReview(@RequestBody Review review, @PathVariable Long id)
+    public ResponseEntity<ReviewDTO> updateReview(@RequestBody ReviewDTO reviewDTO, @PathVariable Long id)
             throws Exception {
-        Review reviewForUpdate = reviewService.getById(id);
-        reviewForUpdate.copyValues(review);
+        ReviewDTO reviewForUpdate = reviewService.getById(id);
+        reviewForUpdate.copyValues(reviewDTO);
 
-        Review updatedReview = reviewService.update(reviewForUpdate);
+        ReviewDTO updatedReview = reviewService.update(reviewForUpdate);
 
         if (updatedReview == null) {
-            return new ResponseEntity<Review>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ReviewDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<Review>(updatedReview, HttpStatus.OK);
+        return new ResponseEntity<ReviewDTO>(updatedReview, HttpStatus.OK);
     }
 
     /** url: /api/reviews/1 DELETE*/
@@ -63,5 +79,9 @@ public class ReviewController {
     public ResponseEntity<Review> deleteReview(@PathVariable("id") Long id) {
         reviewService.delete(id);
         return new ResponseEntity<Review>(HttpStatus.NO_CONTENT);
+    }
+
+    private boolean validateReviewDTO(ReviewDTO reviewDTO) {
+        return true;
     }
 }

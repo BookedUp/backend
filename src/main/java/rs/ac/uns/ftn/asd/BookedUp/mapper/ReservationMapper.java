@@ -1,0 +1,55 @@
+package rs.ac.uns.ftn.asd.BookedUp.mapper;
+
+import org.springframework.stereotype.Component;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
+
+@Component
+public class ReservationMapper implements MapperInterface<Reservation, ReservationDTO> {
+
+    AccommodationMapper accommodationMapper = new AccommodationMapper();
+
+    @Override
+    public Reservation toEntity(ReservationDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Accommodation accommodation = accommodationMapper.toEntity(dto.getAccommodationDTO());
+
+        Reservation reservation = new Reservation();
+        reservation.setId(dto.getId());
+        reservation.setAccommodation(accommodation);
+        reservation.setStartDate(dto.getStartDate());
+        reservation.setEndDate(dto.getEndDate());
+        reservation.setGuestsNumber(dto.getGuestsNumber());
+        reservation.setStatus(dto.getStatus());
+        reservation.setCreatedTime(null);
+        reservation.setTotalPrice(0);
+        reservation.setGuest(new Guest());
+
+        return reservation;
+    }
+
+    @Override
+    public ReservationDTO toDto(Reservation entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        AccommodationDTO accommodationDTO = accommodationMapper.toDto(entity.getAccommodation());
+
+        ReservationDTO reservationDTO = new ReservationDTO();
+        reservationDTO.setId(entity.getId());
+        reservationDTO.setAccommodationDTO(accommodationDTO);
+        reservationDTO.setStartDate(entity.getStartDate());
+        reservationDTO.setEndDate(entity.getEndDate());
+        reservationDTO.setGuestsNumber(entity.getGuestsNumber());
+        reservationDTO.setStatus(entity.getStatus());
+
+        return reservationDTO;
+    }
+}

@@ -3,40 +3,55 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.AccommodationRepository;
-import rs.ac.uns.ftn.asd.BookedUp.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
 public class AccommodationService implements IAcommodationService{
     @Autowired
     private AccommodationRepository accommodationRepository;
+
+    @Autowired
+    private AccommodationMapper accommodationMapper;
     @Override
-    public Collection<Accommodation> getAll() {
-        Collection<Accommodation> accommodations = accommodationRepository.getAll();
-        return accommodations;
+    public Collection<AccommodationDTO> getAll() {
+        Collection<Accommodation> accommodations = (accommodationRepository.getAll());
+        Collection<AccommodationDTO> accommodationDTOS = new ArrayList<>();
+
+        for (Accommodation accommodation : accommodations) {
+            System.out.println("STATUS: " + accommodation.getStatus());
+            AccommodationDTO accommodationDTO = accommodationMapper.toDto(accommodation);
+            accommodationDTOS.add(accommodationDTO);
+        }
+
+        return accommodationDTOS;
     }
 
     @Override
-    public Accommodation getById(Long id) {
+    public AccommodationDTO getById(Long id) {
         Accommodation accommodation = accommodationRepository.getById(id);
-        return accommodation;
+        return accommodationMapper.toDto(accommodation);
     }
 
     @Override
-    public Accommodation create(Accommodation accommodation) throws Exception {
-        if (accommodation.getId() != null) {
+    public AccommodationDTO create(AccommodationDTO accommodationDto) throws Exception {
+        if (accommodationDto.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
+        Accommodation accommodation = accommodationMapper.toEntity(accommodationDto);
         Accommodation savedAccommodation = accommodationRepository.create(accommodation);
-        return savedAccommodation;
+        return accommodationMapper.toDto(savedAccommodation);
     }
 
     @Override
-    public Accommodation update(Accommodation accommodation) throws Exception {
-        Accommodation accommodationToUpdate = getById(accommodation.getId());
+    public AccommodationDTO update(AccommodationDTO accommodationDto) throws Exception {
+        Accommodation accommodation = accommodationMapper.toEntity(accommodationDto);
+        Accommodation accommodationToUpdate = accommodationRepository.getById(accommodation.getId());
         if (accommodationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
@@ -60,11 +75,39 @@ public class AccommodationService implements IAcommodationService{
         accommodationToUpdate.setPriceChanges(accommodation.getPriceChanges());
 
         Accommodation updatedAcommodation = accommodationRepository.create(accommodationToUpdate);
-        return updatedAcommodation;
+        return accommodationMapper.toDto(updatedAcommodation);
     }
 
     @Override
     public void delete(Long id) {
         accommodationRepository.delete(id);
     }
+
+    @Override
+    public AccommodationDTO approve(AccommodationDTO accommodationDTO) throws Exception {
+        if (accommodationDTO == null) {
+            throw new Exception("Trazeni entitet nije pronadjen.");
+        }
+        Accommodation accommodation = accommodationMapper.toEntity(accommodationDTO);
+        Accommodation accommodationToUpdate = accommodationRepository.getById(accommodation.getId());
+        accommodationToUpdate.setStatus(AccommodationStatus.ACTIVE);
+        Accommodation updatedAcommodation = accommodationRepository.create(accommodationToUpdate);
+        System.out.println(updatedAcommodation.getStatus());
+        return accommodationMapper.toDto(updatedAcommodation);
+    }
+
+    @Override
+    public AccommodationDTO reject(AccommodationDTO accommodationDTO) throws  Exception{
+        if (accommodationDTO == null) {
+            throw new Exception("Trazeni entitet nije pronadjen.");
+        }
+        Accommodation accommodation = accommodationMapper.toEntity(accommodationDTO);
+        Accommodation accommodationToUpdate = accommodationRepository.getById(accommodation.getId());
+        accommodationToUpdate.setStatus(AccommodationStatus.REJECTED);
+        Accommodation updatedAcommodation = accommodationRepository.create(accommodationToUpdate);
+        System.out.println(updatedAcommodation.getStatus());
+        return accommodationMapper.toDto(updatedAcommodation);
+    }
+
+
 }
