@@ -24,8 +24,8 @@ public class HostDTO extends UserDTO {
         this.requests = requests;
     }
 
-    public HostDTO(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, double averageRating, List<AccommodationDTO> properties, List<Notification> notifications, List<ReservationDTO> requests) {
-        super(id, firstName, lastName, address, phone, email, password);
+    public HostDTO(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password,Boolean isBlocked, double averageRating, List<AccommodationDTO> properties, List<Notification> notifications, List<ReservationDTO> requests) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked);
         this.averageRating = averageRating;
         this.properties = properties;
         this.notifications = notifications;

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Report;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Statistics;
 import rs.ac.uns.ftn.asd.BookedUp.service.ReportService;
 
 import java.util.Collection;
@@ -18,15 +18,15 @@ public class ReportController {
 
     /*url: /api/report GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Report>> getReport() {
-        Collection<Report> report = reportService.getAll();
+    public ResponseEntity<Collection<Statistics>> getReport() {
+        Collection<Statistics> report = reportService.getAll();
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
     /* url: /api/report/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Report> getReport(@PathVariable("id") Long id) {
-        Report report = reportService.getById(id);
+    public ResponseEntity<Statistics> getReport(@PathVariable("id") Long id) {
+        Statistics report = reportService.getById(id);
 
         if (report == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -37,19 +37,19 @@ public class ReportController {
 
     /*url: /api/report POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Report> createReport(@RequestBody Report report) throws Exception {
-        Report savedReport = reportService.create(report);
+    public ResponseEntity<Statistics> createReport(@RequestBody Statistics report) throws Exception {
+        Statistics savedReport = reportService.create(report);
         return new ResponseEntity<>(savedReport, HttpStatus.CREATED);
     }
 
     /* url: /api/report/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Report> updateReport(@RequestBody Report report, @PathVariable Long id)
+    public ResponseEntity<Statistics> updateReport(@RequestBody Statistics report, @PathVariable Long id)
             throws Exception {
-        Report reportForUpdate = reportService.getById(id);
+        Statistics reportForUpdate = reportService.getById(id);
         reportForUpdate.copyValues(report);
 
-        Report updatedReport = reportService.update(reportForUpdate);
+        Statistics updatedReport = reportService.update(reportForUpdate);
 
         if (updatedReport == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -60,7 +60,7 @@ public class ReportController {
 
     /** url: /api/report/1 DELETE*/
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Report> deleteReport(@PathVariable("id") Long id) {
+    public ResponseEntity<Statistics> deleteReport(@PathVariable("id") Long id) {
         reportService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

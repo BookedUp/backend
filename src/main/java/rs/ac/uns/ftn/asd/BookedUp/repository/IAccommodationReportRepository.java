@@ -1,13 +1,13 @@
 package rs.ac.uns.ftn.asd.BookedUp.repository;
 
-import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationReport;
+import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationStatistics;
 
 import java.util.Collection;
 
 public interface IAccommodationReportRepository {
-    Collection<AccommodationReport> getAll();
-    AccommodationReport create(AccommodationReport report);
-    AccommodationReport getById(Long id);
-    AccommodationReport update(AccommodationReport report);
+    Collection<AccommodationStatistics> getAll();
+    AccommodationStatistics create(AccommodationStatistics report);
+    AccommodationStatistics getById(Long id);
+    AccommodationStatistics update(AccommodationStatistics report);
     void delete(Long id);
 }

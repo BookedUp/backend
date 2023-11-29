@@ -1,20 +1,19 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class AccommodationReport {
+public class AccommodationStatistics {
     private Long id;
     private Accommodation accommodation;
     private int year;
     private double profit;
     private int numberOfReservations;
-    private List<ReportDetail> details;
+    private List<StatisticsDetail> details;
 
-    public AccommodationReport() {
+    public AccommodationStatistics() {
     }
-    public AccommodationReport(Long id, Accommodation accommodation, int year, double profit, int numberOfReservations, List<ReportDetail> details){
+    public AccommodationStatistics(Long id, Accommodation accommodation, int year, double profit, int numberOfReservations, List<StatisticsDetail> details){
         this.id = id;
         this.accommodation = accommodation;
         this.year = year;
@@ -63,15 +62,15 @@ public class AccommodationReport {
         this.numberOfReservations = numberOfReservations;
     }
 
-    public List<ReportDetail> getDetails() {
+    public List<StatisticsDetail> getDetails() {
         return details;
     }
 
-    public void setDetails(List<ReportDetail> details) {
+    public void setDetails(List<StatisticsDetail> details) {
         this.details = details;
     }
 
-    public void copyValues(AccommodationReport accommodationReport) {
+    public void copyValues(AccommodationStatistics accommodationReport) {
         this.accommodation = accommodationReport.getAccommodation();
         this.year = accommodationReport.getYear();
         this.profit = accommodationReport.getProfit();

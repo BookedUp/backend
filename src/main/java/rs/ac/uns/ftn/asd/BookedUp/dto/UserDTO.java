@@ -15,6 +15,7 @@ public class UserDTO {
     private Integer phone;
     private String email;
     private String password;
+    private boolean isBlocked;
 
     // Additional fields as needed
 
@@ -31,7 +32,7 @@ public class UserDTO {
         this.password = password;
     }
 
-    public UserDTO(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password) {
+    public UserDTO(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Boolean isBlocked) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -39,6 +40,7 @@ public class UserDTO {
         this.phone = phone;
         this.email = email;
         this.password = password;
+        this.isBlocked = isBlocked;
     }
 
     public void copyValues(UserDTO dto) {
@@ -48,6 +50,7 @@ public class UserDTO {
         this.phone = dto.getPhone();
         this.email = dto.getEmail();
         this.password = dto.getPassword();
+        this.isBlocked = dto.isBlocked();
     }
 }
 

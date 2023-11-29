@@ -2,7 +2,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Report;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Statistics;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReportRepository;
 
 import java.util.Collection;
@@ -13,27 +13,27 @@ public class ReportService implements IReportService{
     private IReportRepository reportRepository;
 
     @Override
-    public Collection<Report> getAll() {
+    public Collection<Statistics> getAll() {
         return reportRepository.getAll();
     }
 
     @Override
-    public Report getById(Long id) {
+    public Statistics getById(Long id) {
         return reportRepository.getById(id);
     }
 
     @Override
-    public Report create(Report report) throws Exception {
+    public Statistics create(Statistics report) throws Exception {
         if (report.getId() != null) {
             throw new Exception("Id must be null when persisting a new entity.");
         }
-        Report savedReport = reportRepository.create(report);
+        Statistics savedReport = reportRepository.create(report);
         return savedReport;
     }
 
     @Override
-    public Report update(Report reportDetail) throws Exception {
-        Report reportToUpdate = getById(reportDetail.getId());
+    public Statistics update(Statistics reportDetail) throws Exception {
+        Statistics reportToUpdate = getById(reportDetail.getId());
         if (reportToUpdate == null) {
             throw new Exception("The requested entity was not found.");
         }
@@ -43,7 +43,7 @@ public class ReportService implements IReportService{
         reportToUpdate.setProfit(reportDetail.getProfit());
         reportToUpdate.setNumberOfReservations(reportDetail.getNumberOfReservations());
 
-        Report updatedReport = reportRepository.update(reportToUpdate);
+        Statistics updatedReport = reportRepository.update(reportToUpdate);
         return updatedReport;
     }
 

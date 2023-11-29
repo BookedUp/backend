@@ -5,7 +5,7 @@ import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import java.util.List;
 
 public class Host extends User {
-    private boolean isBlocked;
+
     private double averageRating;
     private List<Accommodation> properties;
     private List<Notification> notifications;
@@ -17,21 +17,15 @@ public class Host extends User {
 
     public Host(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role,
                 boolean isBlocked, double averageRating, List<Accommodation> properties, List<Notification> notifications, List<Reservation> requests) {
-        super(id, firstName, lastName, address, phone, email, password, role);
-        this.isBlocked = isBlocked;
+        super(id, firstName, lastName, address, phone, email, password, role,isBlocked);
+
         this.averageRating = averageRating;
         this.properties = properties;
         this.notifications = notifications;
         this.requests = requests;
     }
 
-    public boolean isBlocked() {
-        return isBlocked;
-    }
 
-    public void setBlocked(boolean blocked) {
-        isBlocked = blocked;
-    }
 
     public double getAverageRating() {
         return averageRating;
@@ -57,7 +51,6 @@ public class Host extends User {
 
     public void copyValues(Host host) {
         super.copyValues(host);
-        this.isBlocked = host.isBlocked();
         this.averageRating = host.getAverageRating();
         this.properties = host.getProperties();
         this.notifications = host.getNotifications();
@@ -66,8 +59,7 @@ public class Host extends User {
 
     public void copyValuesFromDTO(UserDTO userDTO) {
         super.copyValuesFromDTO(userDTO);
-        this.setRole(Role.ADMIN);
-        this.setBlocked(false);
+        this.setRole(Role.HOST);
         this.setAverageRating(0);
         this.setNotifications(null);
         this.setProperties(null);

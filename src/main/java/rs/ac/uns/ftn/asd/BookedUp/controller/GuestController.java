@@ -102,6 +102,8 @@ public class GuestController {
         }
     }
 
+
+
     /*url: /api/guests/1/reservations POST*/
 //    @PostMapping(value = "/{id}/reservations", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<Guest> createReservation(@RequestBody Reservation reservation, @PathVariable("id") Long id) throws Exception {
@@ -145,9 +147,19 @@ public class GuestController {
     /** REVIEWS */
     /*url: /api/guest/1/reviews GET*/
     @GetMapping(value = "/{id}/reviews", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Review>> getReviews(@PathVariable("id") Long id) {
-        Collection<Review> reviews = guestService.getById(id).getReviews();
-        return new ResponseEntity<Collection<Review>>(reviews, HttpStatus.OK);
+    public ResponseEntity<List<ReviewDTO>> getReviews(@PathVariable Long id) {
+        try {
+            GuestDTO guestDto = guestService.getById(id);
+
+            if (guestDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(guestDto.getReviews(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /*url: /api/guests/1/reviews POST*/
@@ -211,9 +223,19 @@ public class GuestController {
     /** NOTIFICATIONS */
     /*url: /api/guest/1/notifications GET*/
     @GetMapping(value = "/{id}/notifications", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Notification>> getNotifications(@PathVariable("id") Long id) {
-        Collection<Notification> notifications = guestService.getById(id).getNotifications();
-        return new ResponseEntity<Collection<Notification>>(notifications, HttpStatus.OK);
+    public ResponseEntity<Collection<NotificationDTO>> getNotifications(@PathVariable("id") Long id) {
+        try {
+            GuestDTO guestDto = guestService.getById(id);
+
+            if (guestDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(guestDto.getNotifications(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /** FAVOURITES */
@@ -235,23 +257,23 @@ public class GuestController {
     }
 
     /*url: /api/guests/1/favourites POST*/
-//    @PostMapping(value = "/{id}/favourites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Guest> createFavourite(@RequestBody Accommodation accommodation, @PathVariable("id") Long id) throws Exception {
-//        Guest guestForUpdate = guestService.getById(id);
-//        //guestForUpdate.addFavourite(accommodation);
-//        Guest savedGuest = guestService.update(guestForUpdate);
-//        return new ResponseEntity<Guest>(savedGuest, HttpStatus.CREATED);
-//    }
+    @PostMapping(value = "/{id}/favourites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GuestDTO> createFavourite(@RequestBody AccommodationDTO accommodationDTO, @PathVariable("id") Long id) throws Exception {
+        GuestDTO guestForUpdate = guestService.getById(id);
+        //guestForUpdate.addFavourite(accommodation);
+        GuestDTO savedGuest = guestService.update(guestForUpdate);
+        return new ResponseEntity<GuestDTO>(savedGuest, HttpStatus.CREATED);
+    }
 
     /** url: /api/guests/1/favourites/1 DELETE*/
-//    @DeleteMapping(value = "/{id}/favourites/{favouritesId}")
-//    public ResponseEntity<Guest> deleteFavourite(@PathVariable("id") Long id, @PathVariable("favouritesId") Long favouritesId) throws Exception {
-//
-//        Guest guestForUpdate = guestService.getById(id);
-//        guestForUpdate.getFavourites().removeIf(r -> Objects.equals(r.getId(), favouritesId));
-//        guestService.update(guestForUpdate);
-//        return new ResponseEntity<Guest>(HttpStatus.NO_CONTENT);
-//    }
+    @DeleteMapping(value = "/{id}/favourites/{favouritesId}")
+    public ResponseEntity<GuestDTO> deleteFavourite(@PathVariable("id") Long id, @PathVariable("favouritesId") Long favouritesId) throws Exception {
+
+        GuestDTO guestForUpdate = guestService.getById(id);
+        guestForUpdate.getFavourites().removeIf(r -> Objects.equals(r.getId(), favouritesId));
+        guestService.update(guestForUpdate);
+        return new ResponseEntity<GuestDTO>(HttpStatus.NO_CONTENT);
+    }
 
     @GetMapping("/{id}/requests/search")
     public ResponseEntity<?> searchReservations(

@@ -1,15 +1,15 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
-public class ReportDetail {
+public class StatisticsDetail {
     private Long id;
     private String key;
     private double profit;
     private int numberOfReservations;
 
-    public ReportDetail() {
+    public StatisticsDetail() {
     }
 
-    public ReportDetail(Long id, String key, double profit, int numberOfReservations) {
+    public StatisticsDetail(Long id, String key, double profit, int numberOfReservations) {
         this.id = id;
         this.key = key;
         this.profit = profit;
@@ -40,7 +40,7 @@ public class ReportDetail {
     public void setNumberOfReservations(int numberOfReservations) {
         this.numberOfReservations = numberOfReservations;
     }
-    public void copyValues(ReportDetail reportDetail) {
+    public void copyValues(StatisticsDetail reportDetail) {
         this.key = reportDetail.getKey();
         this.profit = reportDetail.getProfit();
         this.numberOfReservations = reportDetail.getNumberOfReservations();

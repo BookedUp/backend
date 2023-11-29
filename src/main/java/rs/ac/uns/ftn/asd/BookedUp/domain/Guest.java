@@ -5,8 +5,9 @@ import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import java.util.Date;
 import java.util.List;
 
+
 public class Guest extends User {
-    private boolean isBlocked;
+
     private List<Reservation> requests;
     private List<Reservation> reservations;
     private List<Accommodation> favourites;
@@ -20,8 +21,8 @@ public class Guest extends User {
     public Guest(
             Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role,
             boolean isBlocked, List<Reservation> requests, List<Reservation> reservations, List<Accommodation> favourites, List<Review> reviews, List<Notification> notifications) {
-        super(id, firstName, lastName, address, phone, email, password, role);
-        this.isBlocked = isBlocked;
+        super(id, firstName, lastName, address, phone, email, password, role,isBlocked);
+
         this.requests = requests;
         this.reservations = reservations;
         this.favourites = favourites;
@@ -29,13 +30,7 @@ public class Guest extends User {
         this.notifications = notifications;
     }
 
-    public boolean isBlocked() {
-        return isBlocked;
-    }
 
-    public void setBlocked(boolean blocked) {
-        isBlocked = blocked;
-    }
 
     public List<Reservation> getRequests() {return requests;}
 
@@ -58,7 +53,6 @@ public class Guest extends User {
     public void setNotifications(List<Notification> notifications) {this.notifications = notifications;}
     public void copyValues(Guest guest) {
         super.copyValues(guest);
-        this.isBlocked = guest.isBlocked();
         this.requests = guest.getRequests();
         this.reservations = guest.getReservations();
         this.favourites = guest.getFavourites();
@@ -68,8 +62,7 @@ public class Guest extends User {
 
     public void copyValuesFromDTO(UserDTO userDTO) {
         super.copyValuesFromDTO(userDTO);
-        this.setRole(Role.ADMIN);
-        this.setBlocked(false);
+        this.setRole(Role.GUEST);
         this.setRequests(null);
         this.setNotifications(null);
         this.setReservations(null);

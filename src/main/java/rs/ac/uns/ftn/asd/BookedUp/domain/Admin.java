@@ -10,9 +10,9 @@ public class Admin extends User{
     private List<Accommodation> requests;
     public Admin(){ super(); }
     public Admin(
-            Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role,
+            Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role, Boolean isBlocked,
             List<UserReport> userReports, List<ReviewReport> reviewReports, List<Accommodation> requests) {
-        super(id, firstName, lastName, address, phone, email, password, role);
+        super(id, firstName, lastName, address, phone, email, password, role,isBlocked);
         this.userReports = userReports;
         this.reviewReports = reviewReports;
         this.requests = requests;

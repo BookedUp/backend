@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Report {
+public class Statistics {
     private Long id;
     private Date fromDate;
     private Date toDate;
     private double profit;
     private int numberOfReservations;
-    private List<ReportDetail> details;
+    private List<StatisticsDetail> details;
 
-    public Report() {
+    public Statistics() {
     }
 
-    public Report(Long id, Date fromDate, Date toDate, double profit, int numberOfReservations, List<ReportDetail> details) {
+    public Statistics(Long id, Date fromDate, Date toDate, double profit, int numberOfReservations, List<StatisticsDetail> details) {
         this.id = id;
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -66,14 +66,14 @@ public class Report {
         this.numberOfReservations = numberOfReservations;
     }
 
-    public List<ReportDetail> getDetails() {
+    public List<StatisticsDetail> getDetails() {
         return details;
     }
 
-    public void setDetails(List<ReportDetail> details) {
+    public void setDetails(List<StatisticsDetail> details) {
         this.details = details;
     }
-    public void copyValues(Report report) {
+    public void copyValues(Statistics report) {
         this.fromDate = report.getFromDate();
         this.toDate = report.getToDate();
         this.profit = report.getProfit();

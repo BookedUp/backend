@@ -2,10 +2,7 @@ package rs.ac.uns.ftn.asd.BookedUp.mapper;
 
 import org.springframework.stereotype.Component;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.GuestDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +11,9 @@ import java.util.List;
 public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
 
     AccommodationMapper accommodationMapper = new AccommodationMapper();
-
+    ReviewMapper reviewMapper = new ReviewMapper();
     ReservationMapper reservationMapper = new ReservationMapper();
+    NotificationMapper notificationMapper = new NotificationMapper();
     @Override
     public Guest toEntity(GuestDTO dto) {
         if (dto == null) {
@@ -39,6 +37,18 @@ public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
                 requests.add(reservationMapper.toEntity(reservationDTO));
         }
 
+        List<Review> reviews = new ArrayList<Review>();
+        if(dto.getReviews() != null) {
+            for(ReviewDTO reviewDTO : dto.getReviews())
+                reviews.add(reviewMapper.toEntity(reviewDTO));
+        }
+
+        List<Notification> notifications = new ArrayList<Notification>();
+        if(dto.getNotifications() != null) {
+            for(NotificationDTO notificationDTO : dto.getNotifications())
+                notifications.add(notificationMapper.toEntity(notificationDTO));
+        }
+
         Guest guest = new Guest();
         guest.setId(dto.getId());
         guest.setFirstName(dto.getFirstName());
@@ -48,12 +58,12 @@ public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
         guest.setPassword(dto.getPassword());
         guest.setEmail(dto.getEmail());
         guest.setRole(Role.HOST);
-
+        guest.setBlocked(dto.isBlocked());
         guest.setFavourites(favourites);
         guest.setRequests(requests);
-        guest.setNotifications(dto.getNotifications());
+        guest.setNotifications(notifications);
         guest.setReservations(reservations);
-        guest.setReviews(dto.getReviews());
+        guest.setReviews(reviews);
 
         return guest;
     }
@@ -81,6 +91,18 @@ public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
                 requestsDTOS.add(reservationMapper.toDto(reservation));
         }
 
+        List<ReviewDTO> reviewDTOS = new ArrayList<ReviewDTO>();
+        if(entity.getReviews() != null) {
+            for(Review review : entity.getReviews())
+                reviewDTOS.add(reviewMapper.toDto(review));
+        }
+
+        List<NotificationDTO> notificationDTOS = new ArrayList<NotificationDTO>();
+        if(entity.getNotifications() != null) {
+            for(Notification notification : entity.getNotifications())
+                notificationDTOS.add(notificationMapper.toDto(notification));
+        }
+
         GuestDTO guestDto = new GuestDTO();
         guestDto.setId(entity.getId());
         guestDto.setFirstName(entity.getFirstName());
@@ -89,12 +111,12 @@ public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
         guestDto.setPhone(entity.getPhone());
         guestDto.setPassword(entity.getPassword());
         guestDto.setEmail(entity.getEmail());
-
+        guestDto.setBlocked(entity.isBlocked());
         guestDto.setFavourites(favouritesDTOS);
         guestDto.setRequests(requestsDTOS);
-        guestDto.setNotifications(entity.getNotifications());
+        guestDto.setNotifications(notificationDTOS);
         guestDto.setReservations(reservationDTOS);
-        guestDto.setReviews(guestDto.getReviews());
+        guestDto.setReviews(reviewDTOS);
 
         return guestDto;
 

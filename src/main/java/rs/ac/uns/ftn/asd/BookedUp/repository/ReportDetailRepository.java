@@ -1,7 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.repository;
 
 import org.springframework.stereotype.Repository;
-import rs.ac.uns.ftn.asd.BookedUp.domain.ReportDetail;
+import rs.ac.uns.ftn.asd.BookedUp.domain.StatisticsDetail;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,15 +11,15 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class ReportDetailRepository implements IReportDetailRepository {
     private static AtomicLong counter = new AtomicLong();
-    private final ConcurrentMap<Long, ReportDetail> reportDetails = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Long, StatisticsDetail> reportDetails = new ConcurrentHashMap<>();
 
     @Override
-    public Collection<ReportDetail> getAll() {
+    public Collection<StatisticsDetail> getAll() {
         return this.reportDetails.values();
     }
 
     @Override
-    public ReportDetail create(ReportDetail reportDetail) {
+    public StatisticsDetail create(StatisticsDetail reportDetail) {
         Long id = reportDetail.getId();
 
         if (id == null) {
@@ -32,12 +32,12 @@ public class ReportDetailRepository implements IReportDetailRepository {
     }
 
     @Override
-    public ReportDetail getById(Long id) {
+    public StatisticsDetail getById(Long id) {
         return this.reportDetails.get(id);
     }
 
     @Override
-    public ReportDetail update(ReportDetail reportDetail) {
+    public StatisticsDetail update(StatisticsDetail reportDetail) {
         Long id = reportDetail.getId();
 
         if (id != null) {

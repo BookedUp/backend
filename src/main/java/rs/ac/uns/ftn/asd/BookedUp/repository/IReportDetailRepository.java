@@ -1,15 +1,15 @@
 package rs.ac.uns.ftn.asd.BookedUp.repository;
 
-import rs.ac.uns.ftn.asd.BookedUp.domain.ReportDetail;
+import rs.ac.uns.ftn.asd.BookedUp.domain.StatisticsDetail;
 
 import java.util.Collection;
 
 public interface IReportDetailRepository {
 
-    Collection<ReportDetail> getAll();
-    ReportDetail create(ReportDetail reportDetail);
-    ReportDetail getById(Long id);
-    ReportDetail update(ReportDetail reportDetail);
+    Collection<StatisticsDetail> getAll();
+    StatisticsDetail create(StatisticsDetail reportDetail);
+    StatisticsDetail getById(Long id);
+    StatisticsDetail update(StatisticsDetail reportDetail);
     void delete(Long id);
 
 }

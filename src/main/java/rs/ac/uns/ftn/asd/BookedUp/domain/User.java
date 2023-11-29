@@ -1,8 +1,16 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 
 import java.util.List;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class User {
     private Long id;
@@ -15,85 +23,8 @@ public class User {
     private String password;
 
     private Role role;
+    private boolean isBlocked;
 
-
-    public User() {
-    }
-
-    public User(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public Integer getPhone() {
-        return phone;
-    }
-
-    public void setPhone(Integer phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
     public void copyValues(User user) {
         this.firstName = user.getFirstName();
@@ -103,6 +34,7 @@ public class User {
         this.email = user.getEmail();
         this.role = user.getRole();
         this.password = user.getPassword();
+        this.isBlocked = user.isBlocked();
     }
 
     // Method to register a new user

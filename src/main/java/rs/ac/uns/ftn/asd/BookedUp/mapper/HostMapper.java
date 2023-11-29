@@ -44,7 +44,7 @@ public class HostMapper implements MapperInterface<Host, HostDTO>{
         host.setPassword(dto.getPassword());
         host.setEmail(dto.getEmail());
         host.setRole(Role.HOST);
-
+        host.setBlocked(dto.isBlocked());
         host.setProperties(accommodations);
         host.setRequests(reservations);
         host.setNotifications(dto.getNotifications());
@@ -79,7 +79,7 @@ public class HostMapper implements MapperInterface<Host, HostDTO>{
         hostDto.setPhone(entity.getPhone());
         hostDto.setPassword(entity.getPassword());
         hostDto.setEmail(entity.getEmail());
-
+        hostDto.setBlocked(entity.isBlocked());
         hostDto.setProperties(accommodationDTOS);
         hostDto.setRequests(reservationDTOS);
         hostDto.setNotifications(entity.getNotifications());

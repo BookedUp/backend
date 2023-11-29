@@ -14,4 +14,7 @@ public interface IUserService {
     void delete(Long id);
 
 
+    void blockUser(Long id) throws Exception;
+
+    void unblockUser(Long id)throws Exception;
 }

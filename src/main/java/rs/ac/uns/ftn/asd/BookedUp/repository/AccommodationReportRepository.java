@@ -1,7 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.repository;
 
 import org.springframework.stereotype.Repository;
-import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationReport;
+import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationStatistics;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,15 +11,15 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class AccommodationReportRepository implements IAccommodationReportRepository{
     private static AtomicLong counter = new AtomicLong();
-    private final ConcurrentMap<Long, AccommodationReport> reports = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Long, AccommodationStatistics> reports = new ConcurrentHashMap<>();
 
     @Override
-    public Collection<AccommodationReport> getAll() {
+    public Collection<AccommodationStatistics> getAll() {
         return this.reports.values();
     }
 
     @Override
-    public AccommodationReport create(AccommodationReport report) {
+    public AccommodationStatistics create(AccommodationStatistics report) {
         Long id = report.getId();
 
         if (id == null) {
@@ -32,12 +32,12 @@ public class AccommodationReportRepository implements IAccommodationReportReposi
     }
 
     @Override
-    public AccommodationReport getById(Long id) {
+    public AccommodationStatistics getById(Long id) {
         return this.reports.get(id);
     }
 
     @Override
-    public AccommodationReport update(AccommodationReport report) {
+    public AccommodationStatistics update(AccommodationStatistics report) {
         Long id = report.getId();
 
         if (id != null) {
