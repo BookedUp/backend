@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
@@ -10,9 +11,16 @@ import java.util.List;
 
 @Component
 public class ReviewMapper implements MapperInterface<Review, ReviewDTO> {
-    AccommodationMapper accommodationMapper = new AccommodationMapper();
-    UserMapper userMapper = new UserMapper();
-    HostMapper hostMapper = new HostMapper();
+    @Autowired
+    AccommodationMapper accommodationMapper;
+
+    @Autowired
+    GuestMapper guestMapper;
+
+    @Autowired
+    HostMapper hostMapper;
+
+
     @Override
     public Review toEntity(ReviewDTO dto) {
 
@@ -21,12 +29,12 @@ public class ReviewMapper implements MapperInterface<Review, ReviewDTO> {
         }
 
         Accommodation accommodation = accommodationMapper.toEntity(dto.getAccommodationDTO());
-        User user = userMapper.toEntity(dto.getUserDTO());
+        Guest guest = guestMapper.toEntity(dto.getGuestDTO());
         Host host = hostMapper.toEntity(dto.getHostDTO());
 
         Review review = new Review();
         review.setId(dto.getId());
-        review.setUser(user);
+        review.setGuest(guest);
         review.setReview(dto.getReview());
         review.setComment(dto.getComment());
         review.setDate(dto.getDate());
@@ -46,12 +54,12 @@ public class ReviewMapper implements MapperInterface<Review, ReviewDTO> {
         }
 
         AccommodationDTO accommodationDTO = accommodationMapper.toDto(entity.getAccommodation());
-        UserDTO userDTO = userMapper.toDto(entity.getUser());
+        GuestDTO guestDTO = guestMapper.toDto(entity.getGuest());
         HostDTO hostDTO = hostMapper.toDto(entity.getHost());
 
         ReviewDTO reviewDTO = new ReviewDTO();
         reviewDTO.setId(entity.getId());
-        reviewDTO.setUserDTO(userDTO);
+        reviewDTO.setGuestDTO(guestDTO);
         reviewDTO.setAccommodationDTO(accommodationDTO);
         reviewDTO.setReview(entity.getReview());
         reviewDTO.setComment(entity.getComment());

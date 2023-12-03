@@ -1,17 +1,18 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.Photo;
+import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
 
 import java.util.Collection;
 
 public interface IPhotoService {
-    Collection<Photo> getAll();
+    Collection<PhotoDTO> getAll();
 
-    Photo getById(Long id);
+    PhotoDTO getById(Long id);
 
-    Photo create(Photo photo) throws Exception;
+    PhotoDTO create(PhotoDTO photoDTO) throws Exception;
 
-    Photo update(Photo photo) throws Exception;
+    PhotoDTO update(PhotoDTO photoDTO) throws Exception;
 
     void delete(Long id);
 }

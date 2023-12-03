@@ -1,30 +1,36 @@
 package rs.ac.uns.ftn.asd.BookedUp.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.dto.NotificationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Notification;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserMapper implements MapperInterface<User, UserDTO> {
 
+    @Autowired
+    NotificationMapper notificationMapper;
     @Override
     public User toEntity(UserDTO dto) {
         if (dto == null) {
             return null;
         }
 
-        User user = new User();
-        user.setId(dto.getId());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setAddress(dto.getAddress());
-        user.setPhone(dto.getPhone());
-        user.setPassword(dto.getPassword());
-        user.setEmail(dto.getEmail());
-        user.setRole(null);
-        user.setBlocked(dto.isBlocked());
+        List<Notification> notifications = new ArrayList<Notification>();
+        if(dto.getNotifications() != null) {
+            for(NotificationDTO notificationDTO : dto.getNotifications())
+                notifications.add(notificationMapper.toEntity(notificationDTO));
+        }
 
-        return user;
+
+
+
+        return new User(dto.getId(), dto.getFirstName(), dto.getLastName(), dto.getAddress(), dto.getPhone(), dto.getEmail(), dto.getPassword(), null, dto.isBlocked(), notifications);
     }
 
     @Override
@@ -33,16 +39,12 @@ public class UserMapper implements MapperInterface<User, UserDTO> {
             return null;
         }
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(entity.getId());
-        userDTO.setFirstName(entity.getFirstName());
-        userDTO.setLastName(entity.getLastName());
-        userDTO.setAddress(entity.getAddress());
-        userDTO.setEmail(entity.getEmail());
-        userDTO.setPassword(entity.getPassword());
-        userDTO.setPhone(entity.getPhone());
-        userDTO.setBlocked(entity.isBlocked());
+        List<NotificationDTO> notificationDTOS = new ArrayList<NotificationDTO>();
+        if(entity.getNotifications() != null) {
+            for(Notification notification : entity.getNotifications())
+                notificationDTOS.add(notificationMapper.toDto(notification));
+        }
 
-        return userDTO;
+        return new UserDTO(entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getAddress(), entity.getPhone(), entity.getEmail(), entity.getPassword(), entity.isBlocked(), notificationDTOS);
     }
 }

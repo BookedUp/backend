@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,9 @@ public class GuestController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<GuestDTO>> getGuests() {
         Collection<GuestDTO> guestDTOS = guestService.getAll();
+        if (guestDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<Collection<GuestDTO>>(guestDTOS, HttpStatus.OK);
     }
 
@@ -43,10 +47,6 @@ public class GuestController {
     public ResponseEntity<GuestDTO> createGuest(@RequestBody GuestDTO guestDto) throws Exception {
         GuestDTO createdGuestDTO = null;
 
-        if(!this.validateGuestDTO(guestDto)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         try {
             createdGuestDTO = guestService.create(guestDto);
 
@@ -55,7 +55,7 @@ public class GuestController {
             return new ResponseEntity<>(new GuestDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdGuestDTO, HttpStatus.OK);
+        return new ResponseEntity<>(createdGuestDTO, HttpStatus.CREATED);
     }
 
     private boolean validateGuestDTO(GuestDTO guestDto) {
@@ -64,15 +64,16 @@ public class GuestController {
 
     /* url: /api/guests/1 PUT*/
     @PutMapping("/{id}")
-    public ResponseEntity<GuestDTO> updateGuest(@PathVariable Long id, @RequestBody GuestDTO guestDto) throws Exception {
-        // Retrieve admin information based on ID
+    public ResponseEntity<GuestDTO> updateGuest(@PathVariable Long id, @Valid @RequestBody GuestDTO guestDto) throws Exception {
         GuestDTO guestForUpdate = guestService.getById(id);
+        if (guestForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         guestForUpdate.copyValues(guestDto);
-
         GuestDTO updatedGuest = guestService.update(guestForUpdate);
 
         if (updatedGuest == null) {
-            return new ResponseEntity<GuestDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<GuestDTO>(HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<GuestDTO>(updatedGuest, HttpStatus.OK);
@@ -81,7 +82,12 @@ public class GuestController {
     /** url: /api/guests/1 DELETE*/
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Guest> deleteGuest(@PathVariable("id") Long id) {
-        guestService.delete(id);
+        try {
+            guestService.delete(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<Guest>(HttpStatus.NO_CONTENT);
     }
 
@@ -95,13 +101,21 @@ public class GuestController {
             if (guestDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(guestDto.getReservations(), HttpStatus.OK);
+
+            List<ReservationDTO> reservations = guestDto.getReservations();
+
+            if (reservations.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(reservations, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 
 
 
@@ -155,13 +169,21 @@ public class GuestController {
             if (guestDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(guestDto.getReviews(), HttpStatus.OK);
+
+            List<ReviewDTO> reviews = guestDto.getReviews();
+
+            if (reviews.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(reviews, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 
     /*url: /api/guests/1/reviews POST*/
 //    @PostMapping(value = "/{id}/reviews", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -213,11 +235,17 @@ public class GuestController {
             if (guestDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(guestDto.getRequests(), HttpStatus.OK);
+            List<ReservationDTO> requests = guestDto.getRequests();
+
+            if (requests.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(requests, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -231,11 +259,17 @@ public class GuestController {
             if (guestDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(guestDto.getNotifications(), HttpStatus.OK);
+            List<NotificationDTO> notifications = guestDto.getNotifications();
+
+            if (notifications.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(notifications, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -249,11 +283,17 @@ public class GuestController {
             if (guestDto == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(guestDto.getFavourites(), HttpStatus.OK);
+            List<AccommodationDTO> favourites = guestDto.getFavourites();
+
+            if (favourites.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(favourites, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -294,31 +334,10 @@ public class GuestController {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
 
-    @PutMapping("/{id}/notification-settings")
-    @PreAuthorize("hasRole('GUEST')")
-    public ResponseEntity<GuestDTO> updateNotificationSettings(@PathVariable Long id, @RequestParam Boolean enable) {
-        try {
-            GuestDTO guestDto = guestService.getById(id);
-            GuestDTO updatedGuestDto = null;
-
-            if (guestDto == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
-            guestDto.setNotificationEnable(enable);
-            updatedGuestDto = guestService.update(guestDto);
-
-            return new ResponseEntity<>(updatedGuestDto, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
 
 
 }

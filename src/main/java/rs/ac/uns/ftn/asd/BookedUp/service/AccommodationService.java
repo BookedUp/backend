@@ -55,6 +55,7 @@ public class AccommodationService implements IAcommodationService{
         if (accommodationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
+        //accommodationToUpdate.setHost(accommodation.getHost());
         accommodationToUpdate.setName(accommodation.getName());
         accommodationToUpdate.setDescription(accommodation.getDescription());
         accommodationToUpdate.setAddress(accommodation.getAddress());

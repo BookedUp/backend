@@ -57,7 +57,7 @@ public class ReviewService implements IReviewService {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
 
-        reviewToUpdate.setUser(review.getUser());
+        reviewToUpdate.setGuest(review.getGuest());
         reviewToUpdate.setReview(review.getReview());
         reviewToUpdate.setComment(review.getComment());
         reviewToUpdate.setDate(review.getDate());

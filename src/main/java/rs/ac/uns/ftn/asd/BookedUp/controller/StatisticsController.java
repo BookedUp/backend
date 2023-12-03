@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,9 @@ public class StatisticsController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<StatisticsDTO>> getStatistics() {
         Collection<StatisticsDTO> statisticsDTOS = statisticsService.getAll();
+        if (statisticsDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(statisticsDTOS, HttpStatus.OK);
     }
 
@@ -39,11 +43,8 @@ public class StatisticsController {
 
     /*url: /api/statistics POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StatisticsDTO> createStatistics(@RequestBody StatisticsDTO statisticsDto) throws Exception {
+    public ResponseEntity<StatisticsDTO> createStatistics(@Valid @RequestBody StatisticsDTO statisticsDto) throws Exception {
         StatisticsDTO createdStatisticsDto = null;
-        if(!this.validateStatisticsDTO(statisticsDto)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
         try {
             createdStatisticsDto = statisticsService.create(statisticsDto);
@@ -53,7 +54,7 @@ public class StatisticsController {
             return new ResponseEntity<>(new StatisticsDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdStatisticsDto, HttpStatus.OK);
+        return new ResponseEntity<>(createdStatisticsDto, HttpStatus.CREATED);
     }
 
     private boolean validateStatisticsDTO(StatisticsDTO statisticsDto) {
@@ -62,15 +63,17 @@ public class StatisticsController {
 
     /* url: /api/statistics/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StatisticsDTO> updateStatistics(@RequestBody StatisticsDTO statisticsDto, @PathVariable Long id)
+    public ResponseEntity<StatisticsDTO> updateStatistics(@Valid @RequestBody StatisticsDTO statisticsDto, @PathVariable Long id)
             throws Exception {
         StatisticsDTO statisticsForUpdate = statisticsService.getById(id);
+        if (statisticsForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         statisticsForUpdate.copyValues(statisticsDto);
-
         StatisticsDTO updatedStatistics = statisticsService.update(statisticsForUpdate);
 
         if (updatedStatistics == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(updatedStatistics, HttpStatus.OK);
@@ -79,7 +82,12 @@ public class StatisticsController {
     /** url: /api/statistics/1 DELETE*/
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Statistics> deleteStatistics(@PathVariable("id") Long id) {
-        statisticsService.delete(id);
+        try {
+            statisticsService.delete(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

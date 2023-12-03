@@ -1,12 +1,13 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AdminService;
 import java.util.List;
 import java.util.Collection;
@@ -19,171 +20,220 @@ public class AdminController {
 
     /*url: /api/admins GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Admin>> getAdmins() {
-        Collection<Admin> admins = adminService.getAll();
-        return new ResponseEntity<Collection<Admin>>(admins, HttpStatus.OK);
+    public ResponseEntity<Collection<AdminDTO>> getAdmins() {
+        Collection<AdminDTO> adminDTOS = adminService.getAll();
+        if (adminDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Collection<AdminDTO>>(adminDTOS, HttpStatus.OK);
     }
 
     /* url: /api/admins/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Admin> getAdmin(@PathVariable("id") Long id) {
-        Admin admin = adminService.getById(id);
+    public ResponseEntity<AdminDTO> getAdmin(@PathVariable("id") Long id) {
+        AdminDTO adminDTO = adminService.getById(id);
 
-        if (admin == null) {
-            return new ResponseEntity<Admin>(HttpStatus.NOT_FOUND);
+        if (adminDTO == null) {
+            return new ResponseEntity<AdminDTO>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<Admin>(admin, HttpStatus.OK);
+        return new ResponseEntity<AdminDTO>(adminDTO, HttpStatus.OK);
     }
 
     /*url: /api/admins POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Admin> createAdmin(@RequestBody UserDTO userDTO) throws Exception {
-        // Convert UserDTO to Admin
-        Admin admin = new Admin();
-        admin.copyValuesFromDTO(userDTO);
+    public ResponseEntity<AdminDTO> createAdmin(@Valid @RequestBody AdminDTO adminDTO) throws Exception {
+        AdminDTO createdAdminDTO = null;
 
-        // Save the admin
-        Admin savedAdmin = adminService.create(admin);
+        try {
+            createdAdminDTO = adminService.create(adminDTO);
 
-        return new ResponseEntity<>(savedAdmin, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new AdminDTO(),HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(createdAdminDTO, HttpStatus.CREATED);
     }
 
 
     /* url: /api/admins/1 PUT*/
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateAdmin(@PathVariable Long id, @RequestBody UserDTO adminDTO) throws Exception {
-        // Retrieve admin information based on ID
-        Admin admin = adminService.getById(id);
+    public ResponseEntity<AdminDTO> updateAdmin(@PathVariable Long id, @Valid @RequestBody AdminDTO adminDTO) throws Exception {
+        AdminDTO adminForUpdate = adminService.getById(id);
+        //resurs za azuriranje nije pronadjen
+        if (adminForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        adminForUpdate.copyValues(adminDTO);
+        AdminDTO updatedAdmin = adminService.update(adminForUpdate);
 
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
+        if (updatedAdmin == null) {
+            return new ResponseEntity<AdminDTO>(HttpStatus.BAD_REQUEST);
         }
 
-        // Update admin information
-        adminService.updateAdminInformation(admin, adminDTO);
-
-        return ResponseEntity.ok("Admin information updated");
+        return new ResponseEntity<AdminDTO>(updatedAdmin, HttpStatus.OK);
     }
 
     /* url: /api/admins/1/user-reports GET*/
     @GetMapping("/{id}/user-reports")
-    public ResponseEntity<List<UserReport>> getUserReports(@PathVariable Long id) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<List<UserReportDTO>> getUserReports(@PathVariable Long id) {
+        try {
+            AdminDTO adminDTO = adminService.getById(id);
 
-        List<UserReport> userReports = admin.getUserReports();
-        return ResponseEntity.ok(userReports);
+            if (adminDTO == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            List<UserReportDTO> userReports = adminDTO.getUserReports();
+
+            if (userReports.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(userReports, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /* url: /api/admins/1/user-reports/1/accept PUT*/
-    @PutMapping("/{id}/user-reports/{reportId}/accept")
-    public ResponseEntity<String> acceptUserReport(@PathVariable Long id, @PathVariable Long reportId) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
-        }
-
-        // adminService.acceptUserReport(admin, reportId);
-
-        return ResponseEntity.ok("User report with id: " + reportId + " accepted successfully");
-    }
-
-    /* url: /api/admins/1/user-reports/1/reject PUT*/
-    @PutMapping("/{id}/user-reports/{reportId}/reject")
-    public ResponseEntity<String> rejectUserReport(@PathVariable Long id, @PathVariable Long reportId) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
-        }
-
-        // adminService.rejectUserReport(admin, reportId);
-
-        return ResponseEntity.ok("User report with id: " + reportId + " rejected successfully");
-    }
+//    @PutMapping("/{id}/user-reports/{reportId}/accept")
+//    public ResponseEntity<String> acceptUserReport(@PathVariable Long id, @PathVariable Long reportId) {
+//        Admin admin = adminService.getById(id);
+//        if (admin == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
+//        }
+//
+//        // adminService.acceptUserReport(admin, reportId);
+//
+//        return ResponseEntity.ok("User report with id: " + reportId + " accepted successfully");
+//    }
+//
+//    /* url: /api/admins/1/user-reports/1/reject PUT*/
+//    @PutMapping("/{id}/user-reports/{reportId}/reject")
+//    public ResponseEntity<String> rejectUserReport(@PathVariable Long id, @PathVariable Long reportId) {
+//        Admin admin = adminService.getById(id);
+//        if (admin == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
+//        }
+//
+//        // adminService.rejectUserReport(admin, reportId);
+//
+//        return ResponseEntity.ok("User report with id: " + reportId + " rejected successfully");
+//    }
 
     /* url: /api/admins/1/user-reports GET*/
-    @GetMapping("/{id}/review-reports")
-    public ResponseEntity<List<ReviewReport>> getReviewReports(@PathVariable Long id) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    @GetMapping(value = "/{id}/review-reports", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ReviewReportDTO>> getReviewReports(@PathVariable Long id) {
+        try {
+            AdminDTO adminDTO = adminService.getById(id);
 
-        List<ReviewReport> reviewReports = admin.getReviewReports();
-        return ResponseEntity.ok(reviewReports);
+            if (adminDTO == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            List<ReviewReportDTO> reviewReports = adminDTO.getReviewReports();
+
+            if (reviewReports.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(reviewReports, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /* url: /api/admins/1/user-reports/1/accept PUT*/
-    @PutMapping("/{id}/review-reports/{reportId}/accept")
-    public ResponseEntity<String> acceptReviewReports(@PathVariable Long id, @PathVariable Long reportId) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
-        }
-
-        // adminService.acceptReviewReport(admin, reportId);
-
-        return ResponseEntity.ok("Review report with id: " + reportId + " accepted successfully");
-    }
-
-    /* url: /api/admins/1/user-reports/1/reject PUT*/
-    @PutMapping("/{id}/review-reports/{reportId}/reject")
-    public ResponseEntity<String> rejectReviewReports(@PathVariable Long id, @PathVariable Long reportId) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
-        }
-
-        // adminService.rejectReviewReport(admin, reportId);
-
-        return ResponseEntity.ok("Review report with id: " + reportId + " rejected successfully");
-    }
+//    @PutMapping("/{id}/review-reports/{reportId}/accept")
+//    public ResponseEntity<String> acceptReviewReports(@PathVariable Long id, @PathVariable Long reportId) {
+//        Admin admin = adminService.getById(id);
+//        if (admin == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
+//        }
+//
+//        // adminService.acceptReviewReport(admin, reportId);
+//
+//        return ResponseEntity.ok("Review report with id: " + reportId + " accepted successfully");
+//    }
+//
+//    /* url: /api/admins/1/user-reports/1/reject PUT*/
+//    @PutMapping("/{id}/review-reports/{reportId}/reject")
+//    public ResponseEntity<String> rejectReviewReports(@PathVariable Long id, @PathVariable Long reportId) {
+//        Admin admin = adminService.getById(id);
+//        if (admin == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
+//        }
+//
+//        // adminService.rejectReviewReport(admin, reportId);
+//
+//        return ResponseEntity.ok("Review report with id: " + reportId + " rejected successfully");
+//    }
 
     /* url: /api/admins/1/requests GET*/
-    @GetMapping("/{id}/requests")
-    public ResponseEntity<List<Accommodation>> getRequests(@PathVariable Long id) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    @GetMapping(value = "/{id}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AccommodationDTO>> getRequests(@PathVariable Long id) {
+        try {
+            AdminDTO adminDTO = adminService.getById(id);
 
-        List<Accommodation> requests = admin.getRequests();
-        return ResponseEntity.ok(requests);
+            if (adminDTO == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            List<AccommodationDTO> requests = adminDTO.getRequests();
+
+            if (requests.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(requests, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /* url: /api/admins/1/requests/1/accept PUT*/
-    @PutMapping("/{id}/requests/{requestId}/accept")
-    public ResponseEntity<String> acceptRequests(@PathVariable Long id, @PathVariable Long requestId) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
-        }
-
-        // adminService.acceptRequest(admin, reportId);
-
-        return ResponseEntity.ok("Request with id: " + requestId + " accepted successfully");
-    }
-
-    /* url: /api/admins/1/requests/1/reject PUT*/
-    @PutMapping("/{id}/requests/{requestId}/reject")
-    public ResponseEntity<String> rejectRequests(@PathVariable Long id, @PathVariable Long requestId) {
-        Admin admin = adminService.getById(id);
-        if (admin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
-        }
-
-        // adminService.rejectRequest(admin, reportId);
-
-        return ResponseEntity.ok("Request with id: " + requestId + " rejected successfully");
-    }
+//    @PutMapping("/{id}/requests/{requestId}/accept")
+//    public ResponseEntity<String> acceptRequests(@PathVariable Long id, @PathVariable Long requestId) {
+//        Admin admin = adminService.getById(id);
+//        if (admin == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
+//        }
+//
+//        // adminService.acceptRequest(admin, reportId);
+//
+//        return ResponseEntity.ok("Request with id: " + requestId + " accepted successfully");
+//    }
+//
+//    /* url: /api/admins/1/requests/1/reject PUT*/
+//    @PutMapping("/{id}/requests/{requestId}/reject")
+//    public ResponseEntity<String> rejectRequests(@PathVariable Long id, @PathVariable Long requestId) {
+//        Admin admin = adminService.getById(id);
+//        if (admin == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin not found");
+//        }
+//
+//        // adminService.rejectRequest(admin, reportId);
+//
+//        return ResponseEntity.ok("Request with id: " + requestId + " rejected successfully");
+//    }
 
     /** url: /api/admins/1 DELETE*/
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Admin> deleteAdmin(@PathVariable("id") Long id) {
-        adminService.delete(id);
+        try {
+            adminService.delete(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<Admin>(HttpStatus.NO_CONTENT);
     }
 }

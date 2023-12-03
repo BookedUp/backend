@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,9 @@ public class UserReportController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<UserReportDTO>> getUserReports() {
         Collection<UserReportDTO> userReportDTOS = userReportService.getAll();
+        if (userReportDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<Collection<UserReportDTO>>(userReportDTOS, HttpStatus.OK);
     }
 
@@ -39,11 +43,8 @@ public class UserReportController {
 
     /*url: /api/user-reports POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserReportDTO> createUserReport(@RequestBody UserReportDTO userReportDTO) throws Exception {
+    public ResponseEntity<UserReportDTO> createUserReport(@Valid @RequestBody UserReportDTO userReportDTO) throws Exception {
         UserReportDTO createdUserReportDto = null;
-        if(!this.validateUserReportDTO(userReportDTO)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
         try {
             createdUserReportDto = userReportService.create(userReportDTO);
@@ -53,7 +54,7 @@ public class UserReportController {
             return new ResponseEntity<>(new UserReportDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdUserReportDto, HttpStatus.OK);
+        return new ResponseEntity<>(createdUserReportDto, HttpStatus.CREATED);
     }
 
     private boolean validateUserReportDTO(UserReportDTO userReportDTO) {
@@ -62,15 +63,18 @@ public class UserReportController {
 
     /* url: /api/user-reports/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserReportDTO> updateUserReport(@RequestBody UserReportDTO userReportDTO, @PathVariable Long id)
+    public ResponseEntity<UserReportDTO> updateUserReport(@Valid @RequestBody UserReportDTO userReportDTO, @PathVariable Long id)
             throws Exception {
         UserReportDTO userReportForUpdate = userReportService.getById(id);
-        userReportForUpdate.copyValues(userReportDTO);
+        if (userReportForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
+        userReportForUpdate.copyValues(userReportDTO);
         UserReportDTO updatedUserReport = userReportService.update(userReportForUpdate);
 
         if (updatedUserReport == null) {
-            return new ResponseEntity<UserReportDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<UserReportDTO>(HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<UserReportDTO>(updatedUserReport, HttpStatus.OK);
@@ -79,7 +83,12 @@ public class UserReportController {
     /** url: /api/user-reports/1 DELETE*/
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<UserReport> deleteUserReport(@PathVariable("id") Long id) {
-        userReportService.delete(id);
+        try {
+            userReportService.delete(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

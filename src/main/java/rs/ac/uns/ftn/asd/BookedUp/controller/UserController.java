@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<UserDTO>> getUsers() {
         Collection<UserDTO> userDTOS = userService.getAll();
+        if (userDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<Collection<UserDTO>>(userDTOS, HttpStatus.OK);
     }
 
@@ -44,12 +48,8 @@ public class UserController {
 
     /** url: /api/users POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDto) throws Exception {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDto) throws Exception {
         UserDTO createdUserDTO = null;
-
-        if(!this.validateUserDTO(userDto)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
         try {
             createdUserDTO = userService.create(userDto);
@@ -59,7 +59,40 @@ public class UserController {
             return new ResponseEntity<>(new UserDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdUserDTO, HttpStatus.OK);
+        return new ResponseEntity<>(createdUserDTO, HttpStatus.CREATED);
+    }
+    /** url: /api/users/1 PUT*/
+    @PreAuthorize("hasRole('GUEST')")
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDto, @PathVariable Long id)
+            throws Exception {
+        UserDTO userForUpdate = userService.getById(id);
+        if (userForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        userForUpdate.copyValues(userDto);
+        UserDTO updatedUser = userService.update(userForUpdate);
+
+        if (updatedUser == null) {
+            return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<UserDTO>(updatedUser, HttpStatus.OK);
+    }
+
+
+    /** url: /api/users/1 DELETE*/
+    @PreAuthorize("hasAnyRole('HOST', 'GUEST')")
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
+        try {
+            userService.delete(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
 
     private boolean validateUserDTO(UserDTO userDto) {
@@ -107,55 +140,4 @@ public class UserController {
         }
     }
 
-    /** url: /api/users/1 DELETE*/
-    @PreAuthorize("hasAnyRole('HOST', 'GUEST')")
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
-        userService.delete(id);
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-    }
-
-    @PreAuthorize("hasRole('GUEST')")
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto, @PathVariable Long id)
-            throws Exception {
-        UserDTO userForUpdate = userService.getById(id);
-        userForUpdate.copyValues(userDto);
-
-        UserDTO updatedUser = userService.update(userForUpdate);
-
-        if (updatedUser == null) {
-            return new ResponseEntity<UserDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        return new ResponseEntity<UserDTO>(updatedUser, HttpStatus.OK);
-    }
-
-    @PutMapping(
-            value = "/{id}/block",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> blockUser(@NotNull(message = "Field (id) is required")
-                                       @Positive(message = "Id must be positive")
-                                       @PathVariable(value="id") Long id) throws Exception {
-        userService.blockUser(id);
-        HashMap<String, String> response = new HashMap<>();
-        response.put("message","User is successfully blocked!");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PutMapping(
-            value = "/{id}/unblock",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> unblockUser(@NotNull(message = "Field (id) is required")
-                                         @Positive(message = "Id must be positive")
-                                         @PathVariable(value="id") Long id) throws Exception {
-        userService.unblockUser(id);
-        HashMap<String, String> response = new HashMap<>();
-        response.put("message","User is successfully unblocked!");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 }

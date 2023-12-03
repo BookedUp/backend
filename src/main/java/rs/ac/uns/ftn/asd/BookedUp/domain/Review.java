@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,22 +13,44 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Review {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private User user;
-    private int review;
-    private String comment;
-    private LocalDateTime date;
-    private Host host;
-    private Accommodation accommodation;
-    private ReviewType type;
-    private Boolean isReviewActive;
 
+    @ManyToOne
+    @JoinColumn(name = "guest_id")
+    private Guest guest;
+
+    @Column(unique = false, nullable = false)
+    private int review;
+
+    @Column(nullable = false)
+    private String comment;
+
+    @Column(unique = false, nullable = false)
+    private LocalDateTime date;
+
+    @ManyToOne
+    @JoinColumn(name = "host_id")
+    private Host host;
+
+    @ManyToOne
+    @JoinColumn(name = "accommodation_id")
+    private Accommodation accommodation;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReviewType type;
+
+    @Column(nullable = false)
+    private Boolean isReviewActive;
 
     public void copyValues(Review review) {
         this.id = review.getId();
-        this.user = review.getUser();
+        this.guest = review.getGuest();
         this.review = review.getReview();
         this.comment = review.getComment();
         this.date = review.getDate();

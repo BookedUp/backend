@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Data
@@ -19,15 +21,7 @@ public class UserDTO {
     private String email;
     private String password;
     private boolean isBlocked;
-
-    public UserDTO(String firstName, String lastName, Address address, Integer phone, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.password = password;
-    }
+    private List<NotificationDTO> notifications;
 
     public void copyValues(UserDTO dto) {
         this.firstName = dto.getFirstName();
@@ -37,6 +31,7 @@ public class UserDTO {
         this.email = dto.getEmail();
         this.password = dto.getPassword();
         this.isBlocked = dto.isBlocked();
+        this.notifications = dto.getNotifications();
     }
 }
 

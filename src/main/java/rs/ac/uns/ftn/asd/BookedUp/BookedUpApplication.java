@@ -29,7 +29,7 @@ public class BookedUpApplication {
 		SpringApplication.run(BookedUpApplication.class, args);
 	}
 
-//	@Bean
+//	@Bean\
 //	public CommandLineRunner demo(AdminRepository adminRepository, HostRepository hostRepository,
 //								  GuestRepository guestRepository, UserReportRepository userReportRepository,
 //								  ReviewReportRepository reviewReportRepository, ReservationRepository reservationRepository,

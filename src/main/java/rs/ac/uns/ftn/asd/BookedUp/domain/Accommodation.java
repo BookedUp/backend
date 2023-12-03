@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,29 +16,78 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Accommodation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //private Host host;
+    @Column(unique = false, nullable = false)
     private String name;
+
+    @Column(unique = false, nullable = true)
     private String description;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", unique = true)
     private Address address;
+
+    @Column(unique = false, nullable = false)
     private double price;
+
+    @Column(unique = false, nullable = true)
     private int minGuests;
+
+    @Column(unique = false, nullable = true)
     private int maxGuests;
+
+    @Column(unique = false, nullable = true)
     private int cancellationDeadline;
+
+    @Column(nullable = false)
     private boolean automaticReservationAcceptance;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AccommodationStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PriceType priceType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AccommodationType type;
+
+    @ElementCollection(targetClass = Amenity.class)
+    @CollectionTable(name = "amenities", joinColumns = @JoinColumn(name = "accommodation_id"))
+    @Enumerated(EnumType.STRING)
     private List<Amenity> amenities;
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "accommodation_id", nullable = true)
     private List<Photo> photos;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "accommodation_id", nullable = true)
     private List<DateRange> availability;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "accommodation_id", nullable = true)
     private List<PriceChange> priceChanges;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accommodation")
     private List<Reservation> reservations;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accommodation")
     private List<Review> reviews;
+
+    @Column(unique = false, nullable = true)
     private double averageRating;
 
-    // Function to copy values from another Accommodation
+
     public void copyValues(Accommodation accommodation) {
+        //this.host = accommodation.getHost();
         this.name = accommodation.getName();
         this.address = accommodation.getAddress();
         this.description = accommodation.getDescription();

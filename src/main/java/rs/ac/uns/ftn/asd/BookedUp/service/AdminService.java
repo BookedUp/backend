@@ -3,39 +3,56 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Admin;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AdminDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.GuestDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AdminMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.AdminRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
 public class AdminService implements IAdminService{
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private AdminMapper adminMapper;
     @Override
-    public Collection<Admin> getAll() {
+    public Collection<AdminDTO> getAll() {
         Collection<Admin> admins = adminRepository.getAll();
-        return admins;
+        Collection<AdminDTO> adminDTOS = new ArrayList<>();
+
+        for (Admin admin : admins) {
+            AdminDTO adminDTO = adminMapper.toDto(admin);
+            adminDTOS.add(adminDTO);
+        }
+
+        return adminDTOS;
     }
 
     @Override
-    public Admin getById(Long id) {
+    public AdminDTO getById(Long id) {
         Admin admin = adminRepository.getById(id);
-        return admin;
+        return adminMapper.toDto(admin);
     }
 
     @Override
-    public Admin create(Admin admin) throws Exception {
-        if (admin.getId() != null) {
+    public AdminDTO create(AdminDTO adminDTO) throws Exception {
+        if (adminDTO.getId() != null) {
             throw new Exception("Id must be null when persisting a new entity.");
         }
+        Admin admin = adminMapper.toEntity(adminDTO);
         Admin savedAdmin = adminRepository.create(admin);
-        return savedAdmin;
+        return adminMapper.toDto(savedAdmin);
     }
 
     @Override
-    public Admin update(Admin admin) throws Exception {
-        Admin adminToUpdate = getById(admin.getId());
+    public AdminDTO update(AdminDTO adminDTO) throws Exception {
+        Admin admin = adminMapper.toEntity(adminDTO);
+        Admin adminToUpdate = adminRepository.getById(admin.getId());
         if (adminToUpdate == null) {
             throw new Exception("The requested entity was not found.");
         }
@@ -52,7 +69,7 @@ public class AdminService implements IAdminService{
         adminToUpdate.setRequests(admin.getRequests());
 
         Admin updatedAdmin = adminRepository.create(adminToUpdate);
-        return updatedAdmin;
+        return adminMapper.toDto(updatedAdmin);
     }
 
     @Override
@@ -61,15 +78,16 @@ public class AdminService implements IAdminService{
 
     }
 
-    public void updateAdminInformation(Admin admin, UserDTO userDTO) throws Exception {
-        if (admin != null && userDTO != null) {
+    public void updateAdminInformation(AdminDTO adminDTO, UserDTO userDTO) throws Exception {
+        if (adminDTO != null && userDTO != null) {
             // Check and update specific fields based on your logic
             if (userDTO.getFirstName() != null) {
-                admin.setFirstName(userDTO.getFirstName());
+                adminDTO.setFirstName(userDTO.getFirstName());
             }
             if (userDTO.getLastName() != null) {
-                admin.setLastName(userDTO.getLastName());
+                adminDTO.setLastName(userDTO.getLastName());
             }
+            Admin admin = adminMapper.toEntity(adminDTO);
             adminRepository.update(admin);
         }
     }

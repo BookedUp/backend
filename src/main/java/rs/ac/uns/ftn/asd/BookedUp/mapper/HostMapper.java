@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.mapper;
 
+import jdk.jfr.Frequency;
 import org.springframework.stereotype.Component;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
@@ -26,15 +27,15 @@ public class HostMapper implements MapperInterface<Host, HostDTO>{
             return null;
         }
         List<Accommodation> accommodations = new ArrayList<Accommodation>();
-        if(dto.getProperties() != null) {
-            for(AccommodationDTO accommodationDTO : dto.getProperties())
+        if(dto.getAccommodations() != null) {
+            for(AccommodationDTO accommodationDTO : dto.getAccommodations())
                 accommodations.add(accommodationMapper.toEntity(accommodationDTO));
         }
 
-        List<Reservation> reservations = new ArrayList<Reservation>();
+        List<Reservation> requests = new ArrayList<Reservation>();
         if(dto.getRequests() != null) {
             for(ReservationDTO reservationDTO : dto.getRequests())
-                reservations.add(reservationMapper.toEntity(reservationDTO));
+                requests.add(reservationMapper.toEntity(reservationDTO));
         }
 
         List<Notification> notifications = new ArrayList<Notification>();
@@ -55,28 +56,7 @@ public class HostMapper implements MapperInterface<Host, HostDTO>{
                 accommodationStatistics.add(accommodationStatisticsMapper.toEntity(accommodationStatisticsDTO));
         }
 
-        Host host = new Host();
-        host.setId(dto.getId());
-        host.setFirstName(dto.getFirstName());
-        host.setLastName(dto.getLastName());
-        host.setAddress(dto.getAddress());
-        host.setPhone(dto.getPhone());
-        host.setPassword(dto.getPassword());
-        host.setEmail(dto.getEmail());
-        host.setRole(Role.HOST);
-        host.setBlocked(dto.isBlocked());
-        host.setProperties(accommodations);
-        host.setRequests(reservations);
-        host.setNotifications(notifications);
-        host.setAverageRating(dto.getAverageRating());
-        host.setReservationCreatedNotificationEnabled(dto.isReservationCreatedNotificationEnabled());
-        host.setCancellationNotificationEnabled(dto.isCancellationNotificationEnabled());
-        host.setHostRatingNotificationEnabled(dto.isHostRatingNotificationEnabled());
-        host.setAccommodationRatingNotificationEnabled(dto.isAccommodationRatingNotificationEnabled());
-        host.setStatistics(statistics);
-        host.setAccommodationStatistics(accommodationStatistics);
-
-        return host;
+        return new Host(dto.getId(), dto.getFirstName(), dto.getLastName(), dto.getAddress(), dto.getPhone(), dto.getEmail(), dto.getPassword(), Role.HOST, dto.isBlocked(), notifications, dto.getAverageRating(), accommodations, requests, statistics, accommodationStatistics, dto.isReservationCreatedNotificationEnabled(), dto.isCancellationNotificationEnabled(), dto.isHostRatingNotificationEnabled(), dto.isAccommodationRatingNotificationEnabled());
 
     }
 
@@ -86,15 +66,15 @@ public class HostMapper implements MapperInterface<Host, HostDTO>{
             return null;
         }
         List<AccommodationDTO> accommodationDTOS = new ArrayList<AccommodationDTO>();
-        if(entity.getProperties() != null) {
-            for(Accommodation accommodation : entity.getProperties())
+        if(entity.getAccommodations() != null) {
+            for(Accommodation accommodation : entity.getAccommodations())
                 accommodationDTOS.add(accommodationMapper.toDto(accommodation));
         }
 
-        List<ReservationDTO> reservationDTOS = new ArrayList<ReservationDTO>();
+        List<ReservationDTO> requestsDTOS = new ArrayList<ReservationDTO>();
         if(entity.getRequests() != null) {
             for(Reservation reservation : entity.getRequests())
-                reservationDTOS.add(reservationMapper.toDto(reservation));
+                requestsDTOS.add(reservationMapper.toDto(reservation));
         }
 
         List<NotificationDTO> notificationDTOS = new ArrayList<NotificationDTO>();
@@ -115,27 +95,7 @@ public class HostMapper implements MapperInterface<Host, HostDTO>{
                 accommodationStatisticsDTOS.add(accommodationStatisticsMapper.toDto(accommodationStatistics));
         }
 
-        HostDTO hostDto = new HostDTO();
-        hostDto.setId(entity.getId());
-        hostDto.setFirstName(entity.getFirstName());
-        hostDto.setLastName(entity.getLastName());
-        hostDto.setAddress(entity.getAddress());
-        hostDto.setPhone(entity.getPhone());
-        hostDto.setPassword(entity.getPassword());
-        hostDto.setEmail(entity.getEmail());
-        hostDto.setBlocked(entity.isBlocked());
-        hostDto.setProperties(accommodationDTOS);
-        hostDto.setRequests(reservationDTOS);
-        hostDto.setNotifications(notificationDTOS);
-        hostDto.setAverageRating(entity.getAverageRating());
-        hostDto.setReservationCreatedNotificationEnabled(entity.isReservationCreatedNotificationEnabled());
-        hostDto.setCancellationNotificationEnabled(entity.isCancellationNotificationEnabled());
-        hostDto.setHostRatingNotificationEnabled(entity.isHostRatingNotificationEnabled());
-        hostDto.setAccommodationRatingNotificationEnabled(entity.isAccommodationRatingNotificationEnabled());
-        hostDto.setStatistics(statisticsDTOS);
-        hostDto.setAccommodationStatistics(accommodationStatisticsDTOS);
-
-        return hostDto;
+        return new HostDTO(entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getAddress(), entity.getPhone(), entity.getEmail(), entity.getPassword(), entity.isBlocked(), notificationDTOS, entity.getAverageRating(), accommodationDTOS, requestsDTOS, statisticsDTOS, accommodationStatisticsDTOS, entity.isReservationCreatedNotificationEnabled(), entity.isCancellationNotificationEnabled(), entity.isHostRatingNotificationEnabled(), entity.isAccommodationRatingNotificationEnabled());
 
     }
 }

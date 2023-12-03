@@ -10,8 +10,11 @@ import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.HostMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.HostRepository;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -68,7 +71,7 @@ public class HostService implements IHostService{
         hostToUpdate.setRole(host.getRole());
         hostToUpdate.setBlocked(host.isBlocked());
         hostToUpdate.setAverageRating(host.getAverageRating());
-        hostToUpdate.setProperties(host.getProperties());
+        hostToUpdate.setAccommodations(host.getAccommodations());
         hostToUpdate.setNotifications(host.getNotifications());
         hostToUpdate.setRequests(host.getRequests());
         hostToUpdate.setReservationCreatedNotificationEnabled(host.isReservationCreatedNotificationEnabled());
@@ -85,6 +88,14 @@ public class HostService implements IHostService{
         hostRepository.delete(id);
     }
 
+    @Override
+    public boolean isWithinDateRange(Date date, Date fromDate, Date toDate) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localFromDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localToDate = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return !localDate.isBefore(localFromDate) && !localDate.isAfter(localToDate);
+    }
 
 
 }

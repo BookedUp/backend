@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,8 +24,11 @@ public class ReviewReportController {
     /*url: /api/review-reports GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewReportDTO>> getReviewReports() {
-        Collection<ReviewReportDTO> reviewReportDTOs = reviewReportService.getAll();
-        return new ResponseEntity<Collection<ReviewReportDTO>>(reviewReportDTOs, HttpStatus.OK);
+        Collection<ReviewReportDTO> reviewReportDTOS = reviewReportService.getAll();
+        if (reviewReportDTOS.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Collection<ReviewReportDTO>>(reviewReportDTOS, HttpStatus.OK);
     }
 
     /* url: /api/review-reports/1 GET*/
@@ -41,11 +45,8 @@ public class ReviewReportController {
 
     /*url: /api/review-reports POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReviewReportDTO> createReviewReport(@RequestBody ReviewReportDTO reviewReportDTO) throws Exception {
+    public ResponseEntity<ReviewReportDTO> createReviewReport(@Valid @RequestBody ReviewReportDTO reviewReportDTO) throws Exception {
         ReviewReportDTO createdReviewReportDto = null;
-        if(!this.validateReviewReportDTO(reviewReportDTO)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
         try {
             createdReviewReportDto = reviewReportService.create(reviewReportDTO);
@@ -55,7 +56,7 @@ public class ReviewReportController {
             return new ResponseEntity<>(new ReviewReportDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdReviewReportDto, HttpStatus.OK);
+        return new ResponseEntity<>(createdReviewReportDto, HttpStatus.CREATED);
     }
 
     private boolean validateReviewReportDTO(ReviewReportDTO reviewReportDTO) {
@@ -64,15 +65,17 @@ public class ReviewReportController {
 
     /* url: /api/review-reports/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReviewReportDTO> updateReviewReport(@RequestBody ReviewReportDTO reviewReportDTO, @PathVariable Long id)
+    public ResponseEntity<ReviewReportDTO> updateReviewReport(@Valid @RequestBody ReviewReportDTO reviewReportDTO, @PathVariable Long id)
             throws Exception {
         ReviewReportDTO reviewReportForUpdate = reviewReportService.getById(id);
+        if (reviewReportForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         reviewReportForUpdate.copyValues(reviewReportDTO);
-
         ReviewReportDTO updatedReviewReport = reviewReportService.update(reviewReportForUpdate);
 
         if (updatedReviewReport == null) {
-            return new ResponseEntity<ReviewReportDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ReviewReportDTO>(HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<ReviewReportDTO>(updatedReviewReport, HttpStatus.OK);
@@ -81,32 +84,13 @@ public class ReviewReportController {
     /** url: /api/review-reports/1 DELETE*/
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ReviewReport> deleteReviewReport(@PathVariable("id") Long id) {
-        reviewReportService.delete(id);
+        try {
+            reviewReportService.delete(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value = "/{id}/confirmation", method = RequestMethod.PUT)
-    public ResponseEntity<ReviewReportDTO> updateConfirmation(
-            @PathVariable Long id,
-            @RequestParam Boolean confirmation) {
-
-        try {
-            ReviewReportDTO reviewReportDTO = reviewReportService.getById(id);
-            ReviewReportDTO updatedReviewReportDTO = null;
-
-            if (reviewReportDTO == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
-            reviewReportDTO.setStatus(confirmation);
-            updatedReviewReportDTO = reviewReportService.update(reviewReportDTO);
-
-            return new ResponseEntity<>(updatedReviewReportDTO, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
 }

@@ -50,24 +50,7 @@ public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
                 notifications.add(notificationMapper.toEntity(notificationDTO));
         }
 
-        Guest guest = new Guest();
-        guest.setId(dto.getId());
-        guest.setFirstName(dto.getFirstName());
-        guest.setLastName(dto.getLastName());
-        guest.setAddress(dto.getAddress());
-        guest.setPhone(dto.getPhone());
-        guest.setPassword(dto.getPassword());
-        guest.setEmail(dto.getEmail());
-        guest.setRole(Role.HOST);
-        guest.setBlocked(dto.isBlocked());
-        guest.setFavourites(favourites);
-        guest.setRequests(requests);
-        guest.setNotifications(notifications);
-        guest.setReservations(reservations);
-        guest.setReviews(reviews);
-        guest.setNotificatonEnable(dto.isNotificationEnable());
-
-        return guest;
+        return new Guest(dto.getId(), dto.getFirstName(), dto.getLastName(), dto.getAddress(), dto.getPhone(), dto.getEmail(), dto.getPassword(), Role.GUEST, dto.isBlocked(), notifications, requests, reservations, favourites, reviews, dto.isNotificationEnable());
     }
 
     @Override
@@ -105,23 +88,7 @@ public class GuestMapper implements MapperInterface<Guest, GuestDTO>{
                 notificationDTOS.add(notificationMapper.toDto(notification));
         }
 
-        GuestDTO guestDto = new GuestDTO();
-        guestDto.setId(entity.getId());
-        guestDto.setFirstName(entity.getFirstName());
-        guestDto.setLastName(entity.getLastName());
-        guestDto.setAddress(entity.getAddress());
-        guestDto.setPhone(entity.getPhone());
-        guestDto.setPassword(entity.getPassword());
-        guestDto.setEmail(entity.getEmail());
-        guestDto.setBlocked(entity.isBlocked());
-        guestDto.setFavourites(favouritesDTOS);
-        guestDto.setRequests(requestsDTOS);
-        guestDto.setNotifications(notificationDTOS);
-        guestDto.setReservations(reservationDTOS);
-        guestDto.setReviews(reviewDTOS);
-        guestDto.setNotificationEnable(entity.isNotificatonEnable());
-
-        return guestDto;
+        return new GuestDTO(entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getAddress(), entity.getPhone(), entity.getEmail(), entity.getPassword(), entity.isBlocked(), notificationDTOS, requestsDTOS, reservationDTOS, favouritesDTOS, reviewDTOS, entity.isNotificatonEnable());
 
     }
 }

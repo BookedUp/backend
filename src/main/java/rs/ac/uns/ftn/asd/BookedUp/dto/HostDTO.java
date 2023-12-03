@@ -8,15 +8,11 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Data
-@SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 public class HostDTO extends UserDTO {
 
     private double averageRating;
-    private List<AccommodationDTO> properties;
-    private List<NotificationDTO> notifications;
+    private List<AccommodationDTO> accommodations;
+//    private List<NotificationDTO> notifications;
     private List<ReservationDTO> requests;
     private List<StatisticsDTO> statistics;
     private List<AccommodationStatisticsDTO> accommodationStatistics;
@@ -26,13 +22,24 @@ public class HostDTO extends UserDTO {
     private boolean hostRatingNotificationEnabled = true;
     private boolean accommodationRatingNotificationEnabled = true;
 
-
+    public HostDTO(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, List<NotificationDTO> notifications, double averageRating, List<AccommodationDTO> accommodations, List<ReservationDTO> requests, List<StatisticsDTO> statistics, List<AccommodationStatisticsDTO> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, notifications);
+        this.averageRating = averageRating;
+        this.accommodations = accommodations;
+        this.requests = requests;
+        this.statistics = statistics;
+        this.accommodationStatistics = accommodationStatistics;
+        this.reservationCreatedNotificationEnabled = reservationCreatedNotificationEnabled;
+        this.cancellationNotificationEnabled = cancellationNotificationEnabled;
+        this.hostRatingNotificationEnabled = hostRatingNotificationEnabled;
+        this.accommodationRatingNotificationEnabled = accommodationRatingNotificationEnabled;
+    }
 
     public void copyValues(HostDTO dto) {
         super.copyValues(dto);
-        this.properties = dto.getProperties();
+        this.accommodations = dto.getAccommodations();
         this.requests = dto.getRequests();
-        this.notifications = dto.getNotifications();
+        //this.notifications = dto.getNotifications();
         this.averageRating = dto.getAverageRating();
         this.reservationCreatedNotificationEnabled = dto.isReservationCreatedNotificationEnabled();
         this.cancellationNotificationEnabled = dto.isCancellationNotificationEnabled();
