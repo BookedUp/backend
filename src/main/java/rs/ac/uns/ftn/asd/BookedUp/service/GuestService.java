@@ -62,7 +62,7 @@ public class GuestService implements IGuestService{
         guestToUpdate.setEmail(guest.getEmail());
         guestToUpdate.setPassword(guest.getPassword());
         guestToUpdate.setPhone(guest.getPhone());
-        guestToUpdate.setRole(guest.getRole());
+        //guestToUpdate.setRole(guest.getRole());
         guestToUpdate.setBlocked(guest.isBlocked());
         guestToUpdate.setRequests(guest.getRequests());
         guestToUpdate.setReservations(guest.getReservations());
@@ -70,6 +70,11 @@ public class GuestService implements IGuestService{
         guestToUpdate.setReviews(guest.getReviews());
         guestToUpdate.setNotifications(guest.getNotifications());
         guestToUpdate.setNotificatonEnable(guest.isNotificatonEnable());
+
+        guestToUpdate.setAuthority(guest.getAuthority());
+        guestToUpdate.setProfilePicture(guest.getProfilePicture());
+        guestToUpdate.setVerified(guest.isVerified());
+        guestToUpdate.setLastPasswordResetDate(guest.getLastPasswordResetDate());
 
         Guest updatedGuest = guestRepository.create(guestToUpdate);
         return guestMapper.toDto(updatedGuest);

@@ -68,7 +68,7 @@ public class HostService implements IHostService{
         hostToUpdate.setEmail(host.getEmail());
         hostToUpdate.setPassword(host.getPassword());
         hostToUpdate.setPhone(host.getPhone());
-        hostToUpdate.setRole(host.getRole());
+        //hostToUpdate.setRole(host.getRole());
         hostToUpdate.setBlocked(host.isBlocked());
         hostToUpdate.setAverageRating(host.getAverageRating());
         hostToUpdate.setAccommodations(host.getAccommodations());
@@ -78,6 +78,11 @@ public class HostService implements IHostService{
         hostToUpdate.setCancellationNotificationEnabled(host.isCancellationNotificationEnabled());
         hostToUpdate.setHostRatingNotificationEnabled(host.isHostRatingNotificationEnabled());
         hostToUpdate.setAccommodationRatingNotificationEnabled(host.isAccommodationRatingNotificationEnabled());
+
+        hostToUpdate.setAuthority(host.getAuthority());
+        hostToUpdate.setProfilePicture(host.getProfilePicture());
+        hostToUpdate.setVerified(host.isVerified());
+        hostToUpdate.setLastPasswordResetDate(host.getLastPasswordResetDate());
 
         Host updatedHost = hostRepository.create(hostToUpdate);
         return hostMapper.toDto(updatedHost);

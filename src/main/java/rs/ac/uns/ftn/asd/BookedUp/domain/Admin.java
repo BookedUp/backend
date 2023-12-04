@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.asd.BookedUp.enums.Role;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,14 +28,14 @@ public class Admin extends User{
     @JoinColumn(name = "admin_id", nullable = true)
     private List<Accommodation> requests;
 
-    public Admin(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role, boolean isBlocked, List<Notification> notifications, List<UserReport> userReports, List<ReviewReport> reviewReports, List<Accommodation> requests) {
-        super(id, firstName, lastName, address, phone, email, password, role, isBlocked, notifications);
+    public Admin(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Notification> notifications, List<UserReport> userReports, List<ReviewReport> reviewReports, List<Accommodation> requests) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, authority, lastPasswordResetDate, notifications);
         this.userReports = userReports;
         this.reviewReports = reviewReports;
         this.requests = requests;
     }
 
-//    public void copyValues(Admin admin) {
+    //    public void copyValues(Admin admin) {
 //        super.copyValues(admin);
 //        this.userReports = admin.getUserReports();
 //        this.reviewReports = admin.getReviewReports();

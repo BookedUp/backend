@@ -60,8 +60,13 @@ public class UserService implements IUserService{
         userToUpdate.setEmail(user.getEmail());
         userToUpdate.setPassword(user.getPassword());
         userToUpdate.setPhone(user.getPhone());
-        userToUpdate.setRole(user.getRole());
+        //userToUpdate.setRole(user.getRole());
         userToUpdate.setBlocked(user.isBlocked());
+
+        userToUpdate.setAuthority(user.getAuthority());
+        userToUpdate.setProfilePicture(user.getProfilePicture());
+        userToUpdate.setVerified(user.isVerified());
+        userToUpdate.setLastPasswordResetDate(user.getLastPasswordResetDate());
 
         User updatedUser = userRepository.create(userToUpdate);
         return userMapper.toDto(updatedUser);

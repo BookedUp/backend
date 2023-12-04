@@ -63,10 +63,15 @@ public class AdminService implements IAdminService{
         adminToUpdate.setEmail(admin.getEmail());
         adminToUpdate.setPassword(admin.getPassword());
         adminToUpdate.setPhone(admin.getPhone());
-        adminToUpdate.setRole(admin.getRole());
+        //adminToUpdate.setRole(admin.getRole());
         adminToUpdate.setUserReports(admin.getUserReports());
         adminToUpdate.setReviewReports(admin.getReviewReports());
         adminToUpdate.setRequests(admin.getRequests());
+
+        adminToUpdate.setAuthority(admin.getAuthority());
+        adminToUpdate.setProfilePicture(admin.getProfilePicture());
+        adminToUpdate.setVerified(admin.isVerified());
+        adminToUpdate.setLastPasswordResetDate(admin.getLastPasswordResetDate());
 
         Admin updatedAdmin = adminRepository.create(adminToUpdate);
         return adminMapper.toDto(updatedAdmin);
