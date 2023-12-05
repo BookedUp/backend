@@ -2,11 +2,12 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReservationMapper;
-import rs.ac.uns.ftn.asd.BookedUp.repository.ReservationRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,74 +15,63 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class ReservationService implements IReservationService {
+public class ReservationService implements ServiceInterface<Reservation> {
     @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private ReservationMapper reservationMapper;
+    private IReservationRepository repository;
     @Override
-    public Collection<ReservationDTO> getAll() {
-        Collection<Reservation> reservations = (reservationRepository.getAll());
-        Collection<ReservationDTO> reservationsDTO = new ArrayList<>();
-
-        for (Reservation reservation : reservations) {
-            ReservationDTO reservationDTO = reservationMapper.toDto(reservation);
-            reservationsDTO.add(reservationDTO);
-        }
-
-        return reservationsDTO;
-
+    public Collection<Reservation> getAll() {
+        return repository.findAll();
     }
 
     @Override
-    public ReservationDTO getById(Long id) {
-        Reservation reservation =  reservationRepository.getById(id);
-        return reservationMapper.toDto(reservation);
+    public Reservation getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public ReservationDTO create(ReservationDTO reservationDto) throws Exception {
-        if (reservationDto.getId() != null) {
+    public Reservation create(Reservation reservation) throws Exception {
+        if (reservation.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
-        Reservation reservation = reservationMapper.toEntity(reservationDto);
-        Reservation createdReservation =  reservationRepository.create(reservation);
-        return reservationMapper.toDto(createdReservation);
+        return repository.save(reservation);
     }
 
     @Override
-    public ReservationDTO update(ReservationDTO reservationDto) throws Exception {
-        Reservation reservation = reservationMapper.toEntity(reservationDto);
-        Reservation reservationToUpdate = reservationRepository.getById(reservation.getId());
-        if (reservationToUpdate == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
-        }
-        reservationToUpdate.setCreatedTime(reservation.getCreatedTime());
-        reservationToUpdate.setStartDate(reservation.getStartDate());
-        reservationToUpdate.setEndDate(reservation.getEndDate());
-        reservationToUpdate.setTotalPrice(reservation.getTotalPrice());
-        reservationToUpdate.setGuestsNumber(reservation.getGuestsNumber());
-        reservationToUpdate.setAccommodation(reservation.getAccommodation());
-        reservationToUpdate.setGuest(reservation.getGuest());
-        reservationToUpdate.setStatus(reservation.getStatus());
-
-        Reservation updatedReservation = reservationRepository.create(reservationToUpdate);
-        return reservationMapper.toDto(updatedReservation);
+    public Reservation save(Reservation reservation) throws Exception {
+        return repository.save(reservation);
     }
+
+//    @Override
+//    public ReservationDTO update(ReservationDTO reservationDto) throws Exception {
+//        Reservation reservation = reservationMapper.toEntity(reservationDto);
+//        Reservation reservationToUpdate = repository.findById(reservation.getId()).orElse(null);
+//        if (reservationToUpdate == null) {
+//            throw new Exception("Trazeni entitet nije pronadjen.");
+//        }
+//        reservationToUpdate.setCreatedTime(reservation.getCreatedTime());
+//        reservationToUpdate.setStartDate(reservation.getStartDate());
+//        reservationToUpdate.setEndDate(reservation.getEndDate());
+//        reservationToUpdate.setTotalPrice(reservation.getTotalPrice());
+//        reservationToUpdate.setGuestsNumber(reservation.getGuestsNumber());
+//        reservationToUpdate.setAccommodation(reservation.getAccommodation());
+//        reservationToUpdate.setGuest(reservation.getGuest());
+//        reservationToUpdate.setStatus(reservation.getStatus());
+//
+//        Reservation updatedReservation = repository.save(reservationToUpdate);
+//        return reservationMapper.toDto(updatedReservation);
+//    }
 
     @Override
     public void delete(Long id) {
-        reservationRepository.delete(id);
+        repository.deleteById(id);
     }
 
-    @Override
     public List<ReservationDTO> getOverlappingReservations(ReservationDTO reservationDto) {
-        Reservation reservation = reservationMapper.toEntity(reservationDto);
+        Reservation reservation = ReservationMapper.toEntity(reservationDto);
         Date startDate = reservation.getStartDate();
         Date endDate = reservation.getEndDate();
 
-        List<Reservation> allReservations = new ArrayList<>(reservationRepository.getAll());
+        List<Reservation> allReservations = new ArrayList<>(repository.findAll());
 
         List<ReservationDTO> overlappingReservations = new ArrayList<>();
 
@@ -93,7 +83,7 @@ public class ReservationService implements IReservationService {
                 boolean overlap = startDate.before(existingEndDate) && existingStartDate.before(endDate);
 
                 if (overlap) {
-                    overlappingReservations.add(reservationMapper.toDto(existingReservation));
+                    overlappingReservations.add(ReservationMapper.toDto(existingReservation));
                 }
             }
         }
@@ -101,16 +91,15 @@ public class ReservationService implements IReservationService {
         return overlappingReservations;
     }
 
-    @Override
     public ReservationDTO cancelReservation(ReservationDTO reservationDto) throws Exception{
-        Reservation reservation = reservationMapper.toEntity(reservationDto);
-        Reservation reservationToUpdate = reservationRepository.getById(reservation.getId());
+        Reservation reservation = ReservationMapper.toEntity(reservationDto);
+        Reservation reservationToUpdate = repository.findById(reservation.getId()).orElse(null);
         if (reservationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
         reservationToUpdate.setStatus(ReservationStatus.CANCELLED);
-        Reservation updatedReservation = reservationRepository.create(reservationToUpdate);
-        return reservationMapper.toDto(updatedReservation);
+        Reservation updatedReservation = repository.save(reservationToUpdate);
+        return ReservationMapper.toDto(updatedReservation);
 
     }
 }

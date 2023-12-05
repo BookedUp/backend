@@ -2,70 +2,61 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Photo;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
-import rs.ac.uns.ftn.asd.BookedUp.repository.PhotoRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IPhotoRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class PhotoService implements IPhotoService{
+public class PhotoService implements ServiceInterface<Photo>{
     @Autowired
-    private PhotoRepository photoRepository;
-
-    @Autowired
-    private PhotoMapper photoMapper;
+    private IPhotoRepository repository;
     @Override
-    public Collection<PhotoDTO> getAll() {
-        Collection<Photo> photos = (photoRepository.getAll());
-        Collection<PhotoDTO> photoDTOS = new ArrayList<>();
-
-        for (Photo photo : photos) {
-            PhotoDTO photoDTO = photoMapper.toDto(photo);
-            photoDTOS.add(photoDTO);
-        }
-
-        return photoDTOS;
+    public Collection<Photo> getAll() {
+        return repository.findAll();
     }
 
     @Override
-    public PhotoDTO getById(Long id) {
-        Photo photo = photoRepository.getById(id);
-        return photoMapper.toDto(photo);
+    public Photo getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public PhotoDTO create(PhotoDTO photoDTO) throws Exception {
-        if (photoDTO.getId() != null) {
+    public Photo create(Photo photo) throws Exception {
+        if (photo.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
-        Photo photo = photoMapper.toEntity(photoDTO);
-        Photo savedPhoto = photoRepository.create(photo);
-        return photoMapper.toDto(savedPhoto);
+        return repository.save(photo);
     }
 
     @Override
-    public PhotoDTO update(PhotoDTO photoDTO) throws Exception {
-        Photo photo = photoMapper.toEntity(photoDTO);
-        Photo photoToUpdate = photoRepository.getById(photo.getId());
-        if (photoToUpdate == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
-        }
-        photoToUpdate.setUrl(photo.getUrl());
-        photoToUpdate.setCaption(photo.getCaption());
-        photoToUpdate.setWidth(photo.getWidth());
-        photoToUpdate.setHeight(photo.getHeight());
-
-        Photo updatedPhoto = photoRepository.create(photoToUpdate);
-        return photoMapper.toDto(updatedPhoto);
+    public Photo save(Photo photo) throws Exception {
+        return repository.save(photo);
     }
+
+
+//    @Override
+//    public PhotoDTO update(PhotoDTO photoDTO) throws Exception {
+//        Photo photo = photoMapper.toEntity(photoDTO);
+//        Photo photoToUpdate = repository.findById(photo.getId()).orElse(null);
+//        if (photoToUpdate == null) {
+//            throw new Exception("Trazeni entitet nije pronadjen.");
+//        }
+//        photoToUpdate.setUrl(photo.getUrl());
+//        photoToUpdate.setCaption(photo.getCaption());
+//        photoToUpdate.setWidth(photo.getWidth());
+//        photoToUpdate.setHeight(photo.getHeight());
+//
+//        Photo updatedPhoto = repository.save(photoToUpdate);
+//        return photoMapper.toDto(updatedPhoto);
+//    }
 
     @Override
     public void delete(Long id) {
-        photoRepository.delete(id);
+        repository.deleteById(id);
     }
 }

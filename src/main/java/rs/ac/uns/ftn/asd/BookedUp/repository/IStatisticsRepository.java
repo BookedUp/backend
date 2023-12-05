@@ -1,15 +1,12 @@
 package rs.ac.uns.ftn.asd.BookedUp.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Statistics;
+import rs.ac.uns.ftn.asd.BookedUp.domain.StatisticsDetail;
 
 import java.util.Collection;
 
-public interface IStatisticsRepository {
+public interface IStatisticsRepository extends JpaRepository<Statistics, Long> {
 
-    Collection<Statistics> getAll();
-    Statistics create(Statistics report);
-    Statistics getById(Long id);
-    Statistics update(Statistics report);
-    void delete(Long id);
 
 }

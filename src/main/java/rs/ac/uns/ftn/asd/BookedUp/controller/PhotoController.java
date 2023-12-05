@@ -7,11 +7,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Photo;
+import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.PhotoService;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/photo")
@@ -22,55 +27,57 @@ public class PhotoController {
     /*url: /api/photo GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<PhotoDTO>> getPhotos() {
-        Collection<PhotoDTO> photoDTOS = photoService.getAll();
-        if (photoDTOS.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(photoDTOS, HttpStatus.OK);
+        Collection<Photo> photos = photoService.getAll();
+        Collection<PhotoDTO> photosDTO = photos.stream()
+                .map(PhotoMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(photosDTO, HttpStatus.OK);
     }
 
     /* url: /api/photo/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PhotoDTO> getPhoto(@PathVariable("id") Long id) {
-        PhotoDTO photoDTO = photoService.getById(id);
+        Photo photo = photoService.getById(id);
 
-        if (photoDTO == null) {
+        if (photo == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(photoDTO, HttpStatus.OK);
+        return new ResponseEntity<>(PhotoMapper.toDto(photo), HttpStatus.OK);
     }
 
     /*url: /api/photo POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PhotoDTO> createPhoto(@Valid @RequestBody PhotoDTO photoDTO) throws Exception {
-        PhotoDTO createdPhotoDTO = null;
+        Photo createdPhoto = null;
 
         try {
-            createdPhotoDTO = photoService.create(photoDTO);
+            createdPhoto = photoService.create(PhotoMapper.toEntity(photoDTO));
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new PhotoDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdPhotoDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(PhotoMapper.toDto(createdPhoto), HttpStatus.CREATED);
     }
 
     /* url: /api/photo/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PhotoDTO> updatePhoto(@RequestBody PhotoDTO photoDTO, @PathVariable Long id)
             throws Exception {
-        PhotoDTO photoForUpdateDTO = photoService.getById(id);
-        photoForUpdateDTO.copyValues(photoDTO);
+        Photo photoForUpdate = photoService.getById(id);
 
-        PhotoDTO updatedReportDTO = photoService.update(photoForUpdateDTO);
-
-        if (updatedReportDTO == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (photoForUpdate == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        photoForUpdate.setUrl(photoDTO.getUrl());
+        photoForUpdate.setCaption(photoDTO.getCaption());
 
-        return new ResponseEntity<>(updatedReportDTO, HttpStatus.OK);
+        photoForUpdate = photoService.save(photoForUpdate);
+
+        return new ResponseEntity<>(PhotoMapper.toDto(photoForUpdate), HttpStatus.OK);
     }
 
     /** url: /api/photo/1 DELETE*/

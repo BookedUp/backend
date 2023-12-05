@@ -56,11 +56,11 @@ public class User implements UserDetails {
     private boolean isBlocked;
 
     @Column(nullable = false)
-    protected boolean verified;
+    private boolean verified;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "photo_id", nullable = true)
-    protected Photo profilePicture;
+    private Photo profilePicture;
 
     @ManyToMany(fetch = FetchType.EAGER)
     //@JoinColumn(name = "user_id", nullable = false)
@@ -95,9 +95,6 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
     }
-
-
-
 
     public void setPassword(String password) {
         Timestamp now = new Timestamp(new Date().getTime());

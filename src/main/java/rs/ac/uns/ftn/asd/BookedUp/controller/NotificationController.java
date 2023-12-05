@@ -8,13 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Notification;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.NotificationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewReportDTO;
+import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.dto.*;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.NotificationMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.NotificationService;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -25,42 +26,40 @@ public class NotificationController {
     /*url: /api/notifications GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<NotificationDTO>> getNotifications() {
-        Collection<NotificationDTO> notificationDTOS = notificationService.getAll();
-        if (notificationDTOS.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<Collection<NotificationDTO>>(notificationDTOS, HttpStatus.OK);
+        Collection<Notification> notifications = notificationService.getAll();
+        Collection<NotificationDTO> notificationsDTO = notifications.stream()
+                .map(NotificationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(notificationsDTO, HttpStatus.OK);
     }
 
     /* url: /api/notifications/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationDTO> getNotification(@PathVariable("id") Long id) {
-        NotificationDTO notificationDTO = notificationService.getById(id);
+        Notification notification = notificationService.getById(id);
 
-        if (notificationDTO == null) {
+        if (notification == null) {
             return new ResponseEntity<NotificationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<NotificationDTO>(notificationDTO, HttpStatus.OK);
+        return new ResponseEntity<NotificationDTO>(NotificationMapper.toDto(notification), HttpStatus.OK);
     }
 
     /*url: /api/notifications POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationDTO> createNotification(@RequestBody NotificationDTO notificationDTO) throws Exception {
-        NotificationDTO createdNotificationDto = null;
+        Notification createdNotification = null;
+
         try {
-            createdNotificationDto = notificationService.create(notificationDTO);
+            createdNotification = notificationService.create(NotificationMapper.toEntity(notificationDTO));
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new NotificationDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdNotificationDto, HttpStatus.CREATED);
-    }
-
-    private boolean validateNotificationDTO(NotificationDTO notificationDTO) {
-        return true;
+        return new ResponseEntity<>(NotificationMapper.toDto(createdNotification), HttpStatus.CREATED);
     }
 
 
@@ -68,19 +67,22 @@ public class NotificationController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationDTO> updateNotification(@Valid @RequestBody NotificationDTO notificationDTO, @PathVariable Long id)
             throws Exception {
-        NotificationDTO notificationForUpdate = notificationService.getById(id);
-        //resurs za azuriranje nije pronadjen
+        Notification notificationForUpdate = notificationService.getById(id);
+
         if (notificationForUpdate == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        notificationForUpdate.copyValues(notificationDTO);
-        NotificationDTO updatedNotification = notificationService.update(notificationForUpdate);
+        notificationForUpdate.setFrom(UserMapper.toEntity(notificationDTO.getFromUserDTO()));
+        notificationForUpdate.setTo(UserMapper.toEntity(notificationDTO.getToUserDTO()));
+        notificationForUpdate.setTitle(notificationDTO.getTitle());
+        notificationForUpdate.setMessage(notificationDTO.getMessage());
+        notificationForUpdate.setTimestamp(notificationDTO.getTimestamp());
+        notificationForUpdate.setType(notificationDTO.getType());
+        notificationForUpdate.setActive(notificationDTO.isActive());
 
-        if (updatedNotification == null) {
-            return new ResponseEntity<NotificationDTO>(HttpStatus.BAD_REQUEST);
-        }
+        notificationForUpdate = notificationService.save(notificationForUpdate);
 
-        return new ResponseEntity<NotificationDTO>(updatedNotification, HttpStatus.OK);
+        return new ResponseEntity<NotificationDTO>(NotificationMapper.toDto(notificationForUpdate), HttpStatus.OK);
     }
 
     /** url: /api/notifications/1 DELETE*/

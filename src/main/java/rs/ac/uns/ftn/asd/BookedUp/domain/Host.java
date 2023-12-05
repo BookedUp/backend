@@ -7,8 +7,10 @@ import lombok.Setter;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.Role;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,9 +26,6 @@ public class Host extends User {
     @JoinColumn(name = "host_id", nullable = true)
     private List<Accommodation> accommodations;
 
-//    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
-//    private List<Notification> notifications;
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "host_id", nullable = true)
     private List<Reservation> requests;
@@ -39,21 +38,21 @@ public class Host extends User {
     @JoinColumn(name = "host_id", nullable = true)
     private List<AccommodationStatistics> accommodationStatistics;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean reservationCreatedNotificationEnabled = true;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean cancellationNotificationEnabled = true;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean hostRatingNotificationEnabled = true;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean accommodationRatingNotificationEnabled = true;
 
 
-    public Host(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role, boolean isBlocked, List<Notification> notifications, double averageRating, List<Accommodation> accommodations, List<Reservation> requests, List<Statistics> statistics, List<AccommodationStatistics> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
-        super(id, firstName, lastName, address, phone, email, password, role, isBlocked, notifications);
+    public Host(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Notification> notifications, double averageRating, List<Accommodation> accommodations, List<Reservation> requests, List<Statistics> statistics, List<AccommodationStatistics> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, authority, lastPasswordResetDate, notifications);
         this.averageRating = averageRating;
         this.accommodations = accommodations;
         this.requests = requests;

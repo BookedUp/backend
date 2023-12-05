@@ -28,19 +28,19 @@ public class Admin extends User{
     @JoinColumn(name = "admin_id", nullable = true)
     private List<Accommodation> requests;
 
-    public Admin(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Notification> notifications, List<UserReport> userReports, List<ReviewReport> reviewReports, List<Accommodation> requests) {
+    public Admin(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role admin, boolean isBlocked, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Notification> notifications, List<UserReport> userReports, List<ReviewReport> reviewReports, List<Accommodation> requests) {
         super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, authority, lastPasswordResetDate, notifications);
         this.userReports = userReports;
         this.reviewReports = reviewReports;
         this.requests = requests;
     }
 
-    //    public void copyValues(Admin admin) {
-//        super.copyValues(admin);
-//        this.userReports = admin.getUserReports();
-//        this.reviewReports = admin.getReviewReports();
-//        this.requests = admin.getRequests();
-//    }
+        public void copyValues(Admin admin) {
+        super.copyValues(admin);
+        this.userReports = admin.getUserReports();
+        this.reviewReports = admin.getReviewReports();
+        this.requests = admin.getRequests();
+    }
 
 
 }

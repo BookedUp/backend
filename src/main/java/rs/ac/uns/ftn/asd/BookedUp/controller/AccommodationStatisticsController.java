@@ -6,78 +6,91 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationStatistics;
+import rs.ac.uns.ftn.asd.BookedUp.domain.StatisticsDetail;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationStatisticsDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.StatisticsDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.StatisticsDetailDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationStatisticsMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.StatisticsDetailMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationStatisticsService;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/accommodation-report")
 public class AccommodationStatisticsController {
     @Autowired
-    private AccommodationStatisticsService statisticsService;
+    private AccommodationStatisticsService service;
 
     /*url: /api/accommodation-statistics GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationStatisticsDTO>> getStatistics() {
-        Collection<AccommodationStatisticsDTO> statisticsDTOS = statisticsService.getAll();
-        if (statisticsDTOS.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(statisticsDTOS, HttpStatus.OK);
+        Collection<AccommodationStatistics> statistics = service.getAll();
+        Collection<AccommodationStatisticsDTO> statisticsDTO = statistics.stream()
+                .map(AccommodationStatisticsMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(statisticsDTO, HttpStatus.OK);
     }
 
     /* url: /api/accommodation-statistics/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationStatisticsDTO> getStatistic(@PathVariable("id") Long id) {
-        AccommodationStatisticsDTO statisticsDTO = statisticsService.getById(id);
+        AccommodationStatistics statistics = service.getById(id);
 
-        if (statisticsDTO == null) {
+        if (statistics == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(statisticsDTO, HttpStatus.OK);
+        return new ResponseEntity<>(AccommodationStatisticsMapper.toDto(statistics), HttpStatus.OK);
     }
 
     /*url: /api/accommodation-statistics POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationStatisticsDTO> createStatistic(@RequestBody AccommodationStatisticsDTO statisticsDto) throws Exception {
-        AccommodationStatisticsDTO createdStatisticsDto = null;
+    public ResponseEntity<AccommodationStatisticsDTO> createStatistic(@RequestBody AccommodationStatisticsDTO statisticsDTO) throws Exception {
+        AccommodationStatistics createdStatistics = null;
+
         try {
-            createdStatisticsDto = statisticsService.create(statisticsDto);
+            createdStatistics = service.create(AccommodationStatisticsMapper.toEntity(statisticsDTO));
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new AccommodationStatisticsDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdStatisticsDto, HttpStatus.CREATED);
-    }
-
-    private boolean validateStatisticsDTO(AccommodationStatisticsDTO statisticsDto) {
-        return true;
+        return new ResponseEntity<>(AccommodationStatisticsMapper.toDto(createdStatistics), HttpStatus.CREATED);
     }
 
     /* url: /api/accommodation-statistics/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationStatisticsDTO> updateStatistic(@Valid @RequestBody AccommodationStatisticsDTO statisticsDTO, @PathVariable Long id)
             throws Exception {
-        AccommodationStatisticsDTO statisticForUpdate = statisticsService.getById(id);
-        //resurs za azuriranje nije pronadjen
+        AccommodationStatistics statisticForUpdate = service.getById(id);
+
         if (statisticForUpdate == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        statisticForUpdate.copyValues(statisticsDTO);
-        AccommodationStatisticsDTO updatedStatistic = statisticsService.update(statisticForUpdate);
-
-        if (updatedStatistic == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        statisticForUpdate.setAccommodation(AccommodationMapper.toEntity(statisticsDTO.getAccommodationDto()));
+        statisticForUpdate.setYear(statisticsDTO.getYear());
+        List<StatisticsDetail> statisticsDetails = new ArrayList<StatisticsDetail>();
+        if(statisticsDTO.getDetailsDto() != null) {
+            for(StatisticsDetailDTO statisticsDetailDTO : statisticsDTO.getDetailsDto())
+                statisticsDetails.add(StatisticsDetailMapper.toEntity(statisticsDetailDTO));
         }
+        statisticForUpdate.setDetails(statisticsDetails);
+        statisticForUpdate.setProfit(statisticsDTO.getProfit());
+        statisticForUpdate.setNumberOfReservations(statisticsDTO.getNumberOfReservations());
 
-        return new ResponseEntity<>(updatedStatistic, HttpStatus.OK);
+        statisticForUpdate = service.save(statisticForUpdate);
+
+        return new ResponseEntity<>(AccommodationStatisticsMapper.toDto(statisticForUpdate), HttpStatus.OK);
     }
 
 
@@ -85,7 +98,7 @@ public class AccommodationStatisticsController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<AccommodationStatistics> deleteStatistic(@PathVariable("id") Long id) {
         try {
-            statisticsService.delete(id);
+            service.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

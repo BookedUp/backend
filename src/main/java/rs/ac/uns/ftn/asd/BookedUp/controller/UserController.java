@@ -13,10 +13,15 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.LogInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,58 +32,68 @@ public class UserController {
     /** url: /api/users GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<UserDTO>> getUsers() {
-        Collection<UserDTO> userDTOS = userService.getAll();
-        if (userDTOS.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<Collection<UserDTO>>(userDTOS, HttpStatus.OK);
+        Collection<User> users = userService.getAll();
+
+        Collection<UserDTO> usersDTO = users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
 
     /** url: /api/users/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) {
-        UserDTO userDto = userService.getById(id);
+        User user = userService.getById(id);
+        UserDTO userDTO = UserMapper.toDto(user);
 
-        if (userDto == null) {
+        if (userDTO == null) {
             return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<UserDTO>(userDto, HttpStatus.OK);
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
     /** url: /api/users POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDto) throws Exception {
-        UserDTO createdUserDTO = null;
+        User createdUser = null;
 
         try {
-            createdUserDTO = userService.create(userDto);
+            createdUser = userService.create(UserMapper.toEntity(userDto));
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new UserDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdUserDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(UserMapper.toDto(createdUser), HttpStatus.CREATED);
     }
     /** url: /api/users/1 PUT*/
     @PreAuthorize("hasRole('GUEST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDto, @PathVariable Long id)
             throws Exception {
-        UserDTO userForUpdate = userService.getById(id);
-        if (userForUpdate == null){
+        User userForUpdate = userService.getById(id);
+
+        if (userForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        userForUpdate.copyValues(userDto);
-        UserDTO updatedUser = userService.update(userForUpdate);
+        userForUpdate.setFirstName(userDto.getFirstName());
+        userForUpdate.setLastName(userDto.getLastName());
+        userForUpdate.setAddress(userDto.getAddress());
+        userForUpdate.setEmail(userDto.getEmail());
+        userForUpdate.setPassword(userDto.getPassword());
+        userForUpdate.setPhone(userDto.getPhone());
+        userForUpdate.setVerified(userDto.isVerified());
+        userForUpdate.setProfilePicture(PhotoMapper.toEntity(userDto.getProfilePicture()));
+        userForUpdate.setBlocked(userDto.isBlocked());
+        userForUpdate.setVerified(userDto.isVerified());
 
-        if (updatedUser == null) {
-            return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
-        }
+        userForUpdate = userService.save(userForUpdate);
 
-        return new ResponseEntity<UserDTO>(updatedUser, HttpStatus.OK);
+        return new ResponseEntity<UserDTO>(UserMapper.toDto(userForUpdate), HttpStatus.OK);
     }
 
 

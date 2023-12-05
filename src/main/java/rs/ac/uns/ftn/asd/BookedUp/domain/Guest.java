@@ -7,7 +7,9 @@ import lombok.Setter;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.Role;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -30,22 +32,20 @@ public class Guest extends User {
             inverseJoinColumns = @JoinColumn(name = "accommodation_id"))
     private List<Accommodation> favourites;
 
-    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "guest_id", nullable = true)
     private List<Review> reviews;
 
-//    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL)
-//    private List<Notification> notifications;
+    @Column(nullable = true)
+    private boolean notificationEnable;
 
-    @Column(nullable = false)
-    private boolean notificatonEnable;
-
-    public Guest(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, Role role, boolean isBlocked, List<Notification> notifications, List<Reservation> requests, List<Reservation> reservations, List<Accommodation> favourites, List<Review> reviews, boolean notificatonEnable) {
-        super(id, firstName, lastName, address, phone, email, password, role, isBlocked, notifications);
+    public Guest(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Notification> notifications, List<Reservation> requests, List<Reservation> reservations, List<Accommodation> favourites, List<Review> reviews, boolean notificationEnable) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, authority, lastPasswordResetDate, notifications);
         this.requests = requests;
         this.reservations = reservations;
         this.favourites = favourites;
         this.reviews = reviews;
-        this.notificatonEnable = notificatonEnable;
+        this.notificationEnable = notificationEnable;
     }
 
     public void copyValues(Guest guest) {

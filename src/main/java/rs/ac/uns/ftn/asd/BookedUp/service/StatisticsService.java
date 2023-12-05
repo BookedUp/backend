@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Statistics;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
@@ -13,61 +14,53 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class StatisticsService implements IStatisticsService {
+public class StatisticsService implements ServiceInterface<Statistics> {
     @Autowired
-    private IStatisticsRepository statisticsRepository;
+    private IStatisticsRepository repository;
 
-    @Autowired
-    private StatisticsMapper statisticsMapper;
 
     @Override
-    public Collection<StatisticsDTO> getAll() {
-        Collection<Statistics> statistics = (statisticsRepository.getAll());
-        Collection<StatisticsDTO> statisticsDTOS = new ArrayList<>();
-
-        for (Statistics statistic : statistics) {
-            StatisticsDTO statisticsDTO = statisticsMapper.toDto(statistic);
-            statisticsDTOS.add(statisticsDTO);
-        }
-
-        return statisticsDTOS;
+    public Collection<Statistics> getAll() {
+        return repository.findAll();
     }
 
     @Override
-    public StatisticsDTO getById(Long id) {
-        Statistics statistics = statisticsRepository.getById(id);
-        return statisticsMapper.toDto(statistics);
+    public Statistics getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public StatisticsDTO create(StatisticsDTO statisticsDTO) throws Exception {
-        if (statisticsDTO.getId() != null) {
+    public Statistics create(Statistics statistics) throws Exception {
+        if (statistics.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
-        Statistics statistics = statisticsMapper.toEntity(statisticsDTO);
-        Statistics createdStatistics =  statisticsRepository.create(statistics);
-        return statisticsMapper.toDto(createdStatistics);
+        return repository.save(statistics);
     }
 
     @Override
-    public StatisticsDTO update(StatisticsDTO statisticsDTO) throws Exception {
-        Statistics statistics = statisticsMapper.toEntity(statisticsDTO);
-        Statistics statisticsToUpdate = statisticsRepository.getById(statistics.getId());
-        if (statisticsToUpdate == null) {
-            throw new Exception("The requested entity was not found.");
-        }
-        statisticsToUpdate.setFromDate(statistics.getFromDate());
-        statisticsToUpdate.setToDate(statistics.getToDate());
-        statisticsToUpdate.setDetails(statistics.getDetails());
-        statisticsToUpdate.setProfit(statistics.getProfit());
-        statisticsToUpdate.setNumberOfReservations(statistics.getNumberOfReservations());
-
-        Statistics updatedStatistics = statisticsRepository.update(statisticsToUpdate);
-        return statisticsMapper.toDto(updatedStatistics);
+    public Statistics save(Statistics statistics) throws Exception {
+        return repository.save(statistics);
     }
+
+//    @Override
+//    public StatisticsDTO update(StatisticsDTO statisticsDTO) throws Exception {
+//        Statistics statistics = statisticsMapper.toEntity(statisticsDTO);
+//        Statistics statisticsToUpdate = repository.findById(statistics.getId()).orElse(null);
+//        if (statisticsToUpdate == null) {
+//            throw new Exception("The requested entity was not found.");
+//        }
+//        statisticsToUpdate.setFromDate(statistics.getFromDate());
+//        statisticsToUpdate.setToDate(statistics.getToDate());
+//        statisticsToUpdate.setDetails(statistics.getDetails());
+//        statisticsToUpdate.setProfit(statistics.getProfit());
+//        statisticsToUpdate.setNumberOfReservations(statistics.getNumberOfReservations());
+//
+//        Statistics updatedStatistics = repository.save(statisticsToUpdate);
+//        return statisticsMapper.toDto(updatedStatistics);
+//    }
 
     @Override
     public void delete(Long id) {
-        statisticsRepository.delete(id);
+        repository.deleteById(id);
     }
 }

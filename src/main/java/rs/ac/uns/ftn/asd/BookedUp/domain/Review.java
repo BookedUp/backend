@@ -20,10 +20,6 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "guest_id")
-    private Guest guest;
-
     @Column(unique = false, nullable = false)
     private int review;
 
@@ -50,7 +46,7 @@ public class Review {
 
     public void copyValues(Review review) {
         this.id = review.getId();
-        this.guest = review.getGuest();
+        //this.guest = review.getGuest();
         this.review = review.getReview();
         this.comment = review.getComment();
         this.date = review.getDate();

@@ -8,9 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AdminService;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admins")
@@ -21,83 +25,112 @@ public class AdminController {
     /*url: /api/admins GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AdminDTO>> getAdmins() {
-        Collection<AdminDTO> adminDTOS = adminService.getAll();
-        if (adminDTOS.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<Collection<AdminDTO>>(adminDTOS, HttpStatus.OK);
+        Collection<Admin> admins = adminService.getAll();
+        Collection<AdminDTO> adminsDTO = admins.stream()
+                .map(AdminMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(adminsDTO, HttpStatus.OK);
     }
 
     /* url: /api/admins/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdminDTO> getAdmin(@PathVariable("id") Long id) {
-        AdminDTO adminDTO = adminService.getById(id);
+        Admin admin = adminService.getById(id);
 
-        if (adminDTO == null) {
+        if (admin == null) {
             return new ResponseEntity<AdminDTO>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<AdminDTO>(adminDTO, HttpStatus.OK);
+        return new ResponseEntity<AdminDTO>(AdminMapper.toDto(admin), HttpStatus.OK);
     }
 
     /*url: /api/admins POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdminDTO> createAdmin(@Valid @RequestBody AdminDTO adminDTO) throws Exception {
-        AdminDTO createdAdminDTO = null;
+        Admin createdAdmin = null;
 
         try {
-            createdAdminDTO = adminService.create(adminDTO);
+            createdAdmin = adminService.create(AdminMapper.toEntity(adminDTO));
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new AdminDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdAdminDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(AdminMapper.toDto(createdAdmin), HttpStatus.CREATED);
     }
 
 
     /* url: /api/admins/1 PUT*/
     @PutMapping("/{id}")
     public ResponseEntity<AdminDTO> updateAdmin(@PathVariable Long id, @Valid @RequestBody AdminDTO adminDTO) throws Exception {
-        AdminDTO adminForUpdate = adminService.getById(id);
-        //resurs za azuriranje nije pronadjen
+        Admin adminForUpdate = adminService.getById(id);
         if (adminForUpdate == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        adminForUpdate.copyValues(adminDTO);
-        AdminDTO updatedAdmin = adminService.update(adminForUpdate);
 
-        if (updatedAdmin == null) {
-            return new ResponseEntity<AdminDTO>(HttpStatus.BAD_REQUEST);
+        adminForUpdate.setFirstName(adminDTO.getFirstName());
+        adminForUpdate.setLastName(adminDTO.getLastName());
+        adminForUpdate.setAddress(adminDTO.getAddress());
+        adminForUpdate.setEmail(adminDTO.getEmail());
+        adminForUpdate.setPassword(adminDTO.getPassword());
+        adminForUpdate.setPhone(adminDTO.getPhone());
+        adminForUpdate.setVerified(adminDTO.isVerified());
+        adminForUpdate.setProfilePicture(PhotoMapper.toEntity(adminDTO.getProfilePicture()));
+        List<ReviewReport> reviewReports = new ArrayList<ReviewReport>();
+        if(adminDTO.getReviewReports() != null) {
+            for(ReviewReportDTO reviewReportDTO : adminDTO.getReviewReports())
+                reviewReports.add(ReviewReportMapper.toEntity(reviewReportDTO));
         }
 
-        return new ResponseEntity<AdminDTO>(updatedAdmin, HttpStatus.OK);
+        List<UserReport> userReports = new ArrayList<UserReport>();
+        if(adminDTO.getUserReports() != null) {
+            for(UserReportDTO userReportDTO : adminDTO.getUserReports())
+                userReports.add(UserReportMapper.toEntity(userReportDTO));
+        }
+
+        List<Accommodation> requests = new ArrayList<Accommodation>();
+        if(adminDTO.getRequests() != null) {
+            for(AccommodationDTO accommodationDTO : adminDTO.getRequests())
+                requests.add(AccommodationMapper.toEntity(accommodationDTO));
+        }
+
+        List<Notification> notifications = new ArrayList<Notification>();
+
+        adminForUpdate.setNotifications(notifications);
+        adminForUpdate.setUserReports(userReports);
+        adminForUpdate.setReviewReports(reviewReports);
+        adminForUpdate.setRequests(requests);
+        adminForUpdate = adminService.save(adminForUpdate);
+
+        return new ResponseEntity<AdminDTO>(AdminMapper.toDto(adminForUpdate), HttpStatus.OK);
+
     }
 
     /* url: /api/admins/1/user-reports GET*/
-    @GetMapping("/{id}/user-reports")
-    public ResponseEntity<List<UserReportDTO>> getUserReports(@PathVariable Long id) {
-        try {
-            AdminDTO adminDTO = adminService.getById(id);
-
-            if (adminDTO == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
-            List<UserReportDTO> userReports = adminDTO.getUserReports();
-
-            if (userReports.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(userReports, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @GetMapping("/{id}/user-reports")
+//    public ResponseEntity<List<UserReportDTO>> getUserReports(@PathVariable Long id) {
+//        try {
+//            AdminDTO adminDTO = adminService.getById(id);
+//
+//            if (adminDTO == null) {
+//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//            }
+//
+//            List<UserReportDTO> userReports = adminDTO.getUserReports();
+//
+//            if (userReports.isEmpty()) {
+//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            }
+//
+//            return new ResponseEntity<>(userReports, HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     /* url: /api/admins/1/user-reports/1/accept PUT*/
 //    @PutMapping("/{id}/user-reports/{reportId}/accept")
@@ -126,28 +159,28 @@ public class AdminController {
 //    }
 
     /* url: /api/admins/1/user-reports GET*/
-    @GetMapping(value = "/{id}/review-reports", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ReviewReportDTO>> getReviewReports(@PathVariable Long id) {
-        try {
-            AdminDTO adminDTO = adminService.getById(id);
-
-            if (adminDTO == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
-            List<ReviewReportDTO> reviewReports = adminDTO.getReviewReports();
-
-            if (reviewReports.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(reviewReports, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @GetMapping(value = "/{id}/review-reports", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<ReviewReportDTO>> getReviewReports(@PathVariable Long id) {
+//        try {
+//            AdminDTO adminDTO = adminService.getById(id);
+//
+//            if (adminDTO == null) {
+//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//            }
+//
+//            List<ReviewReportDTO> reviewReports = adminDTO.getReviewReports();
+//
+//            if (reviewReports.isEmpty()) {
+//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            }
+//
+//            return new ResponseEntity<>(reviewReports, HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     /* url: /api/admins/1/user-reports/1/accept PUT*/
 //    @PutMapping("/{id}/review-reports/{reportId}/accept")
@@ -176,28 +209,28 @@ public class AdminController {
 //    }
 
     /* url: /api/admins/1/requests GET*/
-    @GetMapping(value = "/{id}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AccommodationDTO>> getRequests(@PathVariable Long id) {
-        try {
-            AdminDTO adminDTO = adminService.getById(id);
-
-            if (adminDTO == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
-            List<AccommodationDTO> requests = adminDTO.getRequests();
-
-            if (requests.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(requests, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @GetMapping(value = "/{id}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<AccommodationDTO>> getRequests(@PathVariable Long id) {
+//        try {
+//            AdminDTO adminDTO = adminService.getById(id);
+//
+//            if (adminDTO == null) {
+//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//            }
+//
+//            List<AccommodationDTO> requests = adminDTO.getRequests();
+//
+//            if (requests.isEmpty()) {
+//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            }
+//
+//            return new ResponseEntity<>(requests, HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     /* url: /api/admins/1/requests/1/accept PUT*/
 //    @PutMapping("/{id}/requests/{requestId}/accept")

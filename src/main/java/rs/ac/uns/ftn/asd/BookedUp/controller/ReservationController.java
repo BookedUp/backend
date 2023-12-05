@@ -10,11 +10,16 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.ReservationMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.ReservationService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -25,62 +30,61 @@ public class ReservationController {
     /*url: /api/reservations GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getReservations() {
-        Collection<ReservationDTO> reservationsDTO = reservationService.getAll();
-        if (reservationsDTO.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<Collection<ReservationDTO>>(reservationsDTO, HttpStatus.OK);
+        Collection<Reservation> reservations = reservationService.getAll();
+        Collection<ReservationDTO> reservationsDTO = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
     }
 
     /* url: /api/reservations/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> getReservation(@PathVariable("id") Long id) {
-        ReservationDTO reservationDto = reservationService.getById(id);
+        Reservation reservation = reservationService.getById(id);
 
-        if (reservationDto == null) {
+        if (reservation == null) {
             return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<ReservationDTO>(reservationDto, HttpStatus.OK);
+        return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
     }
 
     /*url: /api/reservations POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody ReservationDTO reservationDto) throws Exception {
-        ReservationDTO createdReservationDto = null;
+    public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody ReservationDTO reservationDTO) throws Exception {
+        Reservation createdReservation = null;
 
         try {
-            createdReservationDto = reservationService.create(reservationDto);
+            createdReservation = reservationService.create(ReservationMapper.toEntity(reservationDTO));
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new ReservationDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdReservationDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(ReservationMapper.toDto(createdReservation), HttpStatus.CREATED);
     }
 
-    private boolean validateReservationDTO(ReservationDTO reservationDto) {
-        return true;
-    }
 
 
     /* url: /api/reservations/1 PUT*/
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReservationDTO> updateReservation(@Valid @RequestBody ReservationDTO reservationDto, @PathVariable Long id)
+    public ResponseEntity<ReservationDTO> updateReservation(@Valid @RequestBody ReservationDTO reservationDTO, @PathVariable Long id)
             throws Exception {
-        ReservationDTO reservationForUpdate = reservationService.getById(id);
+        Reservation reservationForUpdate = reservationService.getById(id);
         if (reservationForUpdate == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        reservationForUpdate.copyValues(reservationDto);
-        ReservationDTO updatedReservation = reservationService.update(reservationForUpdate);
+        reservationForUpdate.setStartDate(reservationDTO.getStartDate());
+        reservationForUpdate.setEndDate(reservationDTO.getEndDate());
+        reservationForUpdate.setGuestsNumber(reservationDTO.getGuestsNumber());
+        reservationForUpdate.setAccommodation(AccommodationMapper.toEntity(reservationDTO.getAccommodationDTO()));
+        reservationForUpdate.setStatus(reservationDTO.getStatus());
 
-        if (updatedReservation == null) {
-            return new ResponseEntity<ReservationDTO>(HttpStatus.BAD_REQUEST);
-        }
+        reservationForUpdate = reservationService.save(reservationForUpdate);
 
-        return new ResponseEntity<ReservationDTO>(updatedReservation, HttpStatus.OK);
+        return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservationForUpdate), HttpStatus.OK);
     }
 
     /** url: /api/reservations/1 DELETE*/

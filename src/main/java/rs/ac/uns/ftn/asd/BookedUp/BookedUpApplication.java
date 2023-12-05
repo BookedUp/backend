@@ -21,7 +21,7 @@ import java.util.List;
 public class BookedUpApplication {
 
 	@Bean
-	public ModelMapper getModelMapper() {
+	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
 	public static void main(String[] args) {

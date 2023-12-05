@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "address")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +23,17 @@ public class Address {
     @Column(unique = false, nullable = false)
     private String city;
 
-    @Column(unique = true, nullable = true)
+    @Column(unique = false, nullable = true)
     private String postalCode;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = false, nullable = false)
     private String streetAndNumber;
+
+    @Column(unique = false, nullable = false)
+    private double lat;
+
+    @Column(unique = false, nullable = false)
+    private double lon;
 
 
 

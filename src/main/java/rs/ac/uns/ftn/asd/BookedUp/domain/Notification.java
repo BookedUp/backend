@@ -24,7 +24,7 @@ public class Notification {
     private User from;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "to_user_id")
     private User to;
 
     @Column(unique = false, nullable = true)
