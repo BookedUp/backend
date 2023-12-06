@@ -81,12 +81,15 @@ public class HostController {
         }
         hostForUpdate.setFirstName(hostDTO.getFirstName());
         hostForUpdate.setLastName(hostDTO.getLastName());
-        hostForUpdate.setAddress(AddressMapper.toEntity(hostDTO.getAddress()));
-        hostForUpdate.setEmail(hostDTO.getEmail());
+        if (hostDTO.getAddress() != null) {
+            hostForUpdate.setAddress(AddressMapper.toEntity(hostDTO.getAddress()));
+        }        hostForUpdate.setEmail(hostDTO.getEmail());
         hostForUpdate.setPassword(hostDTO.getPassword());
         hostForUpdate.setPhone(hostDTO.getPhone());
         hostForUpdate.setVerified(hostDTO.isVerified());
-        hostForUpdate.setProfilePicture(PhotoMapper.toEntity(hostDTO.getProfilePicture()));
+        if (hostDTO.getProfilePicture() != null) {
+            hostForUpdate.setProfilePicture(PhotoMapper.toEntity(hostDTO.getProfilePicture()));
+        }
         hostForUpdate.setBlocked(hostDTO.isBlocked());
         hostForUpdate.setAverageRating(hostDTO.getAverageRating());
         List<Accommodation> accommodations = new ArrayList<Accommodation>();

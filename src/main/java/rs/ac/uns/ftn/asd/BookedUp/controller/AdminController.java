@@ -72,12 +72,18 @@ public class AdminController {
 
         adminForUpdate.setFirstName(adminDTO.getFirstName());
         adminForUpdate.setLastName(adminDTO.getLastName());
-        adminForUpdate.setAddress(AddressMapper.toEntity(adminDTO.getAddress()));
+
+        if (adminDTO.getAddress() != null) {
+            adminForUpdate.setAddress(AddressMapper.toEntity(adminDTO.getAddress()));
+        }
         adminForUpdate.setEmail(adminDTO.getEmail());
         adminForUpdate.setPassword(adminDTO.getPassword());
         adminForUpdate.setPhone(adminDTO.getPhone());
         adminForUpdate.setVerified(adminDTO.isVerified());
-        adminForUpdate.setProfilePicture(PhotoMapper.toEntity(adminDTO.getProfilePicture()));
+
+        if (adminDTO.getProfilePicture() != null) {
+            adminForUpdate.setProfilePicture(PhotoMapper.toEntity(adminDTO.getProfilePicture()));
+        }
         List<ReviewReport> reviewReports = new ArrayList<ReviewReport>();
         if(adminDTO.getReviewReports() != null) {
             for(ReviewReportDTO reviewReportDTO : adminDTO.getReviewReports())

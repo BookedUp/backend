@@ -54,7 +54,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean verified;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "photo_id", nullable = true, unique = false)
     private Photo profilePicture;
 

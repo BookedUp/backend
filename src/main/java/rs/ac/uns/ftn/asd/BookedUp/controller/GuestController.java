@@ -74,12 +74,16 @@ public class GuestController {
         }
         guestForUpdate.setFirstName(guestDTO.getFirstName());
         guestForUpdate.setLastName(guestDTO.getLastName());
-        guestForUpdate.setAddress(AddressMapper.toEntity(guestDTO.getAddress()));
+        if (guestDTO.getAddress() != null) {
+            guestForUpdate.setAddress(AddressMapper.toEntity(guestDTO.getAddress()));
+        }
         guestForUpdate.setEmail(guestDTO.getEmail());
         guestForUpdate.setPassword(guestDTO.getPassword());
         guestForUpdate.setPhone(guestDTO.getPhone());
         guestForUpdate.setVerified(guestDTO.isVerified());
-        guestForUpdate.setProfilePicture(PhotoMapper.toEntity(guestDTO.getProfilePicture()));
+        if (guestDTO.getProfilePicture() != null) {
+            guestForUpdate.setProfilePicture(PhotoMapper.toEntity(guestDTO.getProfilePicture()));
+        }
         guestForUpdate.setBlocked(guestDTO.isBlocked());
 
         List<Accommodation> favourites = new ArrayList<Accommodation>();

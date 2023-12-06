@@ -84,12 +84,16 @@ public class UserController {
 
         userForUpdate.setFirstName(userDto.getFirstName());
         userForUpdate.setLastName(userDto.getLastName());
-        userForUpdate.setAddress(AddressMapper.toEntity(userDto.getAddress()));
+        if (userDto.getAddress() != null) {
+            userForUpdate.setAddress(AddressMapper.toEntity(userDto.getAddress()));
+        }
         userForUpdate.setEmail(userDto.getEmail());
         userForUpdate.setPassword(userDto.getPassword());
         userForUpdate.setPhone(userDto.getPhone());
         userForUpdate.setVerified(userDto.isVerified());
-        userForUpdate.setProfilePicture(PhotoMapper.toEntity(userDto.getProfilePicture()));
+        if (userDto.getProfilePicture() != null) {
+            userForUpdate.setProfilePicture(PhotoMapper.toEntity(userDto.getProfilePicture()));
+        }
         userForUpdate.setBlocked(userDto.isBlocked());
         userForUpdate.setVerified(userDto.isVerified());
 
