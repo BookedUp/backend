@@ -72,7 +72,7 @@ public class AdminController {
 
         adminForUpdate.setFirstName(adminDTO.getFirstName());
         adminForUpdate.setLastName(adminDTO.getLastName());
-        adminForUpdate.setAddress(adminDTO.getAddress());
+        adminForUpdate.setAddress(AddressMapper.toEntity(adminDTO.getAddress()));
         adminForUpdate.setEmail(adminDTO.getEmail());
         adminForUpdate.setPassword(adminDTO.getPassword());
         adminForUpdate.setPhone(adminDTO.getPhone());

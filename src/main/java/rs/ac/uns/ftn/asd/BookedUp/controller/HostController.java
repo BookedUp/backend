@@ -81,7 +81,7 @@ public class HostController {
         }
         hostForUpdate.setFirstName(hostDTO.getFirstName());
         hostForUpdate.setLastName(hostDTO.getLastName());
-        hostForUpdate.setAddress(hostDTO.getAddress());
+        hostForUpdate.setAddress(AddressMapper.toEntity(hostDTO.getAddress()));
         hostForUpdate.setEmail(hostDTO.getEmail());
         hostForUpdate.setPassword(hostDTO.getPassword());
         hostForUpdate.setPhone(hostDTO.getPhone());

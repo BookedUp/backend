@@ -30,6 +30,7 @@ public class UserService implements ServiceInterface<User>{
         if (user.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
+        System.out.println(user.getAddress().getId());
         return repository.save(user);
     }
 

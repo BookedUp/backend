@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.LogInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AddressMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
@@ -56,11 +57,12 @@ public class UserController {
 
     /** url: /api/users POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDto) throws Exception {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDto) throws Exception {
         User createdUser = null;
 
         try {
             createdUser = userService.create(UserMapper.toEntity(userDto));
+            System.out.println(createdUser.getAddress());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +84,7 @@ public class UserController {
 
         userForUpdate.setFirstName(userDto.getFirstName());
         userForUpdate.setLastName(userDto.getLastName());
-        userForUpdate.setAddress(userDto.getAddress());
+        userForUpdate.setAddress(AddressMapper.toEntity(userDto.getAddress()));
         userForUpdate.setEmail(userDto.getEmail());
         userForUpdate.setPassword(userDto.getPassword());
         userForUpdate.setPhone(userDto.getPhone());

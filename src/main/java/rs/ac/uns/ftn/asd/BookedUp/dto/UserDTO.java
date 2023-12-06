@@ -16,7 +16,7 @@ public class UserDTO {
     private Long id;
     private String firstName;
     private String lastName;
-    private Address address;
+    private AddressDTO address;
     private Integer phone;
     private String email;
     private String password;
@@ -40,7 +40,7 @@ public class UserDTO {
         this.profilePicture = profilePicture;
     }
 
-    public UserDTO(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture) {
+    public UserDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

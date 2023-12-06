@@ -74,7 +74,7 @@ public class GuestController {
         }
         guestForUpdate.setFirstName(guestDTO.getFirstName());
         guestForUpdate.setLastName(guestDTO.getLastName());
-        guestForUpdate.setAddress(guestDTO.getAddress());
+        guestForUpdate.setAddress(AddressMapper.toEntity(guestDTO.getAddress()));
         guestForUpdate.setEmail(guestDTO.getEmail());
         guestForUpdate.setPassword(guestDTO.getPassword());
         guestForUpdate.setPhone(guestDTO.getPhone());
