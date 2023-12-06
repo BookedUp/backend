@@ -51,8 +51,8 @@ public class Host extends User {
     private boolean accommodationRatingNotificationEnabled = true;
 
 
-    public Host(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Notification> notifications, double averageRating, List<Accommodation> accommodations, List<Reservation> requests, List<Statistics> statistics, List<AccommodationStatistics> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, authority, lastPasswordResetDate, notifications);
+    public Host(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean active, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Notification> notifications, double averageRating, List<Accommodation> accommodations, List<Reservation> requests, List<Statistics> statistics, List<AccommodationStatistics> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, active, verified, profilePicture, authority, lastPasswordResetDate, notifications);
         this.averageRating = averageRating;
         this.accommodations = accommodations;
         this.requests = requests;

@@ -85,6 +85,7 @@ public class GuestController {
             guestForUpdate.setProfilePicture(PhotoMapper.toEntity(guestDTO.getProfilePicture()));
         }
         guestForUpdate.setBlocked(guestDTO.isBlocked());
+        guestForUpdate.setActive(guestDTO.isActive());
 
         List<Accommodation> favourites = new ArrayList<Accommodation>();
         if(guestDTO.getFavourites() != null) {

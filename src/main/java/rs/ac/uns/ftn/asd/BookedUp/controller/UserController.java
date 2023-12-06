@@ -95,7 +95,8 @@ public class UserController {
             userForUpdate.setProfilePicture(PhotoMapper.toEntity(userDto.getProfilePicture()));
         }
         userForUpdate.setBlocked(userDto.isBlocked());
-        userForUpdate.setVerified(userDto.isVerified());
+        userForUpdate.setActive(userDto.isActive());
+
 
         userForUpdate = userService.save(userForUpdate);
 

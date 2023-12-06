@@ -91,6 +91,8 @@ public class HostController {
             hostForUpdate.setProfilePicture(PhotoMapper.toEntity(hostDTO.getProfilePicture()));
         }
         hostForUpdate.setBlocked(hostDTO.isBlocked());
+        hostForUpdate.setActive(hostDTO.isActive());
+
         hostForUpdate.setAverageRating(hostDTO.getAverageRating());
         List<Accommodation> accommodations = new ArrayList<Accommodation>();
         if(hostDTO.getAccommodations() != null) {

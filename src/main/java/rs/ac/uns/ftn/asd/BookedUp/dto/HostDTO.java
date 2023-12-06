@@ -22,8 +22,9 @@ public class HostDTO extends UserDTO {
     private boolean hostRatingNotificationEnabled = true;
     private boolean accommodationRatingNotificationEnabled = true;
 
-    public HostDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, List<NotificationDTO> notifications, double averageRating, List<AccommodationDTO> accommodations, List<ReservationDTO> requests, List<StatisticsDTO> statistics, List<AccommodationStatisticsDTO> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, notifications);
+
+    public HostDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, double averageRating, List<AccommodationDTO> accommodations, List<ReservationDTO> requests, List<StatisticsDTO> statistics, List<AccommodationStatisticsDTO> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture);
         this.averageRating = averageRating;
         this.accommodations = accommodations;
         this.requests = requests;

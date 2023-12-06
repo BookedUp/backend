@@ -52,6 +52,9 @@ public class User implements UserDetails {
     private boolean isBlocked;
 
     @Column(nullable = false)
+    private boolean active;
+
+    @Column(nullable = false)
     private boolean verified;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -70,20 +73,6 @@ public class User implements UserDetails {
 
 
 
-    public User(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean verified, Photo profilePicture, Set<Authority> authority, List<Notification> notifications) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.password = password;
-        this.isBlocked = isBlocked;
-        this.verified = verified;
-        this.profilePicture = profilePicture;
-        this.authority = authority;
-        this.notifications = notifications;
-    }
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -106,6 +95,7 @@ public class User implements UserDetails {
         this.phone = user.getPhone();
         this.email = user.getEmail();
         //this.role = user.getRole();
+        this.active = user.isActive();
         this.password = user.getPassword();
         this.isBlocked = user.isBlocked();
         this.notifications = user.getNotifications();

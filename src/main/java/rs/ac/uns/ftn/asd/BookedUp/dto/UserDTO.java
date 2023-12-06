@@ -22,6 +22,8 @@ public class UserDTO {
     private String password;
     private boolean isBlocked;
     private boolean verified;
+    private boolean active;
+
     private PhotoDTO profilePicture;
     private List<NotificationDTO> notifications;
 
@@ -38,6 +40,18 @@ public class UserDTO {
         this.email = email;
         this.password = password;
         this.profilePicture = profilePicture;
+    }
+
+    public UserDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.password = password;
+        this.active = true;
+        this.verified = true;
     }
 
     public UserDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture) {
@@ -62,6 +76,7 @@ public class UserDTO {
         this.password = dto.getPassword();
         this.isBlocked = dto.isBlocked();
         this.notifications = dto.getNotifications();
+        this.active = dto.isActive();
     }
 }
 

@@ -80,6 +80,7 @@ public class AdminController {
         adminForUpdate.setPassword(adminDTO.getPassword());
         adminForUpdate.setPhone(adminDTO.getPhone());
         adminForUpdate.setVerified(adminDTO.isVerified());
+        adminForUpdate.setActive(adminDTO.isActive());
 
         if (adminDTO.getProfilePicture() != null) {
             adminForUpdate.setProfilePicture(PhotoMapper.toEntity(adminDTO.getProfilePicture()));
