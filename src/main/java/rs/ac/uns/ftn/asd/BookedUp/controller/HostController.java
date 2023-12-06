@@ -139,14 +139,15 @@ public class HostController {
 
     /** url: /api/hosts/1 DELETE*/
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Host> deleteHost(@PathVariable("id") Long id) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'HOST')")
+    public ResponseEntity<Void> deleteHost(@PathVariable("id") Long id) {
         try {
            hostService.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Host>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 //    @GetMapping("/{id}/accommodations")

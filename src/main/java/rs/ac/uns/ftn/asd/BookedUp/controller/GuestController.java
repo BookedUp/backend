@@ -130,14 +130,15 @@ public class GuestController {
 
     /** url: /api/guests/1 DELETE*/
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Guest> deleteGuest(@PathVariable("id") Long id) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'GUEST')")
+    public ResponseEntity<Void> deleteGuest(@PathVariable("id") Long id) {
         try {
             guestService.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Guest>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /** RESERVATIONS */

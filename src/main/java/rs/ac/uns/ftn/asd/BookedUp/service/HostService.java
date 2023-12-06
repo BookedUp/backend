@@ -86,8 +86,12 @@ public class HostService implements ServiceInterface<Host>{
 //    }
 
     @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public void delete(Long id) throws Exception {
+        Host host = repository.findById(id).orElse(null);
+        if (host == null)
+            throw new Exception("Host doesn't exist");
+        host.setActive(false);
+        host = repository.save(host);
     }
 
     public boolean isWithinDateRange(Date date, Date fromDate, Date toDate) {

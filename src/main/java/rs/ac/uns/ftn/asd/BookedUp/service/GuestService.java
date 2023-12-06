@@ -79,9 +79,12 @@ public class GuestService implements ServiceInterface<Guest>{
 //    }
 
     @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
-
+    public void delete(Long id) throws Exception {
+        Guest guest = repository.findById(id).orElse(null);
+        if (guest == null)
+            throw new Exception("Guest doesn't exist");
+        guest.setActive(false);
+        guest = repository.save(guest);
     }
 
 }
