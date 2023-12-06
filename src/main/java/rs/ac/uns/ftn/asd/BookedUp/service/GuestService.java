@@ -7,6 +7,7 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
 import rs.ac.uns.ftn.asd.BookedUp.dto.GuestDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.GuestMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IGuestRepository;
 
@@ -81,10 +82,28 @@ public class GuestService implements ServiceInterface<Guest>{
     @Override
     public void delete(Long id) throws Exception {
         Guest guest = repository.findById(id).orElse(null);
+        
         if (guest == null)
             throw new Exception("Guest doesn't exist");
+        
+        if (hasActiveReservations(guest)) {
+            throw new Exception("Guest has active reservations and cannot be deleted");
+        }
+        
         guest.setActive(false);
         guest = repository.save(guest);
     }
+
+    private boolean hasActiveReservations(Guest guest) {
+        if (guest.getReservations() != null) {
+            return guest.getReservations().stream()
+                    .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED
+                            && reservation.getStatus() != ReservationStatus.COMPLETED
+                            && reservation.getStatus() != ReservationStatus.REJECTED);
+        }
+        return false;
+    }
+
+
 
 }
