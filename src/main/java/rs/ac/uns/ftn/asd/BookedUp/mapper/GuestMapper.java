@@ -18,6 +18,12 @@ public class GuestMapper{
     @Autowired
     public GuestMapper(ModelMapper modelMapper) {
         GuestMapper.modelMapper = modelMapper;
+        modelMapper.typeMap(GuestDTO.class, Guest.class)
+                .addMapping(GuestDTO::getFavourites, Guest::setFavourites)
+                .addMapping(GuestDTO::getReviews, Guest::setReviews)
+                .addMapping(GuestDTO::getReservations, Guest::setReservations)
+                .addMapping(GuestDTO::getRequests, Guest::setRequests);
+
     }
     public static Guest toEntity(GuestDTO dto) {
         return modelMapper.map(dto, Guest.class);

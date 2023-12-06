@@ -25,7 +25,8 @@ VALUES
     ('src/main/resources/images/people/people4.png', 'Description4', 535, 466),
     ('src/main/resources/images/people/people5.png', 'Description5', 500, 500),
     ('src/main/resources/images/people/people6.png', 'Description6', 220, 230),
-    ('src/main/resources/images/people/people7.png', 'Description7', 524, 476);
+    ('src/main/resources/images/people/people7.png', 'Description7', 524, 476),
+    ('src/main/resources/images/people/profilPicture.png', 'No profile picture', 640, 960);
 
 INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, type, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled)
 VALUES

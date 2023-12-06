@@ -19,24 +19,22 @@ import java.util.List;
 public class AccommodationDTO {
 
     private Long id;
-    //private HostDTO hostDTO;
     private String name;
     private String description;
-    private Address address;
+    private AddressDTO address;
     private List<Amenity> amenities;
     private List<PhotoDTO> photos;
     private int minGuests;
     private int maxGuests;
     private AccommodationType type;
-    private List<DateRange> availability;
+    private List<DateRangeDTO> availability;
     private PriceType priceType;
-    private List<PriceChange> priceChanges;
+    private List<PriceChangeDTO> priceChanges;
     private boolean automaticReservationAcceptance;
     private AccommodationStatus status;
 
 
     public void copyValues(AccommodationDTO dto) {
-        //this.hostDTO = dto.getHostDTO();
         this.name = dto.getName();
         this.description = dto.getDescription();
         this.address = dto.getAddress();

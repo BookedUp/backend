@@ -19,7 +19,9 @@ public class AccommodationMapper  {
 
     @Autowired
     public AccommodationMapper(ModelMapper modelMapper) {
+
         AccommodationMapper.modelMapper = modelMapper;
+
     }
     public static Accommodation toEntity(AccommodationDTO dto) {
         return modelMapper.map(dto, Accommodation.class);

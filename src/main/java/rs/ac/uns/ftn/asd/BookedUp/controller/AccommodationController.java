@@ -7,16 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Photo;
-import rs.ac.uns.ftn.asd.BookedUp.domain.User;
-import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.dto.*;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -82,7 +76,7 @@ public class AccommodationController {
 
         accommodationForUpdate.setName(accommodationDTO.getName());
         accommodationForUpdate.setDescription(accommodationDTO.getDescription());
-        accommodationForUpdate.setAddress(accommodationDTO.getAddress());
+        accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
         accommodationForUpdate.setAmenities(accommodationDTO.getAmenities());
         List<Photo> photos = new ArrayList<Photo>();
         if (accommodationDTO.getPhotos() != null){
@@ -93,9 +87,19 @@ public class AccommodationController {
         accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
         accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
         accommodationForUpdate.setType(accommodationDTO.getType());
-        accommodationForUpdate.setAvailability(accommodationDTO.getAvailability());
+        List<DateRange> availability = new ArrayList<DateRange>();
+        if (accommodationDTO.getAvailability() != null){
+            for (DateRangeDTO dto : accommodationDTO.getAvailability())
+                availability.add(DateRangeMapper.toEntity(dto));
+        }
+        accommodationForUpdate.setAvailability(availability);
         accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
-        accommodationForUpdate.setPriceChanges(accommodationDTO.getPriceChanges());
+        List<PriceChange> priceChanges = new ArrayList<PriceChange>();
+        if (accommodationDTO.getPriceChanges() != null){
+            for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
+                priceChanges.add(PriceChangeMapper.toEntity(dto));
+        }
+        accommodationForUpdate.setPriceChanges(priceChanges);
         accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
         accommodationForUpdate.setStatus(accommodationDTO.getStatus());
 

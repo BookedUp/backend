@@ -35,7 +35,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "address_id")
     private Address address;
 
@@ -48,10 +48,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private Role role;
-
     @Column(nullable = false)
     private boolean isBlocked;
 
@@ -59,7 +55,7 @@ public class User implements UserDetails {
     private boolean verified;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "photo_id", nullable = true)
+    @JoinColumn(name = "photo_id", nullable = true, unique = false)
     private Photo profilePicture;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -4,7 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.NotificationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
@@ -13,6 +15,7 @@ import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
@@ -21,7 +24,9 @@ public class UserMapper {
 
     @Autowired
     public UserMapper(ModelMapper modelMapper) {
+
         UserMapper.modelMapper = modelMapper;
+
     }
     public static User toEntity(UserDTO dto) {
         return modelMapper.map(dto, User.class);
@@ -30,6 +35,8 @@ public class UserMapper {
     public static UserDTO toDto(User entity) {
         return modelMapper.map(entity, UserDTO.class);
     }
+}
+
 
 
 //    @Autowired
@@ -61,4 +68,4 @@ public class UserMapper {
 //        }
 //        return modelMapper.map(entity, UserDTO.class);
 //    }
-}
+
