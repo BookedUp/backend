@@ -6,17 +6,22 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class AccommodationService implements ServiceInterface<Accommodation>{
     @Autowired
     private IAccommodationRepository repository;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @Override
     public Collection<Accommodation> getAll() {
@@ -99,6 +104,21 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
     public List<Accommodation> findAllByHostId(Long id){
         return repository.findAllByHostId(id);
+    }
+
+    public boolean hasActiveReservations(Long id) {
+        List<Reservation> reservations = reservationService.findAllByAccommodationId(id);
+        if ( reservations!= null) {
+            return reservations.stream()
+                    .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED
+                            && reservation.getStatus() != ReservationStatus.COMPLETED
+                            && reservation.getStatus() != ReservationStatus.REJECTED);
+        }
+        return false;
+    }
+
+    public List<Accommodation> searchAccommodations(String country, String city, Integer guestsNumber, Date startDate, Date endDate){
+        return repository.searchAccommodations(country, city, guestsNumber, startDate, endDate);
     }
 
 }

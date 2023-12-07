@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
@@ -74,6 +75,10 @@ public class AccommodationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        if (accommodationService.hasActiveReservations(accommodationForUpdate.getId())){
+            throw new Exception("Accommodation has active reservations and cannot be updated");
+        }
+
         accommodationForUpdate.setName(accommodationDTO.getName());
         accommodationForUpdate.setDescription(accommodationDTO.getDescription());
         accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
@@ -104,6 +109,7 @@ public class AccommodationController {
         accommodationForUpdate.setStatus(accommodationDTO.getStatus());
         accommodationForUpdate.setHost(HostMapper.toEntity(accommodationDTO.getHost()));
         accommodationForUpdate.setPrice(accommodationDTO.getPrice());
+        accommodationForUpdate.setStatus(AccommodationStatus.CHANGED);
         accommodationForUpdate = accommodationService.save(accommodationForUpdate);
 
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
@@ -124,24 +130,22 @@ public class AccommodationController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchAccommodations(
-            @RequestParam(required = false) String location,
+    public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
             @RequestParam(required = false) Integer guestsNumber,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-            @RequestParam(required = false) List<String> amenities,
-            @RequestParam(required = false) AccommodationType type,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
     ) {
         try {
-            // Implementirajte logiku pretrage i filtriranja smeštaja koristeći AccommodationService
-//            List<AccommodationDTO> filteredAccommodations = accommodationService.searchAndFilterAccommodations(
-//                    location, guestsNumber, startDate, endDate, amenities, type, minPrice, maxPrice);
+            List<Accommodation> searchedAccommodations = accommodationService.searchAccommodations(
+                    country, city, guestsNumber, startDate, endDate);
 
-            HashMap<String, String> response = new HashMap<>();
-            response.put("message", "Search completed successfully!");
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            List<AccommodationDTO> accommodationsDTO = searchedAccommodations.stream()
+                    .map(AccommodationMapper::toDto)
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();

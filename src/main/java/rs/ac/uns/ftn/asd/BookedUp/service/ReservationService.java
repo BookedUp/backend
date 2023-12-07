@@ -45,6 +45,10 @@ public class ReservationService implements ServiceInterface<Reservation> {
         return repository.findAllByGuestId(id);
     }
 
+    public List<Reservation> findAllByAccommodationId(Long id){
+        return repository.findAllByAccommodationId(id);
+    }
+
 //    @Override
 //    public ReservationDTO update(ReservationDTO reservationDto) throws Exception {
 //        Reservation reservation = reservationMapper.toEntity(reservationDto);
