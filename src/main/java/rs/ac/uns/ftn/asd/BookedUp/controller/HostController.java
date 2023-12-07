@@ -95,11 +95,6 @@ public class HostController {
 
         hostForUpdate.setAverageRating(hostDTO.getAverageRating());
         List<Accommodation> accommodations = new ArrayList<Accommodation>();
-        if(hostDTO.getAccommodations() != null) {
-            for(AccommodationDTO accommodationDTO : hostDTO.getAccommodations())
-                accommodations.add(AccommodationMapper.toEntity(accommodationDTO));
-        }
-
         List<Reservation> requests = new ArrayList<Reservation>();
 //        if(hostDTO.getRequests() != null) {
 //            for(ReservationDTO reservationDTO : hostDTO.getRequests())
@@ -124,8 +119,7 @@ public class HostController {
 //                accommodationStatistics.add(accommodationStatisticsMapper.toEntity(accommodationStatisticsDTO));
 //        }
 
-        hostForUpdate.setAccommodations(accommodations);
-        hostForUpdate.setNotifications(notifications);
+//        hostForUpdate.setNotifications(notifications);
         //hostForUpdate.setRequests(requests);
         hostForUpdate.setReservationCreatedNotificationEnabled(hostDTO.isReservationCreatedNotificationEnabled());
         hostForUpdate.setCancellationNotificationEnabled(hostDTO.isCancellationNotificationEnabled());
@@ -153,18 +147,22 @@ public class HostController {
 //    @GetMapping("/{id}/accommodations")
 //    public ResponseEntity<List<AccommodationDTO>> getHostAccommodations(@PathVariable Long id) {
 //        try {
-//            HostDTO hostDto = hostService.getById(id);
+//            Host host = hostService.getById(id);
 //
-//            if (hostDto == null) {
+//            if (host == null) {
 //                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //            }
-//            List<AccommodationDTO> accommodations = hostDto.getAccommodations();
+//            List<Accommodation> accommodations = host.getAccommodations();
 //
 //            if (accommodations.isEmpty()) {
 //                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //            }
 //
-//            return new ResponseEntity<>(accommodations, HttpStatus.OK);
+//            List<AccommodationDTO> accommodationsDTO = accommodations.stream()
+//                    .map(AccommodationMapper::toDto)
+//                    .collect(Collectors.toList());
+//
+//            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
 //
 //        } catch (Exception e) {
 //            e.printStackTrace();

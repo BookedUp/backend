@@ -96,17 +96,10 @@ public class HostService implements ServiceInterface<Host>{
         if (host == null)
             throw new Exception("Host doesn't exist");
 
-        if (hasActiveReservations(host)) {
-            throw new Exception("Host has future reservations and cannot be deleted");
-        }
+//        if (hasActiveReservations(host)) {
+//            throw new Exception("Host has future reservations and cannot be deleted");
+//        }
 
-        List<Accommodation> accommodations = host.getAccommodations();
-        if(!accommodations.isEmpty()) {
-            for (Accommodation accommodation : accommodations) {
-                accommodation.setActive(false);
-                accommodationRepository.save(accommodation);
-            }
-        }
 
         Address address = host.getAddress();
         if(address != null){
@@ -119,42 +112,42 @@ public class HostService implements ServiceInterface<Host>{
             photoRepository.save(profilePhoto);
         }
 
-        List<Notification> notifications = host.getNotifications();
-        if(!notifications.isEmpty()) {
-            for (Notification notification : notifications) {
-                notification.setActive(false);
-                notificationRepository.save(notification);
-            }
-        }
+//        List<Notification> notifications = host.getNotifications();
+//        if(!notifications.isEmpty()) {
+//            for (Notification notification : notifications) {
+//                notification.setActive(false);
+//                notificationRepository.save(notification);
+//            }
+//        }
 
 
         host.setActive(false);
         repository.save(host);
     }
 
-    private boolean hasActiveReservations(Host host) {
-        List<Accommodation> accommodations = host.getAccommodations();
-
-        if (accommodations != null) {
-            for (Accommodation accommodation : accommodations) {
-                List<Reservation> reservations = accommodation.getReservations();
-
-                if (reservations != null) {
-                    for (Reservation reservation : reservations) {
-                        // Provera da li je rezervacija u budućnosti i da li je aktivna
-                        if (reservation.getStartDate().after(new Date())
-                                && reservation.getStatus() != ReservationStatus.CANCELLED
-                                && reservation.getStatus() != ReservationStatus.COMPLETED
-                                && reservation.getStatus() != ReservationStatus.REJECTED) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
+//    private boolean hasActiveReservations(Host host) {
+//        List<Accommodation> accommodations = host.getAccommodations();
+//
+//        if (accommodations != null) {
+//            for (Accommodation accommodation : accommodations) {
+//                List<Reservation> reservations = accommodation.getReservations();
+//
+//                if (reservations != null) {
+//                    for (Reservation reservation : reservations) {
+//                        // Provera da li je rezervacija u budućnosti i da li je aktivna
+//                        if (reservation.getStartDate().after(new Date())
+//                                && reservation.getStatus() != ReservationStatus.CANCELLED
+//                                && reservation.getStatus() != ReservationStatus.COMPLETED
+//                                && reservation.getStatus() != ReservationStatus.REJECTED) {
+//                            return true;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return false;
+//    }
 
     public boolean isWithinDateRange(Date date, Date fromDate, Date toDate) {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

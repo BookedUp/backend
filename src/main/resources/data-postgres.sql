@@ -146,11 +146,11 @@ VALUES
     (7, 9);
 
 
-INSERT INTO user_report (reason, reported_user_id, status, admin_id)
+INSERT INTO user_report (reason, reported_user_id, status)
 VALUES
-    ('Inappropriate content', 2, true, 1),
-    ('Hate speech', 4, true, 1),
-    ('Other', 7, false, 1);
+    ('Inappropriate content', 2, true),
+    ('Hate speech', 4, true),
+    ('Other', 7, false);
 
 INSERT INTO review (guest_id, review, comment, date, host_id, accommodation_id, type, is_review_active)
 VALUES
@@ -166,18 +166,18 @@ VALUES
     (5, 1, 'Terrible experience, do not recommend.', '2023-12-10T22:00:00',null, 10, 'ACCOMMODATION', true);
 
 
-INSERT INTO review_report (reason, reported_review_id, status, admin_id)
+INSERT INTO review_report (reason, reported_review_id, status)
 VALUES
-    ('Inappropriate content', 1, true, 1),
-    ('False information', 2, true, 1),
-    ('Abusive language', 3, false, 1),
-    ('Not related to the review', 4, true, 1),
-    ('Spam', 5, true, 1),
-    ('Unfair criticism', 6, false, 1),
-    ('Not a genuine review', 7, true, 1),
-    ('Violation of community guidelines', 8, false, 1),
-    ('Slanderous content', 9, true, 1),
-    ('Privacy concerns', 10, true, 1);
+    ('Inappropriate content', 1, true),
+    ('False information', 2, true),
+    ('Abusive language', 3, false),
+    ('Not related to the review', 4, true),
+    ('Spam', 5, true),
+    ('Unfair criticism', 6, false),
+    ('Not a genuine review', 7, true),
+    ('Violation of community guidelines', 8, false),
+    ('Slanderous content', 9, true),
+    ('Privacy concerns', 10, true);
 
 
 INSERT INTO reservation (created_time, start_date, end_date, total_price, guests_number, accommodation_id, guest_id, status, active)
@@ -227,24 +227,24 @@ VALUES
     (6, 2, 'New Reservation', 'You have a new reservation request.', '2023-12-28 17:40:00', 'RESERVATION_REQUEST_RESPONSE', true),
     (3, 7, 'Reservation on Hold', 'Your reservation is on hold.', '2023-12-29 19:00:00', 'RESERVATION_REQUEST_RESPONSE', true);
 
-INSERT INTO accommodation_statistics (accommodation_id, host_id, year, profit, number_of_reservations)
+INSERT INTO accommodation_statistics (accommodation_id, year, profit, number_of_reservations)
 VALUES
-    (1, 2, 2023, 1200.50, 15),
-    (2, 3, 2023, 800.75, 10),
-    (3, 2, 2023, 1500.25, 18),
-    (4, 2, 2023, 900.30, 12),
-    (5, 2, 2023, 2000.90, 25),
-    (6, 3, 2023, 1800.60, 20),
-    (7, 3, 2023, 750.40, 8),
-    (8, 3, 2023, 3000.20, 30),
-    (9, 2, 2023, 1000.80, 14),
-    (10, 2, 2023, 2500.45, 22);
+    (1, 2023, 1200.50, 15),
+    (2, 2023, 800.75, 10),
+    (3, 2023, 1500.25, 18),
+    (4, 2023, 900.30, 12),
+    (5, 2023, 2000.90, 25),
+    (6, 2023, 1800.60, 20),
+    (7, 2023, 750.40, 8),
+    (8, 2023, 3000.20, 30),
+    (9, 2023, 1000.80, 14),
+    (10, 2023, 2500.45, 22);
 
 
-INSERT INTO statistics (from_date, to_date, profit, number_of_reservations, host_id)
+INSERT INTO statistics (from_date, to_date, profit, number_of_reservations)
 VALUES
-    ('2023-01-01', '2023-12-31', 9500.40, 120, 2),
-    ('2023-01-01', '2023-12-31', 18500.20, 200, 3);
+    ('2023-01-01', '2023-12-31', 9500.40, 120),
+    ('2023-01-01', '2023-12-31', 18500.20, 200);
 
 INSERT INTO statistics_detail (key, profit, number_of_reservations, accommodation_id, statistics_id)
 VALUES

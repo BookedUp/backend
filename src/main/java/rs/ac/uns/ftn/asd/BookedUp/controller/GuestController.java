@@ -93,11 +93,11 @@ public class GuestController {
                 favourites.add(AccommodationMapper.toEntity(accommodationDTO));
         }
 
-        List<Reservation> reservations = new ArrayList<Reservation>();
-        if(guestDTO.getReservations() != null) {
-            for(ReservationDTO reservationDTO : guestDTO.getReservations())
-                reservations.add(ReservationMapper.toEntity(reservationDTO));
-        }
+//        List<Reservation> reservations = new ArrayList<Reservation>();
+//        if(guestDTO.getReservations() != null) {
+//            for(ReservationDTO reservationDTO : guestDTO.getReservations())
+//                reservations.add(ReservationMapper.toEntity(reservationDTO));
+//        }
 
 //        List<Reservation> requests = new ArrayList<Reservation>();
 //        if(guestDTO.getRequests() != null) {
@@ -105,11 +105,11 @@ public class GuestController {
 //                requests.add(ReservationMapper.toEntity(reservationDTO));
 //        }
 
-        List<Review> reviews = new ArrayList<Review>();
-        if(guestDTO.getReviews() != null) {
-            for(ReviewDTO reviewDTO : guestDTO.getReviews())
-                reviews.add(ReviewMapper.toEntity(reviewDTO));
-        }
+//        List<Review> reviews = new ArrayList<Review>();
+//        if(guestDTO.getReviews() != null) {
+//            for(ReviewDTO reviewDTO : guestDTO.getReviews())
+//                reviews.add(ReviewMapper.toEntity(reviewDTO));
+//        }
 
         List<Notification> notifications = new ArrayList<Notification>();
         if(guestDTO.getNotifications() != null) {
@@ -117,10 +117,10 @@ public class GuestController {
                 notifications.add(NotificationMapper.toEntity(notificationDTO));
         }
         //guestForUpdate.setRequests(requests);
-        guestForUpdate.setReservations(reservations);
+//        guestForUpdate.setReservations(reservations);
         guestForUpdate.setFavourites(favourites);
-        guestForUpdate.setReviews(reviews);
-        guestForUpdate.setNotifications(notifications);
+//        guestForUpdate.setReviews(reviews);
+//        guestForUpdate.setNotifications(notifications);
         guestForUpdate.setNotificationEnable(guestDTO.isNotificationEnable());
 
         guestForUpdate = guestService.save(guestForUpdate);

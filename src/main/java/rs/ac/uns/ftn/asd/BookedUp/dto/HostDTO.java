@@ -14,12 +14,8 @@ import java.util.List;
 public class HostDTO extends UserDTO {
 
     private double averageRating;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    private List<AccommodationDTO> accommodations;
 //    private List<NotificationDTO> notifications;
     //private List<ReservationDTO> requests;
-    private List<StatisticsDTO> statistics;
-    private List<AccommodationStatisticsDTO> accommodationStatistics;
 
     private boolean reservationCreatedNotificationEnabled = true;
     private boolean cancellationNotificationEnabled = true;
@@ -27,30 +23,14 @@ public class HostDTO extends UserDTO {
     private boolean accommodationRatingNotificationEnabled = true;
 
 
-    public HostDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, double averageRating, List<AccommodationDTO> accommodations, List<StatisticsDTO> statistics, List<AccommodationStatisticsDTO> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture);
+    public HostDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, boolean active, PhotoDTO profilePicture, List<NotificationDTO> notifications, double averageRating, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, active, profilePicture, notifications);
         this.averageRating = averageRating;
-        this.accommodations = accommodations;
-        //this.requests = requests;
-        this.statistics = statistics;
-        this.accommodationStatistics = accommodationStatistics;
         this.reservationCreatedNotificationEnabled = reservationCreatedNotificationEnabled;
         this.cancellationNotificationEnabled = cancellationNotificationEnabled;
         this.hostRatingNotificationEnabled = hostRatingNotificationEnabled;
         this.accommodationRatingNotificationEnabled = accommodationRatingNotificationEnabled;
     }
 
-    public void copyValues(HostDTO dto) {
-        super.copyValues(dto);
-        this.accommodations = dto.getAccommodations();
-        //this.requests = dto.getRequests();
-        //this.notifications = dto.getNotifications();
-        this.averageRating = dto.getAverageRating();
-        this.reservationCreatedNotificationEnabled = dto.isReservationCreatedNotificationEnabled();
-        this.cancellationNotificationEnabled = dto.isCancellationNotificationEnabled();
-        this.hostRatingNotificationEnabled = dto.isHostRatingNotificationEnabled();
-        this.accommodationRatingNotificationEnabled = dto.isAccommodationRatingNotificationEnabled();
-        this.statistics = dto.getStatistics();
-        this.accommodationStatistics = dto.getAccommodationStatistics();
-    }
+
 }

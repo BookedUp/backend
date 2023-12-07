@@ -97,17 +97,17 @@ public class GuestService implements ServiceInterface<Guest>{
         if (guest == null)
             throw new Exception("Guest doesn't exist");
         
-        if (hasActiveReservations(guest)) {
-            throw new Exception("Guest has active reservations and cannot be deleted");
-        }
+//        if (hasActiveReservations(guest)) {
+//            throw new Exception("Guest has active reservations and cannot be deleted");
+//        }
 
-        List<Reservation> reservations = guest.getReservations();
-        if(!reservations.isEmpty()) {
-            for (Reservation reservation : reservations) {
-                reservation.setActive(false);
-                reservationRepository.save(reservation);
-            }
-        }
+//        List<Reservation> reservations = guest.getReservations();
+//        if(!reservations.isEmpty()) {
+//            for (Reservation reservation : reservations) {
+//                reservation.setActive(false);
+//                reservationRepository.save(reservation);
+//            }
+//        }
 
         List<Accommodation> favorites = guest.getFavourites();
         if (!favorites.isEmpty()) {
@@ -116,13 +116,13 @@ public class GuestService implements ServiceInterface<Guest>{
 
         }
 
-        List<Review> reviews = guest.getReviews();
-        if(!reviews.isEmpty()) {
-            for (Review review : reviews) {
-                review.setIsReviewActive(false);
-                reviewRepository.save(review);
-            }
-        }
+//        List<Review> reviews = guest.getReviews();
+//        if(!reviews.isEmpty()) {
+//            for (Review review : reviews) {
+//                review.setIsReviewActive(false);
+//                reviewRepository.save(review);
+//            }
+//        }
         //Dalje
 
         Address address = guest.getAddress();
@@ -136,13 +136,13 @@ public class GuestService implements ServiceInterface<Guest>{
             photoRepository.save(profilePhoto);
         }
 
-        List<Notification> notifications = guest.getNotifications();
-        if(!notifications.isEmpty()) {
-            for (Notification notification : notifications) {
-                notification.setActive(false);
-                notificationRepository.save(notification);
-            }
-        }
+//        List<Notification> notifications = guest.getNotifications();
+//        if(!notifications.isEmpty()) {
+//            for (Notification notification : notifications) {
+//                notification.setActive(false);
+//                notificationRepository.save(notification);
+//            }
+//        }
 
 
 
@@ -150,15 +150,15 @@ public class GuestService implements ServiceInterface<Guest>{
         repository.save(guest);
     }
 
-    private boolean hasActiveReservations(Guest guest) {
-        if (guest.getReservations() != null) {
-            return guest.getReservations().stream()
-                    .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED
-                            && reservation.getStatus() != ReservationStatus.COMPLETED
-                            && reservation.getStatus() != ReservationStatus.REJECTED);
-        }
-        return false;
-    }
+//    private boolean hasActiveReservations(Guest guest) {
+//        if (guest.getReservations() != null) {
+//            return guest.getReservations().stream()
+//                    .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED
+//                            && reservation.getStatus() != ReservationStatus.COMPLETED
+//                            && reservation.getStatus() != ReservationStatus.REJECTED);
+//        }
+//        return false;
+//    }
 
 
 

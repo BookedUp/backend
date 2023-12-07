@@ -68,9 +68,6 @@ public class User implements UserDetails {
     @Column(name = "last_password_reset_date",nullable = true)
     private Timestamp lastPasswordResetDate;
 
-    @OneToMany(mappedBy = "to", cascade = CascadeType.ALL)
-    private List<Notification> notifications;
-
 
 
 
@@ -98,7 +95,7 @@ public class User implements UserDetails {
         this.active = user.isActive();
         this.password = user.getPassword();
         this.isBlocked = user.isBlocked();
-        this.notifications = user.getNotifications();
+//        this.notifications = user.getNotifications();
         this.authority = user.getAuthority();
         this.verified = user.isVerified();
         this.profilePicture = user.getProfilePicture();
@@ -135,22 +132,5 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", address=" + address +
-                ", phone=" + phone +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", isBlocked=" + isBlocked +
-                ", verified=" + verified +
-                ", profilePicture=" + profilePicture +
-                ", authority=" + authority +
-                ", lastPasswordResetDate=" + lastPasswordResetDate +
-                ", notifications=" + notifications +
-                '}';
-    }
+
 }
