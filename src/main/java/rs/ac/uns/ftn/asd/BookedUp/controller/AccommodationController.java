@@ -103,7 +103,7 @@ public class AccommodationController {
         accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
         accommodationForUpdate.setStatus(accommodationDTO.getStatus());
         accommodationForUpdate.setHost(HostMapper.toEntity(accommodationDTO.getHost()));
-
+        accommodationForUpdate.setPrice(accommodationDTO.getPrice());
         accommodationForUpdate = accommodationService.save(accommodationForUpdate);
 
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);

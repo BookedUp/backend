@@ -15,7 +15,7 @@ public class GuestDTO extends UserDTO {
     private List<ReservationDTO> reservations;
     private List<AccommodationDTO> favourites;
     private List<ReviewDTO> reviews;
-    private boolean notificationEnable;
+    private boolean notificationEnable = true;
 
 
     public GuestDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, List<ReservationDTO> reservations, List<AccommodationDTO> favourites, List<ReviewDTO> reviews, boolean notificationEnable) {

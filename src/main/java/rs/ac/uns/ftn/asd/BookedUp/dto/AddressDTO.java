@@ -15,5 +15,5 @@ public class AddressDTO {
     private String city;
     private String postalCode;
     private String streetAndNumber;
-    private boolean active;
+    private boolean active = true;
 }

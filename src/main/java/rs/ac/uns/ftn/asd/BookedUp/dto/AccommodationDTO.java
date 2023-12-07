@@ -37,6 +37,7 @@ public class AccommodationDTO {
     private AccommodationStatus status;
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private HostDTO host;
+    private double price;
 
 
     public void copyValues(AccommodationDTO dto) {

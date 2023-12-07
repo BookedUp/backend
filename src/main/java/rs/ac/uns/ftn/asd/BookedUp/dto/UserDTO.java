@@ -22,7 +22,7 @@ public class UserDTO {
     private String password;
     private boolean isBlocked;
     private boolean verified;
-    private boolean active;
+    private boolean active = true;
 
     private PhotoDTO profilePicture;
     private List<NotificationDTO> notifications;
