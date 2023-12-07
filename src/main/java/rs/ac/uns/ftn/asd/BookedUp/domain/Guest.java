@@ -37,7 +37,7 @@ public class Guest extends User {
     private List<Review> reviews;
 
     @Column(nullable = true)
-    private boolean notificationEnable;
+    private boolean notificationEnable = true;
 
     public Guest(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean active, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Notification> notifications, List<Reservation> requests, List<Reservation> reservations, List<Accommodation> favourites, List<Review> reviews, boolean notificationEnable) {
         super(id, firstName, lastName, address, phone, email, password, isBlocked, active, verified, profilePicture, authority, lastPasswordResetDate, notifications);

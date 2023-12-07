@@ -42,7 +42,7 @@ public class User implements UserDetails {
     @Column
     private Integer phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -52,7 +52,7 @@ public class User implements UserDetails {
     private boolean isBlocked;
 
     @Column(nullable = false)
-    private boolean active;
+    private boolean active = true;
 
     @Column(nullable = false)
     private boolean verified;
