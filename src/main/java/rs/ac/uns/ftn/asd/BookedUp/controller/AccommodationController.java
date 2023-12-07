@@ -11,12 +11,14 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.BookedUp.enums.PriceType;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -92,7 +94,6 @@ public class AccommodationController {
         accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
         accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
         accommodationForUpdate.setType(accommodationDTO.getType());
-//        List<DateRange> availability = new ArrayList<DateRange>();
         List<DateRange> availability = accommodationDTO.getAvailability().stream()
                 .map(DateRangeMapper::toEntity)
                 .collect(Collectors.toList());
@@ -141,11 +142,23 @@ public class AccommodationController {
             List<Accommodation> searchedAccommodations = accommodationService.searchAccommodations(
                     country, city, guestsNumber, startDate, endDate);
 
-            List<AccommodationDTO> accommodationsDTO = searchedAccommodations.stream()
+            List<AccommodationDTO> results = searchedAccommodations.stream()
                     .map(AccommodationMapper::toDto)
                     .collect(Collectors.toList());
 
-            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+            for (AccommodationDTO accommodationDTO : results){
+                if (accommodationDTO.getPriceType().equals(PriceType.PER_NIGHT)) {
+                    long differenceInMilliseconds = endDate.getTime() - startDate.getTime();
+                    long daysBetween = TimeUnit.DAYS.convert(differenceInMilliseconds, TimeUnit.MILLISECONDS);
+                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, daysBetween);
+                    accommodationDTO.setTotalPrice(totalPrice);
+                } else {
+                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, (long)guestsNumber);
+                    accommodationDTO.setTotalPrice(totalPrice);
+                }
+            }
+
+            return new ResponseEntity<>(results, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();

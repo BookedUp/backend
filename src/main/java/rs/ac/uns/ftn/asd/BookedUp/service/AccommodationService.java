@@ -3,7 +3,9 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.PriceChange;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
+import rs.ac.uns.ftn.asd.BookedUp.dto.PriceChangeDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
@@ -119,6 +121,26 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
     public List<Accommodation> searchAccommodations(String country, String city, Integer guestsNumber, Date startDate, Date endDate){
         return repository.searchAccommodations(country, city, guestsNumber, startDate, endDate);
+    }
+
+    public double calculateTotalPrice(Accommodation accommodation, Date startDate, Long num){
+        if (!accommodation.getPriceChanges().isEmpty()) {
+
+            PriceChange selectedChangeDate = null;
+            for (PriceChange priceChange : accommodation.getPriceChanges()) {
+                if (priceChange.getChangeDate().before(startDate) || priceChange.getChangeDate().equals(startDate)) {
+                    if (selectedChangeDate == null || selectedChangeDate.getChangeDate().before(priceChange.getChangeDate())) {
+                        selectedChangeDate = priceChange;
+                    }
+                }
+            }
+
+            if (selectedChangeDate != null) {
+                return (selectedChangeDate.getNewPrice() * num);
+            }
+        }
+        System.out.println("Total price: " + accommodation.getPrice() * num);
+        return (accommodation.getPrice() * num);
     }
 
 }

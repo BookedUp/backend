@@ -23,8 +23,9 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT a FROM Accommodation a WHERE  a.status = 'CHANGED'")
     List<Accommodation> findAllChangedAccommodations();
 
+    //ako ne radi nesto PRVO SUMNJIV OVAJ FETCH NJEGA SAM MENJALA
     @Query("SELECT DISTINCT a FROM Accommodation a " +
-            "JOIN a.availability dr " +
+            "JOIN FETCH a.availability dr " +
             "WHERE a.status = 'ACTIVE' " +
             "AND (a.address.country = :country OR :country IS NULL) " +
             "AND (a.address.city = :city OR :city IS NULL) " +
@@ -36,6 +37,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("guestsNumber") int guests,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
+
 
 
 
