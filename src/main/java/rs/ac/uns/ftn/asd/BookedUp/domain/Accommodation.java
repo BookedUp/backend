@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -85,9 +86,13 @@ public class Accommodation {
     @Column(unique = false, nullable = true)
     private double averageRating;
 
+    @ManyToOne
+    @JoinColumn(name = "host_id", nullable = false)
+    private Host host;
+
 
     public void copyValues(Accommodation accommodation) {
-        //this.host = accommodation.getHost();
+        this.host = accommodation.getHost();
         this.name = accommodation.getName();
         this.address = accommodation.getAddress();
         this.description = accommodation.getDescription();

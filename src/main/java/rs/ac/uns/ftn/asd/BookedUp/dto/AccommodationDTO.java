@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +35,8 @@ public class AccommodationDTO {
     private List<PriceChangeDTO> priceChanges;
     private boolean automaticReservationAcceptance;
     private AccommodationStatus status;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private HostDTO host;
 
 
     public void copyValues(AccommodationDTO dto) {
@@ -48,5 +53,6 @@ public class AccommodationDTO {
         this.automaticReservationAcceptance = dto.isAutomaticReservationAcceptance();
         this.priceType = dto.getPriceType();
         this.status = dto.getStatus();
+        this.host = dto.getHost();
     }
 }

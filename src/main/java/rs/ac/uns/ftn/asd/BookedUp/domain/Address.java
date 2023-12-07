@@ -35,14 +35,17 @@ public class Address {
     @Column(unique = false, nullable = false)
     private double lon;
 
+    @Column(nullable = false)
+    private boolean active = true;
+
 
 
 
     // Function to copy values from another address
-    public void copyValues(Address address) {
-        this.country = address.getCountry();
-        this.city = address.getCity();
-        this.postalCode = address.getPostalCode();
-        this.streetAndNumber = address.getStreetAndNumber();
-    }
+//    public void copyValues(Address address) {
+//        this.country = address.getCountry();
+//        this.city = address.getCity();
+//        this.postalCode = address.getPostalCode();
+//        this.streetAndNumber = address.getStreetAndNumber();
+//    }
 }

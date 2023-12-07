@@ -1,15 +1,15 @@
-INSERT INTO address (country, city, postal_code, street_and_number, lat, lon)
+INSERT INTO address (country, city, postal_code, street_and_number, lat, lon, active)
 VALUES
-    ('United Kingdom', 'London', 'W1J 9BR', '150 Piccadilly', 51.5074, -0.1278),
-    ('France', 'Paris', '75008', '10 Place de la Concorde', 48.8656, 2.3111),
-    ('Germany', 'Berlin', '10117', 'Unter den Linden 77', 52.5162, 13.3761),
-    ('Russia', 'St. Petersburg', '', 'Mikhailovskaya Ulitsa 1/7', 59.9343, 30.3351),
-    ('Italy', 'Rome', '00187', 'Via del Babuino, 9', 41.9062, 12.4784),
-    ('Switzerland', 'St. Moritz', '7500', 'Via Serlas 27', 46.4907, 9.8350),
-    ('Spain', 'Barcelona', '08007', 'Passeig de Gràcia, 38-40', 41.3925, 2.1657),
-    ('United Kingdom', 'London', 'W1K 4HR', 'Brook Street, Mayfair', 51.5094, -0.1493),
-    ('Italy', 'Venice', '30122', 'Riva degli Schiavoni, 4196', 45.4336, 12.3433),
-    ('Italy', 'Rome', '00187', 'Via Vittorio Veneto, 125', 41.9064, 12.4881);
+    ('United Kingdom', 'London', 'W1J 9BR', '150 Piccadilly', 51.5074, -0.1278, true),
+    ('France', 'Paris', '75008', '10 Place de la Concorde', 48.8656, 2.3111, true),
+    ('Germany', 'Berlin', '10117', 'Unter den Linden 77', 52.5162, 13.3761, true),
+    ('Russia', 'St. Petersburg', '', 'Mikhailovskaya Ulitsa 1/7', 59.9343, 30.3351, true),
+    ('Italy', 'Rome', '00187', 'Via del Babuino, 9', 41.9062, 12.4784, true),
+    ('Switzerland', 'St. Moritz', '7500', 'Via Serlas 27', 46.4907, 9.8350, true),
+    ('Spain', 'Barcelona', '08007', 'Passeig de Gràcia, 38-40', 41.3925, 2.1657, true),
+    ('United Kingdom', 'London', 'W1K 4HR', 'Brook Street, Mayfair', 51.5094, -0.1493, true),
+    ('Italy', 'Venice', '30122', 'Riva degli Schiavoni, 4196', 45.4336, 12.3433, true),
+    ('Italy', 'Rome', '00187', 'Via Vittorio Veneto, 125', 41.9064, 12.4881, true);
 
 
 INSERT INTO public.authority (role) VALUES
@@ -17,16 +17,16 @@ INSERT INTO public.authority (role) VALUES
                                         ('GUEST'),
                                         ('HOST');
 
-INSERT INTO photo (url, caption, width, height)
+INSERT INTO photo (url, caption, width, height, active)
 VALUES
-    ('src/main/resources/images/people/people1.png', 'Description1', 264, 264),
-    ('src/main/resources/images/people/people2.png', 'Description2', 488, 511),
-    ('src/main/resources/images/people/people3.png', 'Description3', 980, 980),
-    ('src/main/resources/images/people/people4.png', 'Description4', 535, 466),
-    ('src/main/resources/images/people/people5.png', 'Description5', 500, 500),
-    ('src/main/resources/images/people/people6.png', 'Description6', 220, 230),
-    ('src/main/resources/images/people/people7.png', 'Description7', 524, 476),
-    ('src/main/resources/images/people/profilPicture.png', 'No profile picture', 640, 960);
+    ('src/main/resources/images/people/people1.png', 'Description1', 264, 264, true),
+    ('src/main/resources/images/people/people2.png', 'Description2', 488, 511, true),
+    ('src/main/resources/images/people/people3.png', 'Description3', 980, 980, true),
+    ('src/main/resources/images/people/people4.png', 'Description4', 535, 466, true),
+    ('src/main/resources/images/people/people5.png', 'Description5', 500, 500, true),
+    ('src/main/resources/images/people/people6.png', 'Description6', 220, 230, true),
+    ('src/main/resources/images/people/people7.png', 'Description7', 524, 476,true),
+    ('src/main/resources/images/people/profilPicture.png', 'No profile picture', 640, 960,true);
 
 INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, type, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled, active)
 VALUES
@@ -48,18 +48,18 @@ VALUES
     (6, 2),
     (7, 2);
 
-INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating)
+INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating, host_id)
 VALUES
-    ('Luksuzni hotel', 'Ovo je opis hotela', 1, 200.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 7.8),
-    ('Pansion "Suncokret"', 'Prijatan porodični pansion', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'HOSTEL', 8.0),
-    ('Vila "Miris mora"', 'Vila sa pogledom na more', 3, 300.0, 4, 8, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 9.0),
-    ('Apartman "Sunce"', 'Centralni apartman u srcu grada', 4, 80.0, 1, 2, 2, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 9.5),
-    ('Luksuzni resort', 'Odmor iz snova', 5, 500.0, 2, 6, 14, true, 'ACTIVE', 'PER_NIGHT', 'RESORT', 7.5),
-    ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.8),
-    ('Luksuzna vila na jezeru', 'Vila sa privatnim pristupom jezeru', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0),
-    ('Ekskluzivni hotel "Bella Vista"', 'Savršen odmor sa panoramskim pogledom', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8),
-    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 8.4),
-    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.7);
+    ('Luksuzni hotel', 'Ovo je opis hotela', 1, 200.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 7.8, 2),
+    ('Pansion "Suncokret"', 'Prijatan porodični pansion', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'HOSTEL', 8.0, 3),
+    ('Vila "Miris mora"', 'Vila sa pogledom na more', 3, 300.0, 4, 8, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 9.0, 2),
+    ('Apartman "Sunce"', 'Centralni apartman u srcu grada', 4, 80.0, 1, 2, 2, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 9.5, 3),
+    ('Luksuzni resort', 'Odmor iz snova', 5, 500.0, 2, 6, 14, true, 'ACTIVE', 'PER_NIGHT', 'RESORT', 7.5, 2),
+    ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.8, 3),
+    ('Luksuzna vila na jezeru', 'Vila sa privatnim pristupom jezeru', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0, 2),
+    ('Ekskluzivni hotel "Bella Vista"', 'Savršen odmor sa panoramskim pogledom', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8, 3),
+    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 8.4, 2),
+    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.7, 3);
 
 INSERT INTO amenities (accommodation_id, amenities)
 VALUES
@@ -180,28 +180,28 @@ VALUES
     ('Privacy concerns', 10, true, 1);
 
 
-INSERT INTO reservation (created_time, start_date, end_date, total_price, guests_number, accommodation_id, guest_id, status)
+INSERT INTO reservation (created_time, start_date, end_date, total_price, guests_number, accommodation_id, guest_id, status, active)
 VALUES
-    ('2023-12-10 08:00:00', '2024-01-05', '2024-01-10', 300.00, 2, 1, 4, 'CREATED'),
-    ('2023-12-11 09:30:00', '2024-02-15', '2024-02-22', 450.00, 3, 2, 5, 'ON_HOLD'),
-    ('2023-12-12 10:45:00', '2024-03-20', '2024-03-25', 200.00, 1, 3, 6, 'REJECTED'),
-    ('2023-12-13 12:15:00', '2024-04-05', '2024-04-15', 600.00, 4, 4, 7, 'ACCEPTED'),
-    ('2023-12-14 14:00:00', '2024-05-12', '2024-05-20', 350.00, 2, 5, 4, 'CANCELLED'),
-    ('2023-12-15 16:30:00', '2024-06-18', '2024-06-25', 700.00, 3, 6, 5, 'COMPLETED'),
-    ('2023-12-16 18:20:00', '2024-07-10', '2024-07-15', 250.00, 1, 7, 6, 'CREATED'),
-    ('2023-12-17 20:45:00', '2024-08-22', '2024-08-30', 500.00, 2, 8, 7, 'ON_HOLD'),
-    ('2023-12-18 22:10:00', '2024-09-05', '2024-09-15', 400.00, 3, 9, 4, 'REJECTED'),
-    ('2023-12-19 23:55:00', '2024-10-12', '2024-10-20', 800.00, 4, 10, 5, 'ACCEPTED'),
-    ('2023-12-20 01:30:00', '2024-11-18', '2024-11-25', 300.00, 2, 1, 6, 'CANCELLED'),
-    ('2023-12-21 03:40:00', '2024-12-15', '2025-01-02', 600.00, 3, 2, 7, 'COMPLETED'),
-    ('2023-12-22 05:25:00', '2025-01-20', '2025-02-01', 350.00, 2, 3, 4, 'CREATED'),
-    ('2023-12-23 07:15:00', '2025-02-15', '2025-02-22', 450.00, 3, 4, 5, 'ON_HOLD'),
-    ('2023-12-24 09:00:00', '2025-03-20', '2025-03-25', 200.00, 1, 5, 6, 'REJECTED'),
-    ('2023-12-25 11:30:00', '2025-04-05', '2025-04-15', 700.00, 4, 6, 7, 'ACCEPTED'),
-    ('2023-12-26 13:15:00', '2025-05-12', '2025-05-20', 350.00, 2, 7, 4, 'CANCELLED'),
-    ('2023-12-27 15:45:00', '2025-06-18', '2025-06-25', 800.00, 3, 8, 5, 'COMPLETED'),
-    ('2023-12-28 17:30:00', '2025-07-10', '2025-07-15', 250.00, 1, 9, 6, 'CREATED'),
-    ('2023-12-29 19:20:00', '2025-08-22', '2025-08-30', 500.00, 2, 10, 7, 'ON_HOLD');
+    ('2023-12-10 08:00:00', '2024-01-05', '2024-01-10', 300.00, 2, 1, 4, 'CREATED', true),
+    ('2023-12-11 09:30:00', '2024-02-15', '2024-02-22', 450.00, 3, 2, 5, 'COMPLETED', true),
+    ('2023-12-12 10:45:00', '2024-03-20', '2024-03-25', 200.00, 1, 3, 6, 'REJECTED', true),
+    ('2023-12-13 12:15:00', '2024-04-05', '2024-04-15', 600.00, 4, 4, 7, 'ACCEPTED', true),
+    ('2023-12-14 14:00:00', '2024-05-12', '2024-05-20', 350.00, 2, 5, 4, 'CANCELLED', true),
+    ('2023-12-15 16:30:00', '2024-06-18', '2024-06-25', 700.00, 3, 6, 5, 'COMPLETED', true),
+    ('2023-12-16 18:20:00', '2024-07-10', '2024-07-15', 250.00, 1, 7, 6, 'CREATED', true),
+    ('2023-12-17 20:45:00', '2024-08-22', '2024-08-30', 500.00, 2, 8, 7, 'REJECTED', true),
+    ('2023-12-18 22:10:00', '2024-09-05', '2024-09-15', 400.00, 3, 9, 4, 'REJECTED', true),
+    ('2023-12-19 23:55:00', '2024-10-12', '2024-10-20', 800.00, 4, 10, 5, 'REJECTED', true),
+    ('2023-12-20 01:30:00', '2024-11-18', '2024-11-25', 300.00, 2, 1, 6, 'CANCELLED', true),
+    ('2023-12-21 03:40:00', '2024-12-15', '2025-01-02', 600.00, 3, 2, 7, 'COMPLETED', true),
+    ('2023-12-22 05:25:00', '2025-01-20', '2025-02-01', 350.00, 2, 3, 4, 'CREATED', true),
+    ('2023-12-23 07:15:00', '2025-02-15', '2025-02-22', 450.00, 3, 4, 5, 'COMPLETED', true),
+    ('2023-12-24 09:00:00', '2025-03-20', '2025-03-25', 200.00, 1, 5, 6, 'REJECTED', true),
+    ('2023-12-25 11:30:00', '2025-04-05', '2025-04-15', 700.00, 4, 6, 7, 'ACCEPTED', true),
+    ('2023-12-26 13:15:00', '2025-05-12', '2025-05-20', 350.00, 2, 7, 4, 'CANCELLED', true),
+    ('2023-12-27 15:45:00', '2025-06-18', '2025-06-25', 800.00, 3, 8, 5, 'COMPLETED', true),
+    ('2023-12-28 17:30:00', '2025-07-10', '2025-07-15', 250.00, 1, 9, 6, 'CREATED', true),
+    ('2023-12-29 19:20:00', '2025-08-22', '2025-08-30', 500.00, 2, 10, 7, 'ACCEPTED', true);
 
 
 INSERT INTO notification (from_user_id, to_user_id, title, message, timestamp, type, active)

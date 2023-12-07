@@ -14,6 +14,6 @@ public class AddressDTO {
     private String country;
     private String city;
     private String postalCode;
-
     private String streetAndNumber;
+    private boolean active;
 }

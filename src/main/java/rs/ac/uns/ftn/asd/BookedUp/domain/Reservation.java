@@ -47,17 +47,20 @@ public class Reservation {
     @Column(nullable = false)
     private ReservationStatus status;
 
+    @Column(nullable = false)
+    private boolean active = true;
 
-    public void copyValues(Reservation reservation) {
-        this.id = reservation.getId();
-        this.createdTime = reservation.getCreatedTime();
-        this.startDate = reservation.getStartDate();
-        this.endDate = reservation.getEndDate();
-        this.totalPrice = reservation.getTotalPrice();
-        this.guestsNumber = reservation.getGuestsNumber();
-        this.accommodation = reservation.getAccommodation();
-        this.guest = reservation.getGuest();
-        this.status = reservation.getStatus();
-    }
+
+//    public void copyValues(Reservation reservation) {
+//        this.id = reservation.getId();
+//        this.createdTime = reservation.getCreatedTime();
+//        this.startDate = reservation.getStartDate();
+//        this.endDate = reservation.getEndDate();
+//        this.totalPrice = reservation.getTotalPrice();
+//        this.guestsNumber = reservation.getGuestsNumber();
+//        this.accommodation = reservation.getAccommodation();
+//        this.guest = reservation.getGuest();
+//        this.status = reservation.getStatus();
+//    }
 
 }

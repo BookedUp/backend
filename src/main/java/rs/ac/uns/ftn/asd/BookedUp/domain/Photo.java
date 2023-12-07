@@ -28,11 +28,14 @@ public class Photo {
     @Column(nullable = false)
     private int height;
 
-    public void copyValues(Photo photo){
-        this.id = photo.getId();
-        this.url = photo.getUrl();
-        this.caption = photo.getCaption();
-        this.width = photo.getWidth();
-        this.height = photo.getHeight();
-    }
+    @Column(nullable = false)
+    private boolean active = true;
+
+//    public void copyValues(Photo photo){
+//        this.id = photo.getId();
+//        this.url = photo.getUrl();
+//        this.caption = photo.getCaption();
+//        this.width = photo.getWidth();
+//        this.height = photo.getHeight();
+//    }
 }
