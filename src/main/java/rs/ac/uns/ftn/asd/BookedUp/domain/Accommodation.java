@@ -69,11 +69,11 @@ public class Accommodation {
     @JoinColumn(name = "accommodation_id", nullable = true)
     private List<Photo> photos;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "accommodation_id", nullable = true)
     private List<DateRange> availability;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "accommodation_id", nullable = true)
     private List<PriceChange> priceChanges;
 

@@ -87,11 +87,11 @@ public class AccommodationController {
         accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
         accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
         accommodationForUpdate.setType(accommodationDTO.getType());
-        List<DateRange> availability = new ArrayList<DateRange>();
-        if (accommodationDTO.getAvailability() != null){
-            for (DateRangeDTO dto : accommodationDTO.getAvailability())
-                availability.add(DateRangeMapper.toEntity(dto));
-        }
+//        List<DateRange> availability = new ArrayList<DateRange>();
+        List<DateRange> availability = accommodationDTO.getAvailability().stream()
+                .map(DateRangeMapper::toEntity)
+                .collect(Collectors.toList());
+
         accommodationForUpdate.setAvailability(availability);
         accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
         List<PriceChange> priceChanges = new ArrayList<PriceChange>();
