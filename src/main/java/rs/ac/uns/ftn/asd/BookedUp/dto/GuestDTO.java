@@ -27,13 +27,5 @@ public class GuestDTO extends UserDTO {
         this.notificationEnable = notificationEnable;
     }
 
-    public void copyValues(GuestDTO dto) {
-        super.copyValues(dto);
-        this.favourites = dto.getFavourites();
-        //this.requests = dto.getRequests();
-//        this.reservations = dto.getReservations();
-//        this.reviews = dto.getReviews();
-        //this.notifications = dto.getNotifications();
-        this.notificationEnable = dto.isNotificationEnable();
-    }
+
 }

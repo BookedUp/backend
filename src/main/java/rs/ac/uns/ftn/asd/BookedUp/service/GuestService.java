@@ -32,6 +32,9 @@ public class GuestService implements ServiceInterface<Guest>{
     private INotificationRepository notificationRepository;
 
     @Autowired
+    private ReservationService reservationService;
+
+    @Autowired
     private GuestMapper guestMapper;
     @Override
     public Collection<Guest> getAll() {
@@ -97,17 +100,17 @@ public class GuestService implements ServiceInterface<Guest>{
         if (guest == null)
             throw new Exception("Guest doesn't exist");
         
-//        if (hasActiveReservations(guest)) {
-//            throw new Exception("Guest has active reservations and cannot be deleted");
-//        }
+        if (hasActiveReservations(guest.getId())) {
+            throw new Exception("Guest has active reservations and cannot be deleted");
+        }
 
-//        List<Reservation> reservations = guest.getReservations();
-//        if(!reservations.isEmpty()) {
-//            for (Reservation reservation : reservations) {
-//                reservation.setActive(false);
-//                reservationRepository.save(reservation);
-//            }
-//        }
+        List<Reservation> reservations = reservationService.findAllByGuestId(guest.getId());
+        if(!reservations.isEmpty()) {
+            for (Reservation reservation : reservations) {
+                reservation.setActive(false);
+                reservationRepository.save(reservation);
+            }
+        }
 
         List<Accommodation> favorites = guest.getFavourites();
         if (!favorites.isEmpty()) {
@@ -150,15 +153,16 @@ public class GuestService implements ServiceInterface<Guest>{
         repository.save(guest);
     }
 
-//    private boolean hasActiveReservations(Guest guest) {
-//        if (guest.getReservations() != null) {
-//            return guest.getReservations().stream()
-//                    .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED
-//                            && reservation.getStatus() != ReservationStatus.COMPLETED
-//                            && reservation.getStatus() != ReservationStatus.REJECTED);
-//        }
-//        return false;
-//    }
+    private boolean hasActiveReservations(Long id) {
+        List<Reservation> reservations = reservationService.findAllByGuestId(id);
+        if ( reservations!= null) {
+            return reservations.stream()
+                    .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED
+                            && reservation.getStatus() != ReservationStatus.COMPLETED
+                            && reservation.getStatus() != ReservationStatus.REJECTED);
+        }
+        return false;
+    }
 
 
 

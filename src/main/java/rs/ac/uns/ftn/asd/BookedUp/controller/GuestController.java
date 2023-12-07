@@ -111,11 +111,11 @@ public class GuestController {
 //                reviews.add(ReviewMapper.toEntity(reviewDTO));
 //        }
 
-        List<Notification> notifications = new ArrayList<Notification>();
-        if(guestDTO.getNotifications() != null) {
-            for(NotificationDTO notificationDTO : guestDTO.getNotifications())
-                notifications.add(NotificationMapper.toEntity(notificationDTO));
-        }
+//        List<Notification> notifications = new ArrayList<Notification>();
+//        if(guestDTO.getNotifications() != null) {
+//            for(NotificationDTO notificationDTO : guestDTO.getNotifications())
+//                notifications.add(NotificationMapper.toEntity(notificationDTO));
+//        }
         //guestForUpdate.setRequests(requests);
 //        guestForUpdate.setReservations(reservations);
         guestForUpdate.setFavourites(favourites);

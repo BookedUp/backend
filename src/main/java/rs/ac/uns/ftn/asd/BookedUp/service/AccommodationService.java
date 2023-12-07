@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
@@ -10,6 +11,7 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class AccommodationService implements ServiceInterface<Accommodation>{
@@ -95,5 +97,8 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return repository.save(accommodationToUpdate);
     }
 
+    public List<Accommodation> findAllByHostId(Long id){
+        return repository.findAllByHostId(id);
+    }
 
 }
