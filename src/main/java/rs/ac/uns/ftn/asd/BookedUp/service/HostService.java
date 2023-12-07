@@ -2,12 +2,10 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
-import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.HostMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IHostRepository;
 
@@ -16,6 +14,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -88,10 +87,40 @@ public class HostService implements ServiceInterface<Host>{
     @Override
     public void delete(Long id) throws Exception {
         Host host = repository.findById(id).orElse(null);
+
         if (host == null)
             throw new Exception("Host doesn't exist");
+
+        if (hasActiveReservations(host)) {
+            throw new Exception("Host has future reservations and cannot be deleted");
+        }
+        
         host.setActive(false);
         host = repository.save(host);
+    }
+
+    private boolean hasActiveReservations(Host host) {
+        List<Accommodation> accommodations = host.getAccommodations();
+
+        if (accommodations != null) {
+            for (Accommodation accommodation : accommodations) {
+                List<Reservation> reservations = accommodation.getReservations();
+
+                if (reservations != null) {
+                    for (Reservation reservation : reservations) {
+                        // Provera da li je rezervacija u budućnosti i da li je aktivna
+                        if (reservation.getStartDate().after(new Date())
+                                && reservation.getStatus() != ReservationStatus.CANCELLED
+                                && reservation.getStatus() != ReservationStatus.COMPLETED
+                                && reservation.getStatus() != ReservationStatus.REJECTED) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public boolean isWithinDateRange(Date date, Date fromDate, Date toDate) {

@@ -101,10 +101,10 @@ public class HostController {
         }
 
         List<Reservation> requests = new ArrayList<Reservation>();
-        if(hostDTO.getRequests() != null) {
-            for(ReservationDTO reservationDTO : hostDTO.getRequests())
-                requests.add(ReservationMapper.toEntity(reservationDTO));
-        }
+//        if(hostDTO.getRequests() != null) {
+//            for(ReservationDTO reservationDTO : hostDTO.getRequests())
+//                requests.add(ReservationMapper.toEntity(reservationDTO));
+//        }
 
         List<Notification> notifications = new ArrayList<Notification>();
         if(hostDTO.getNotifications() != null) {
@@ -126,7 +126,7 @@ public class HostController {
 
         hostForUpdate.setAccommodations(accommodations);
         hostForUpdate.setNotifications(notifications);
-        hostForUpdate.setRequests(requests);
+        //hostForUpdate.setRequests(requests);
         hostForUpdate.setReservationCreatedNotificationEnabled(hostDTO.isReservationCreatedNotificationEnabled());
         hostForUpdate.setCancellationNotificationEnabled(hostDTO.isCancellationNotificationEnabled());
         hostForUpdate.setHostRatingNotificationEnabled(hostDTO.isHostRatingNotificationEnabled());

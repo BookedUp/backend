@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
@@ -11,9 +14,10 @@ import java.util.List;
 public class HostDTO extends UserDTO {
 
     private double averageRating;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private List<AccommodationDTO> accommodations;
 //    private List<NotificationDTO> notifications;
-    private List<ReservationDTO> requests;
+    //private List<ReservationDTO> requests;
     private List<StatisticsDTO> statistics;
     private List<AccommodationStatisticsDTO> accommodationStatistics;
 
@@ -23,11 +27,11 @@ public class HostDTO extends UserDTO {
     private boolean accommodationRatingNotificationEnabled = true;
 
 
-    public HostDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, double averageRating, List<AccommodationDTO> accommodations, List<ReservationDTO> requests, List<StatisticsDTO> statistics, List<AccommodationStatisticsDTO> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
+    public HostDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, double averageRating, List<AccommodationDTO> accommodations, List<StatisticsDTO> statistics, List<AccommodationStatisticsDTO> accommodationStatistics, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
         super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture);
         this.averageRating = averageRating;
         this.accommodations = accommodations;
-        this.requests = requests;
+        //this.requests = requests;
         this.statistics = statistics;
         this.accommodationStatistics = accommodationStatistics;
         this.reservationCreatedNotificationEnabled = reservationCreatedNotificationEnabled;
@@ -39,7 +43,7 @@ public class HostDTO extends UserDTO {
     public void copyValues(HostDTO dto) {
         super.copyValues(dto);
         this.accommodations = dto.getAccommodations();
-        this.requests = dto.getRequests();
+        //this.requests = dto.getRequests();
         //this.notifications = dto.getNotifications();
         this.averageRating = dto.getAverageRating();
         this.reservationCreatedNotificationEnabled = dto.isReservationCreatedNotificationEnabled();

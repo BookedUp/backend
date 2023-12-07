@@ -99,11 +99,11 @@ public class GuestController {
                 reservations.add(ReservationMapper.toEntity(reservationDTO));
         }
 
-        List<Reservation> requests = new ArrayList<Reservation>();
-        if(guestDTO.getRequests() != null) {
-            for(ReservationDTO reservationDTO : guestDTO.getRequests())
-                requests.add(ReservationMapper.toEntity(reservationDTO));
-        }
+//        List<Reservation> requests = new ArrayList<Reservation>();
+//        if(guestDTO.getRequests() != null) {
+//            for(ReservationDTO reservationDTO : guestDTO.getRequests())
+//                requests.add(ReservationMapper.toEntity(reservationDTO));
+//        }
 
         List<Review> reviews = new ArrayList<Review>();
         if(guestDTO.getReviews() != null) {
@@ -116,7 +116,7 @@ public class GuestController {
             for(NotificationDTO notificationDTO : guestDTO.getNotifications())
                 notifications.add(NotificationMapper.toEntity(notificationDTO));
         }
-        guestForUpdate.setRequests(requests);
+        //guestForUpdate.setRequests(requests);
         guestForUpdate.setReservations(reservations);
         guestForUpdate.setFavourites(favourites);
         guestForUpdate.setReviews(reviews);

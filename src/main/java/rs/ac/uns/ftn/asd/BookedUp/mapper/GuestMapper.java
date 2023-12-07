@@ -21,8 +21,7 @@ public class GuestMapper{
         modelMapper.typeMap(GuestDTO.class, Guest.class)
                 .addMapping(GuestDTO::getFavourites, Guest::setFavourites)
                 .addMapping(GuestDTO::getReviews, Guest::setReviews)
-                .addMapping(GuestDTO::getReservations, Guest::setReservations)
-                .addMapping(GuestDTO::getRequests, Guest::setRequests);
+                .addMapping(GuestDTO::getReservations, Guest::setReservations);
 
     }
     public static Guest toEntity(GuestDTO dto) {
