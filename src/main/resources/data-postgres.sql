@@ -48,18 +48,18 @@ VALUES
     (6, 2),
     (7, 2);
 
-INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating, host_id)
+INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating, host_id, active)
 VALUES
-    ('Luksuzni hotel', 'Ovo je opis hotela', 1, 200.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 7.8, 2),
-    ('Pansion "Suncokret"', 'Prijatan porodični pansion', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'HOSTEL', 8.0, 3),
-    ('Vila "Miris mora"', 'Vila sa pogledom na more', 3, 300.0, 4, 8, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 9.0, 2),
-    ('Apartman "Sunce"', 'Centralni apartman u srcu grada', 4, 80.0, 1, 2, 2, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 9.5, 3),
-    ('Luksuzni resort', 'Odmor iz snova', 5, 500.0, 2, 6, 14, true, 'ACTIVE', 'PER_NIGHT', 'RESORT', 7.5, 2),
-    ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.8, 3),
-    ('Luksuzna vila na jezeru', 'Vila sa privatnim pristupom jezeru', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0, 2),
-    ('Ekskluzivni hotel "Bella Vista"', 'Savršen odmor sa panoramskim pogledom', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8, 3),
-    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 8.4, 2),
-    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.7, 3);
+    ('Luksuzni hotel', 'Ovo je opis hotela', 1, 200.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 7.8, 2, true),
+    ('Pansion "Suncokret"', 'Prijatan porodični pansion', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'HOSTEL', 8.0, 3, true),
+    ('Vila "Miris mora"', 'Vila sa pogledom na more', 3, 300.0, 4, 8, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 9.0, 2, true),
+    ('Apartman "Sunce"', 'Centralni apartman u srcu grada', 4, 80.0, 1, 2, 2, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 9.5, 3, true),
+    ('Luksuzni resort', 'Odmor iz snova', 5, 500.0, 2, 6, 14, true, 'ACTIVE', 'PER_NIGHT', 'RESORT', 7.5, 2, true),
+    ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.8, 3, true),
+    ('Luksuzna vila na jezeru', 'Vila sa privatnim pristupom jezeru', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0, 2, true),
+    ('Ekskluzivni hotel "Bella Vista"', 'Savršen odmor sa panoramskim pogledom', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8, 3, true),
+    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 8.4, 2, true),
+    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.7, 3, true);
 
 INSERT INTO amenities (accommodation_id, amenities)
 VALUES

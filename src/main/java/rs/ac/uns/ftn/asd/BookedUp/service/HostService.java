@@ -7,7 +7,7 @@ import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.HostMapper;
-import rs.ac.uns.ftn.asd.BookedUp.repository.IHostRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -25,7 +25,12 @@ public class HostService implements ServiceInterface<Host>{
     private IHostRepository repository;
 
     @Autowired
-    private HostMapper hostMapper;
+    private IPhotoRepository photoRepository;
+
+    @Autowired
+    private IAccommodationRepository accommodationRepository;
+    @Autowired
+    private INotificationRepository notificationRepository;
     @Override
     public Collection<Host> getAll() {
         return repository.findAllHosts();
@@ -94,9 +99,37 @@ public class HostService implements ServiceInterface<Host>{
         if (hasActiveReservations(host)) {
             throw new Exception("Host has future reservations and cannot be deleted");
         }
-        
+
+        List<Accommodation> accommodations = host.getAccommodations();
+        if(!accommodations.isEmpty()) {
+            for (Accommodation accommodation : accommodations) {
+                accommodation.setActive(false);
+                accommodationRepository.save(accommodation);
+            }
+        }
+
+        Address address = host.getAddress();
+        if(address != null){
+            address.setActive(false);
+        }
+
+        Photo profilePhoto = host.getProfilePicture();
+        if(profilePhoto != null){
+            profilePhoto.setActive(false);
+            photoRepository.save(profilePhoto);
+        }
+
+        List<Notification> notifications = host.getNotifications();
+        if(!notifications.isEmpty()) {
+            for (Notification notification : notifications) {
+                notification.setActive(false);
+                notificationRepository.save(notification);
+            }
+        }
+
+
         host.setActive(false);
-        host = repository.save(host);
+        repository.save(host);
     }
 
     private boolean hasActiveReservations(Host host) {

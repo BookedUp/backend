@@ -90,6 +90,8 @@ public class Accommodation {
     @JoinColumn(name = "host_id", nullable = false)
     private Host host;
 
+    @Column(nullable = false)
+    private boolean active = true;
 
     public void copyValues(Accommodation accommodation) {
         this.host = accommodation.getHost();
@@ -111,6 +113,7 @@ public class Accommodation {
         this.reservations = accommodation.getReservations();
         this.reviews = accommodation.getReviews();
         this.averageRating = accommodation.getAverageRating();
+
     }
 
 }
