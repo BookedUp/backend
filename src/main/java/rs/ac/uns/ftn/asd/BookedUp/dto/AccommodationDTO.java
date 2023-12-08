@@ -40,6 +40,7 @@ public class AccommodationDTO {
     private double price;
     private double totalPrice = 0.0;
     private double averageRating;
+    private int cancellationDeadline;
 
 
     public void copyValues(AccommodationDTO dto) {

@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
 
 import java.util.Collection;
@@ -19,10 +18,13 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
 
 
     @Query("SELECT a FROM Accommodation a WHERE  a.status = 'CREATED'")
-    List<Accommodation> findAllCreatedAccommodations();
+    List<Accommodation> findAllCreated();
 
     @Query("SELECT a FROM Accommodation a WHERE  a.status = 'CHANGED'")
-    List<Accommodation> findAllChangedAccommodations();
+    List<Accommodation> findAllChanged();
+
+    @Query("SELECT a FROM Accommodation a WHERE  a.status = 'CHANGED' OR a.status='CREATED'")
+    List<Accommodation> findAllModified();
 
     //ako ne radi nesto PRVO SUMNJIV OVAJ FETCH NJEGA SAM MENJALA
     @Query("SELECT DISTINCT a FROM Accommodation a " +
@@ -38,6 +40,22 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("guestsNumber") int guests,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
+
+    @Query("SELECT a FROM Accommodation a " +
+            "LEFT JOIN a.amenities amenity " +
+            "WHERE (?1 IS NULL OR amenity IN ?1) " +
+            "AND (?2 IS NULL OR a.type = ?2) " +
+            "AND (?3 IS NULL OR a.price >= ?3) " +
+            "AND (?4 IS NULL OR a.price <= ?4)")
+    List<Accommodation> filterAccommodations(
+            List<Amenity> amenities,
+            AccommodationType accommodationType,
+            Double minPrice,
+            Double maxPrice);
+
+
+
+
 
 
 }

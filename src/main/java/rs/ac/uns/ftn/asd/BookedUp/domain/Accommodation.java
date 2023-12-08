@@ -11,6 +11,8 @@ import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.enums.PriceType;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -92,6 +94,8 @@ public class Accommodation {
 
     @Column(nullable = false)
     private boolean active = true;
+
+
 
     public void copyValues(Accommodation accommodation) {
         this.host = accommodation.getHost();

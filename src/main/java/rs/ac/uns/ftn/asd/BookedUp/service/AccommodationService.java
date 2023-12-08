@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccommodationService implements ServiceInterface<Accommodation>{
@@ -39,7 +40,11 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
     @Override
     public Collection<Accommodation> getAll() {
-        return repository.findAll();
+        List<Accommodation> accommodations = repository.findAll();
+        for (Accommodation accommodation: accommodations){
+            updatePrice(accommodation);
+        }
+        return accommodations;
     }
 
     @Override
@@ -176,6 +181,18 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return repository.findAllByHostId(id);
     }
 
+    public List<Accommodation> findAllChanged(){
+        return repository.findAllChanged();
+    }
+
+    public List<Accommodation> findAllCreated(){
+        return repository.findAllCreated();
+    }
+
+    public List<Accommodation> findAllModified(){
+        return repository.findAllModified();
+    }
+
     public boolean hasActiveReservations(Long id) {
         List<Reservation> reservations = reservationService.findAllByAccommodationId(id);
         if ( reservations!= null) {
@@ -191,7 +208,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return repository.searchAccommodations(country, city, guestsNumber, startDate, endDate);
     }
 
-    public double calculateTotalPrice(Accommodation accommodation, Date startDate, Long num){
+    public double calculateTotalPrice(Accommodation accommodation, Date startDate, Integer daysNumber, Integer guestsNumber){
         if (!accommodation.getPriceChanges().isEmpty()) {
 
             PriceChange selectedChangeDate = null;
@@ -204,14 +221,51 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             }
 
             if (selectedChangeDate != null) {
-                return (selectedChangeDate.getNewPrice() * num);
+                return (selectedChangeDate.getNewPrice() * daysNumber * guestsNumber);
             }
         }
-        System.out.println("Total price: " + accommodation.getPrice() * num);
-        return (accommodation.getPrice() * num);
+//        System.out.println("Total price: " + accommodation.getPrice() * num);
+        return (accommodation.getPrice() * daysNumber * guestsNumber);
     }
 
-//    public List<Accommodation> filterAccommodations(List<Amenity> amenities, AccommodationType accommodationType, Double minPrice, Double maxPrice) {
-//        return repository.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
-//    }
+    public void updatePrice(Accommodation accommodation){
+            Date today = new Date();
+            if (!accommodation.getPriceChanges().isEmpty()) {
+
+                PriceChange selectedChangeDate = null;
+                for (PriceChange priceChange : accommodation.getPriceChanges()) {
+                    if (priceChange.getChangeDate().before(today) || priceChange.getChangeDate().equals(today)) {
+                        if (selectedChangeDate == null || selectedChangeDate.getChangeDate().before(priceChange.getChangeDate())) {
+                            selectedChangeDate = priceChange;
+                        }
+                    }
+                }
+
+                if (selectedChangeDate != null) {
+                    accommodation.setPrice(selectedChangeDate.getNewPrice());
+                    repository.save(accommodation);
+                }
+            }
+        }
+
+
+    public List<Accommodation> filterAccommodations(List<Amenity> amenities, AccommodationType accommodationType, Double minPrice, Double maxPrice) {
+        List<Accommodation> filteredAccommodations = repository.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
+        return filteredAccommodations;
+//        for (Accommodation accommodation : filteredAccommodations){
+//            System.out.println(accommodation.getId());
+//            System.out.println(accommodation.getType());
+//            System.out.println(accommodation.getPrice());
+//            for (Amenity amenity : accommodation.getAmenities()){
+//                System.out.println(amenity);
+//            }
+//        }
+//        if (amenities != null && !amenities.isEmpty()) {
+//            filteredAccommodations = filteredAccommodations.stream()
+//                    .filter(accommodation -> accommodation.getAmenities().containsAll(amenities))
+//                    .collect(Collectors.toList());
+//        }
+//        return filteredAccommodations;
+    }
 }
+
