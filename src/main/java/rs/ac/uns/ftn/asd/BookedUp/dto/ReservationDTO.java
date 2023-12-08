@@ -15,24 +15,12 @@ import java.util.Date;
 public class ReservationDTO {
 
     private Long id;
-
     private AccommodationDTO accommodationDTO;
-
     private Date startDate;
-
     private Date endDate;
-
     private Integer guestsNumber;
-
     private ReservationStatus status;
-
-    public ReservationDTO(AccommodationDTO accommodationDTO, Date startDate, Date endDate, Integer guestsNumber, ReservationStatus status) {
-        this.accommodationDTO = accommodationDTO;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.guestsNumber = guestsNumber;
-        this.status = status;
-    }
+    private boolean active;
     public void copyValues(ReservationDTO dto) {
         this.accommodationDTO = dto.getAccommodationDTO();
         this.startDate = dto.getStartDate();

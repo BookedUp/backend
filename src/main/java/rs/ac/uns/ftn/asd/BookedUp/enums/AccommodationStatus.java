@@ -4,6 +4,7 @@ public enum AccommodationStatus {
 
     CREATED,
     ACTIVE,
-    REJECTED
+    REJECTED,
+    CHANGED
     // Add more status options as needed
 }

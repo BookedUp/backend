@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewDTO {
     private Long id;
-    private UserDTO userDTO;
+    //private GuestDTO guestDTO;
     private int review;
     private String comment;
     private LocalDateTime date;
@@ -23,7 +23,7 @@ public class ReviewDTO {
     private ReviewType type;
 
     public void copyValues(ReviewDTO dto) {
-        this.userDTO=dto.getUserDTO();
+        //this.guestDTO=dto.getGuestDTO();
         this.review=dto.getReview();
         this.comment = dto.getComment();
         this.date = dto.getDate();

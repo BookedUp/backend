@@ -3,99 +3,99 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
-import rs.ac.uns.ftn.asd.BookedUp.repository.UserRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IUserRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class UserService implements IUserService{
+public class UserService implements ServiceInterface<User>{
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository repository;
 
-    @Autowired
-    private UserMapper userMapper;
     @Override
-    public Collection<UserDTO> getAll() {
-        Collection<User> users = userRepository.getAll();
-        Collection<UserDTO> userDTOS = new ArrayList<>();
-
-        for (User user : users) {
-            UserDTO userDTO = userMapper.toDto(user);
-            userDTOS.add(userDTO);
-        }
-
-        return userDTOS;
+    public Collection<User> getAll() {
+        Collection<User> users = repository.findAll();
+        return users;
     }
 
     @Override
-    public UserDTO getById(Long id) {
-        User user = userRepository.getById(id);
-        return userMapper.toDto(user);
+    public User getById(Long id) {
+        User user = repository.findById(id).orElse(null);
+        return user;
     }
 
     @Override
-    public UserDTO create(UserDTO userDto) throws Exception {
-        if (userDto.getId() != null) {
+    public User create(User user) throws Exception {
+        if (user.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
-        User user = userMapper.toEntity(userDto);
-        User savedUser = userRepository.create(user);
-        return userMapper.toDto(savedUser);
+        System.out.println(user.getAddress().getId());
+        return repository.save(user);
     }
 
-    @Override
-    public UserDTO update(UserDTO userDto) throws Exception {
-        User user = userMapper.toEntity(userDto);
-        User userToUpdate = userRepository.getById(user.getId());
-        if (userToUpdate == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
-        }
-        userToUpdate.setFirstName(user.getFirstName());
-        userToUpdate.setLastName(user.getLastName());
-        userToUpdate.setAddress(user.getAddress());
-        userToUpdate.setEmail(user.getEmail());
-        userToUpdate.setPassword(user.getPassword());
-        userToUpdate.setPhone(user.getPhone());
-        userToUpdate.setRole(user.getRole());
-        userToUpdate.setBlocked(user.isBlocked());
+//    @Override
+//    public User update(User user) throws Exception {
+//        User userToUpdate = repository.findById(user.getId()).orElse(null);
+//        if (userToUpdate == null) {
+//            throw new Exception("Trazeni entitet nije pronadjen.");
+//        }
+//        userToUpdate.setFirstName(user.getFirstName());
+//        userToUpdate.setLastName(user.getLastName());
+//        userToUpdate.setAddress(user.getAddress());
+//        userToUpdate.setEmail(user.getEmail());
+//        userToUpdate.setPassword(user.getPassword());
+//        userToUpdate.setPhone(user.getPhone());
+//        //userToUpdate.setRole(user.getRole());
+//        userToUpdate.setVerified(user.isVerified());
+//        userToUpdate.setProfilePicture(user.getProfilePicture());
+//        userToUpdate.setLastPasswordResetDate(user.getLastPasswordResetDate());
+//        userToUpdate.setBlocked(user.isBlocked());
+//
+//        userToUpdate.setAuthority(user.getAuthority());
+//        userToUpdate.setProfilePicture(user.getProfilePicture());
+//        userToUpdate.setVerified(user.isVerified());
+//        userToUpdate.setLastPasswordResetDate(user.getLastPasswordResetDate());
+//
+//        System.out.println(userToUpdate.getLastPasswordResetDate());
+//        for (Authority authority : userToUpdate.getAuthority()){
+//            System.out.println(authority.getRole());
+//        }
+//
+//        return repository.save(userToUpdate);
+//
+//    }
 
-        User updatedUser = userRepository.create(userToUpdate);
-        return userMapper.toDto(updatedUser);
+    @Override
+    public User save(User user) {
+        return repository.save(user);
     }
 
     @Override
     public void delete(Long id) {
-        userRepository.delete(id);
+        repository.deleteById(id);
     }
 
-    @Override
     public void blockUser(Long id) throws Exception{
-        User user = userRepository.getById(id);
+        User user = repository.findById(id).orElse(null);
         if (user == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
 
         user.setBlocked(true);
 
-        User updatedUser = userRepository.create(user);
-
-
+        repository.save(user);
     }
 
-    @Override
     public void unblockUser(Long id) throws Exception {
-        User user = userRepository.getById(id);
+        User user = repository.findById(id).orElse(null);
         if (user == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
 
         user.setBlocked(false);
 
-        User updatedUser = userRepository.create(user);
+        repository.save(user);
 
     }
 

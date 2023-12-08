@@ -21,7 +21,7 @@ import java.util.List;
 public class BookedUpApplication {
 
 	@Bean
-	public ModelMapper getModelMapper() {
+	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
 	public static void main(String[] args) {
@@ -29,7 +29,7 @@ public class BookedUpApplication {
 		SpringApplication.run(BookedUpApplication.class, args);
 	}
 
-//	@Bean
+//	@Bean\
 //	public CommandLineRunner demo(AdminRepository adminRepository, HostRepository hostRepository,
 //								  GuestRepository guestRepository, UserReportRepository userReportRepository,
 //								  ReviewReportRepository reviewReportRepository, ReservationRepository reservationRepository,

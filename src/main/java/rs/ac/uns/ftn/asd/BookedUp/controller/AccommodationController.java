@@ -7,18 +7,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.dto.*;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
+import rs.ac.uns.ftn.asd.BookedUp.enums.PriceType;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/accommodations")
@@ -26,166 +28,225 @@ public class AccommodationController {
     @Autowired
     private AccommodationService accommodationService;
 
-    @Autowired
-    private AccommodationMapper accommodationMapper;
-
     /*url: /api/accommodations GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAccommodations() {
-        Collection<AccommodationDTO> accommodationDTOS = accommodationService.getAll();
-        return new ResponseEntity<Collection<AccommodationDTO>>(accommodationDTOS, HttpStatus.OK);
+        Collection<Accommodation> accommodations = accommodationService.getAll();
+        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
     /* url: /api/accommodations/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> getAccommodation(@PathVariable("id") Long id) {
-        AccommodationDTO accommodationDto = accommodationService.getById(id);
+        Accommodation accommodation = accommodationService.getById(id);
 
-        if (accommodationDto == null) {
-            return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
+        if (accommodation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<AccommodationDTO>(accommodationDto, HttpStatus.OK);
+        return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodation), HttpStatus.OK);
     }
 
     /*url: /api/accommodations POST*/
     @PreAuthorize("hasRole('HOST')")
     @RequestMapping(method=RequestMethod.POST)
     public ResponseEntity<AccommodationDTO> createAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO) throws Exception {
-        AccommodationDTO createdAccommodationDTO = null;
-
-        if(!this.validateCreateAccommodationDTO(accommodationDTO)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Accommodation createdAccommodation = null;
 
         try {
-           createdAccommodationDTO = accommodationService.create(accommodationDTO);
+            createdAccommodation = accommodationService.create(AccommodationMapper.toEntity(accommodationDTO));
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new AccommodationDTO(),HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(createdAccommodationDTO, HttpStatus.OK);
-    }
-
-    private boolean validateCreateAccommodationDTO(AccommodationDTO accommodationDTO) {
-        return true;
+        return new ResponseEntity<>(AccommodationMapper.toDto(createdAccommodation), HttpStatus.CREATED);
     }
 
     /* url: /api/accommodations/1 PUT*/
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> updateAccommodation(@RequestBody AccommodationDTO accommodationDto, @PathVariable Long id)
+    public ResponseEntity<AccommodationDTO> updateAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
             throws Exception {
-        AccommodationDTO accommodationForUpdate = accommodationService.getById(id);
-        accommodationForUpdate.copyValues(accommodationDto);
-
-        AccommodationDTO updatedAccommodation = accommodationService.update(accommodationForUpdate);
-
-        if (updatedAccommodation == null) {
-            return new ResponseEntity<AccommodationDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+        Accommodation accommodationForUpdate = accommodationService.getById(id);
+        if (accommodationForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<AccommodationDTO>(updatedAccommodation, HttpStatus.OK);
+        if (accommodationService.hasActiveReservations(accommodationForUpdate.getId())){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        accommodationForUpdate.setName(accommodationDTO.getName());
+        accommodationForUpdate.setDescription(accommodationDTO.getDescription());
+        accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
+        accommodationForUpdate.setAmenities(accommodationDTO.getAmenities());
+        List<Photo> photos = new ArrayList<Photo>();
+        if (accommodationDTO.getPhotos() != null){
+            for (PhotoDTO photoDTO : accommodationDTO.getPhotos())
+                photos.add(PhotoMapper.toEntity(photoDTO));
+        }
+        accommodationForUpdate.setPhotos(photos);
+        accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
+        accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
+//        accommodationForUpdate.setType(accommodationDTO.getType()); ???
+        List<DateRange> availability = accommodationDTO.getAvailability().stream()
+                .map(DateRangeMapper::toEntity)
+                .collect(Collectors.toList());
+
+        accommodationForUpdate.setAvailability(availability);
+        accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
+        List<PriceChange> priceChanges = new ArrayList<PriceChange>();
+        if (accommodationDTO.getPriceChanges() != null){
+            for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
+                priceChanges.add(PriceChangeMapper.toEntity(dto));
+        }
+        accommodationForUpdate.setPriceChanges(priceChanges);
+        accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
+        accommodationForUpdate.setPrice(accommodationDTO.getPrice());
+        accommodationForUpdate.setCancellationDeadline(accommodationDTO.getCancellationDeadline());
+        accommodationForUpdate.setStatus(AccommodationStatus.CHANGED);
+        accommodationForUpdate = accommodationService.save(accommodationForUpdate);
+
+        return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
     }
+
 
     /** url: /api/accommodations/1 DELETE*/
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Accommodation> deleteAccommodation(@PathVariable("id") Long id) {
-        accommodationService.delete(id);
-        return new ResponseEntity<Accommodation>(HttpStatus.NO_CONTENT);
+        try {
+            accommodationService.delete(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Accommodation>(HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{id}/approve")
-    public ResponseEntity<AccommodationDTO> approveAccommodation(@PathVariable Long id) {
-        try {
-            AccommodationDTO accommodationDto = accommodationService.getById(id);
-            AccommodationDTO approvedAccommodationDto = null;
-
-            if (accommodationDto == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
-            approvedAccommodationDto = accommodationService.approve(accommodationDto);
-
-            return new ResponseEntity<>(approvedAccommodationDto, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PutMapping(value = "/{id}/confirmation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccommodationDTO> approveAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
+            throws Exception {
+        Accommodation accommodationForUpdate = accommodationService.getById(id);
+        if (accommodationForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        accommodationForUpdate.setStatus(AccommodationStatus.ACTIVE);
+        accommodationForUpdate = accommodationService.save(accommodationForUpdate);
+
+        return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{id}/reject")
-    public ResponseEntity<AccommodationDTO> rejectAccommodation(@PathVariable Long id) {
-        try {
-            AccommodationDTO accommodationDto = accommodationService.getById(id);
-            AccommodationDTO rejectedAccommodationDto = null;
-
-            if (accommodationDto == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
-            rejectedAccommodationDto = accommodationService.reject(accommodationDto);
-
-            return new ResponseEntity<>(rejectedAccommodationDto, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PutMapping(value = "/{id}/rejection", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccommodationDTO> rejectAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
+            throws Exception {
+        Accommodation accommodationForUpdate = accommodationService.getById(id);
+        if (accommodationForUpdate == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        accommodationForUpdate.setStatus(AccommodationStatus.REJECTED);
+        accommodationForUpdate = accommodationService.save(accommodationForUpdate);
+
+        return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/modified", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getAllModified() {
+        Collection<Accommodation> accommodations = accommodationService.findAllModified();
+        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
 
-    @PreAuthorize("hasRole('HOST')")
-    @RequestMapping(value = "/{id}/confirmation", method = RequestMethod.PUT)
-    public ResponseEntity<AccommodationDTO> updateConfirmationType(
-            @PathVariable Long id,
-            @RequestParam Boolean automaticConfirmation) {
+        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+    }
 
-        try {
-            AccommodationDTO accommodationDto = accommodationService.getById(id);
-            AccommodationDTO updatedAccommodationDto = null;
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getAllCreated() {
+        Collection<Accommodation> accommodations = accommodationService.findAllCreated();
+        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
 
-            if (accommodationDto == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+    }
 
-            accommodationDto.setAutomaticReservationAcceptance(automaticConfirmation);
-            updatedAccommodationDto = accommodationService.update(accommodationDto);
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/changed", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getAllChanged() {
+        Collection<Accommodation> accommodations = accommodationService.findAllChanged();
+        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
 
-            return new ResponseEntity<>(updatedAccommodationDto, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchAccommodations(
-            @RequestParam(required = false) String location,
+    public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
             @RequestParam(required = false) Integer guestsNumber,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-            @RequestParam(required = false) List<String> amenities,
-            @RequestParam(required = false) AccommodationType type,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
+    ) {
+        try {
+            List<Accommodation> searchedAccommodations = accommodationService.searchAccommodations(
+                    country, city, guestsNumber, startDate, endDate);
+
+            List<AccommodationDTO> results = searchedAccommodations.stream()
+                    .map(AccommodationMapper::toDto)
+                    .collect(Collectors.toList());
+
+            long differenceInMilliseconds = endDate.getTime() - startDate.getTime();
+            long daysBetween = TimeUnit.DAYS.convert(differenceInMilliseconds, TimeUnit.MILLISECONDS);
+
+            for (AccommodationDTO accommodationDTO : results){
+                if (accommodationDTO.getPriceType().equals(PriceType.PER_NIGHT)) {
+                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, (int)daysBetween, 1);
+                    accommodationDTO.setTotalPrice(totalPrice);
+                } else {
+                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, (int)daysBetween,guestsNumber);
+                    accommodationDTO.setTotalPrice(totalPrice);
+                }
+            }
+
+            return new ResponseEntity<>(results, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<AccommodationDTO>> filterAccommodations(
+            @RequestParam(required = false) List<Amenity> amenities,
+            @RequestParam(required = false) AccommodationType accommodationType,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice
     ) {
         try {
-            // Implementirajte logiku pretrage i filtriranja smeštaja koristeći AccommodationService
-//            List<AccommodationDTO> filteredAccommodations = accommodationService.searchAndFilterAccommodations(
-//                    location, guestsNumber, startDate, endDate, amenities, type, minPrice, maxPrice);
+            List<Accommodation> filteredAccommodations = accommodationService.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
 
-            HashMap<String, String> response = new HashMap<>();
-            response.put("message", "Search completed successfully!");
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            List<AccommodationDTO> results = filteredAccommodations.stream()
+                    .map(AccommodationMapper::toDto)
+                    .collect(Collectors.toList());
 
+            return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

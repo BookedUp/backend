@@ -1,10 +1,14 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.enums.PriceType;
@@ -20,32 +24,24 @@ public class AccommodationDTO {
     private Long id;
     private String name;
     private String description;
-    private Address address;
+    private AddressDTO address;
     private List<Amenity> amenities;
-    private List<Photo> photos;
+    private List<PhotoDTO> photos;
     private int minGuests;
     private int maxGuests;
     private AccommodationType type;
-    private List<DateRange> availability;
+    private List<DateRangeDTO> availability;
     private PriceType priceType;
-    private List<PriceChange> priceChanges;
+    private List<PriceChangeDTO> priceChanges;
     private boolean automaticReservationAcceptance;
+    private AccommodationStatus status;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private HostDTO host;
+    private double price;
+    private double totalPrice = 0.0;
+    private double averageRating;
+    private int cancellationDeadline;
 
-
-    public AccommodationDTO(String name, String description, Address address, List<Amenity> amenities, List<Photo> photos, int minGuests, int maxGuests, AccommodationType type, List<DateRange> availability, PriceType priceType, List<PriceChange> priceChanges, boolean automaticReservationAcceptance) {
-        this.name = name;
-        this.description = description;
-        this.address = address;
-        this.amenities = amenities;
-        this.photos = photos;
-        this.minGuests = minGuests;
-        this.maxGuests = maxGuests;
-        this.type = type;
-        this.availability = availability;
-        this.priceType = priceType;
-        this.priceChanges = priceChanges;
-        this.automaticReservationAcceptance = automaticReservationAcceptance;
-    }
 
     public void copyValues(AccommodationDTO dto) {
         this.name = dto.getName();
@@ -60,5 +56,7 @@ public class AccommodationDTO {
         this.priceChanges = dto.getPriceChanges();
         this.automaticReservationAcceptance = dto.isAutomaticReservationAcceptance();
         this.priceType = dto.getPriceType();
+        this.status = dto.getStatus();
+        this.host = dto.getHost();
     }
 }

@@ -2,77 +2,73 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Review;
-import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReviewMapper;
-import rs.ac.uns.ftn.asd.BookedUp.repository.ReviewRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
-public class ReviewService implements IReviewService {
+public class ReviewService implements ServiceInterface<Review> {
 
     @Autowired
-    private ReviewRepository reviewRepository;
+    private IReviewRepository repository;
 
-    @Autowired
-    private ReviewMapper reviewMapper;
     @Override
-    public Collection<ReviewDTO> getAll() {
-        Collection<Review> reviews = (reviewRepository.getAll());
-        Collection<ReviewDTO> reviewDTOS = new ArrayList<>();
-
-        for (Review review : reviews) {
-            ReviewDTO reviewDTO = reviewMapper.toDto(review);
-            reviewDTOS.add(reviewDTO);
-        }
-
-        return reviewDTOS;
+    public Collection<Review> getAll() {
+        return repository.findAll();
     }
 
     @Override
-    public ReviewDTO getById(Long id) {
-        Review review =  reviewRepository.getById(id);
-        return reviewMapper.toDto(review);
+    public Review getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public ReviewDTO create(ReviewDTO reviewDTO) throws Exception {
-        if (reviewDTO.getId() != null) {
+    public Review create(Review review) throws Exception {
+        if (review.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
-        Review review = reviewMapper.toEntity(reviewDTO);
-        Review createdReview =  reviewRepository.create(review);
-        return reviewMapper.toDto(createdReview);
+        return  repository.save(review);
     }
 
     @Override
-    public ReviewDTO update(ReviewDTO reviewDTO) throws Exception {
-        Review review = reviewMapper.toEntity(reviewDTO);
-        Review reviewToUpdate= reviewRepository.getById(review.getId());
-        if (reviewToUpdate == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
-        }
-
-        reviewToUpdate.setUser(review.getUser());
-        reviewToUpdate.setReview(review.getReview());
-        reviewToUpdate.setComment(review.getComment());
-        reviewToUpdate.setDate(review.getDate());
-        reviewToUpdate.setAccommodation(review.getAccommodation());
-        reviewToUpdate.setHost(review.getHost());
-        reviewToUpdate.setType(review.getType());
-        reviewToUpdate.setIsReviewActive(review.getIsReviewActive());
-
-        Review updatedReview = reviewRepository.create(reviewToUpdate);
-        return reviewMapper.toDto(updatedReview);
-
+    public Review save(Review review) throws Exception {
+        return repository.save(review);
     }
+
+//    @Override
+//    public ReviewDTO update(ReviewDTO reviewDTO) throws Exception {
+//        Review review = reviewMapper.toEntity(reviewDTO);
+//        Review reviewToUpdate= repository.findById(review.getId()).orElse(null);
+//        if (reviewToUpdate == null) {
+//            throw new Exception("Trazeni entitet nije pronadjen.");
+//        }
+//
+//        //reviewToUpdate.setGuest(review.getGuest());
+//        reviewToUpdate.setReview(review.getReview());
+//        reviewToUpdate.setComment(review.getComment());
+//        reviewToUpdate.setDate(review.getDate());
+//        reviewToUpdate.setAccommodation(review.getAccommodation());
+//        reviewToUpdate.setHost(review.getHost());
+//        reviewToUpdate.setType(review.getType());
+//        reviewToUpdate.setIsReviewActive(review.getIsReviewActive());
+//
+//        Review updatedReview = repository.save(reviewToUpdate);
+//        return reviewMapper.toDto(updatedReview);
+//
+//    }
 
     @Override
     public void delete(Long id) {
-        reviewRepository.delete(id);
+        repository.deleteById(id);
+    }
+
+    public List<Review> findAllByAccommodationId(Long id) {
+        return repository.findAllByAccommodationId(id);
     }
 }

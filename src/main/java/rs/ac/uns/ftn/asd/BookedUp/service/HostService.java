@@ -2,89 +2,171 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
-import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.HostMapper;
-import rs.ac.uns.ftn.asd.BookedUp.repository.HostRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
-public class HostService implements IHostService{
+public class HostService implements ServiceInterface<Host>{
     @Autowired
-    private HostRepository hostRepository;
+    private IHostRepository repository;
 
     @Autowired
-    private HostMapper hostMapper;
+    private IPhotoRepository photoRepository;
+
+    @Autowired
+    private IAccommodationRepository accommodationRepository;
+    @Autowired
+    private INotificationRepository notificationRepository;
+
+    @Autowired
+    private AccommodationService accommodationService;
     @Override
-    public Collection<HostDTO> getAll() {
-        Collection<Host> hosts = hostRepository.getAll();
-        Collection<HostDTO> hostDTOS = new ArrayList<>();
-
-        for (Host host : hosts) {
-            HostDTO hostDTO = hostMapper.toDto(host);
-            hostDTOS.add(hostDTO);
-        }
-
-        return hostDTOS;
+    public Collection<Host> getAll() {
+        return repository.findAllHosts();
     }
 
     @Override
-    public HostDTO getById(Long id) {
-        Host host = hostRepository.getById(id);
-        return hostMapper.toDto(host);
+    public Host getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public HostDTO create(HostDTO hostDto) throws Exception {
-        if (hostDto.getId() != null) {
+    public Host create(Host host) throws Exception {
+        if (host.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
-        Host host = hostMapper.toEntity(hostDto);
-        Host savedHost = hostRepository.create(host);
-        return hostMapper.toDto(savedHost);
+        return repository.save(host);
     }
 
     @Override
-    public HostDTO update(HostDTO hostDto) throws Exception {
-        Host host = hostMapper.toEntity(hostDto);
-        Host hostToUpdate = hostRepository.getById(host.getId());
-        if (hostToUpdate == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
+    public Host save(Host host) throws Exception {
+        return repository.save(host);
+    }
+
+//    @Override
+//    public HostDTO update(HostDTO hostDto) throws Exception {
+//        Host host = hostMapper.toEntity(hostDto);
+//        Host hostToUpdate = repository.findById(hostDto.getId()).orElse(null);
+//        if (hostToUpdate == null) {
+//            throw new Exception("Trazeni entitet nije pronadjen.");
+//        }
+//        hostToUpdate.setFirstName(host.getFirstName());
+//        hostToUpdate.setLastName(host.getLastName());
+//        hostToUpdate.setAddress(host.getAddress());
+//        hostToUpdate.setEmail(host.getEmail());
+//        hostToUpdate.setPassword(host.getPassword());
+//        hostToUpdate.setPhone(host.getPhone());
+//        hostToUpdate.setVerified(host.isVerified());
+//        hostToUpdate.setProfilePicture(host.getProfilePicture());
+//        hostToUpdate.setLastPasswordResetDate(host.getLastPasswordResetDate());
+//        hostToUpdate.setBlocked(host.isBlocked());
+//        hostToUpdate.setAverageRating(host.getAverageRating());
+//        hostToUpdate.setAccommodations(host.getAccommodations());
+//        hostToUpdate.setNotifications(host.getNotifications());
+//        hostToUpdate.setRequests(host.getRequests());
+//        hostToUpdate.setReservationCreatedNotificationEnabled(host.isReservationCreatedNotificationEnabled());
+//        hostToUpdate.setCancellationNotificationEnabled(host.isCancellationNotificationEnabled());
+//        hostToUpdate.setHostRatingNotificationEnabled(host.isHostRatingNotificationEnabled());
+//        hostToUpdate.setAccommodationRatingNotificationEnabled(host.isAccommodationRatingNotificationEnabled());
+//
+//        hostToUpdate.setAuthority(host.getAuthority());
+//        hostToUpdate.setProfilePicture(host.getProfilePicture());
+//        hostToUpdate.setVerified(host.isVerified());
+//        hostToUpdate.setLastPasswordResetDate(host.getLastPasswordResetDate());
+//
+//        Host updatedHost = repository.save(hostToUpdate);
+//        return hostMapper.toDto(updatedHost);
+//    }
+
+    @Override
+    public void delete(Long id) throws Exception {
+        Host host = repository.findById(id).orElse(null);
+
+        if (host == null)
+            throw new Exception("Host doesn't exist");
+
+        if (hasActiveReservations(host.getId())) {
+            throw new Exception("Host has future reservations and cannot be deleted");
         }
-        hostToUpdate.setFirstName(host.getFirstName());
-        hostToUpdate.setLastName(host.getLastName());
-        hostToUpdate.setAddress(host.getAddress());
-        hostToUpdate.setEmail(host.getEmail());
-        hostToUpdate.setPassword(host.getPassword());
-        hostToUpdate.setPhone(host.getPhone());
-        hostToUpdate.setRole(host.getRole());
-        hostToUpdate.setBlocked(host.isBlocked());
-        hostToUpdate.setAverageRating(host.getAverageRating());
-        hostToUpdate.setProperties(host.getProperties());
-        hostToUpdate.setNotifications(host.getNotifications());
-        hostToUpdate.setRequests(host.getRequests());
-        hostToUpdate.setReservationCreatedNotificationEnabled(host.isReservationCreatedNotificationEnabled());
-        hostToUpdate.setCancellationNotificationEnabled(host.isCancellationNotificationEnabled());
-        hostToUpdate.setHostRatingNotificationEnabled(host.isHostRatingNotificationEnabled());
-        hostToUpdate.setAccommodationRatingNotificationEnabled(host.isAccommodationRatingNotificationEnabled());
 
-        Host updatedHost = hostRepository.create(hostToUpdate);
-        return hostMapper.toDto(updatedHost);
+
+        Address address = host.getAddress();
+        if(address != null){
+            address.setActive(false);
+        }
+
+        Photo profilePhoto = host.getProfilePicture();
+        if(profilePhoto != null){
+            profilePhoto.setActive(false);
+            photoRepository.save(profilePhoto);
+        }
+
+//        List<Notification> notifications = host.getNotifications();
+//        if(!notifications.isEmpty()) {
+//            for (Notification notification : notifications) {
+//                notification.setActive(false);
+//                notificationRepository.save(notification);
+//            }
+//        }
+
+        List<Accommodation> accommodations = accommodationService.findAllByHostId(id);
+        if(!accommodations.isEmpty()) {
+            for (Accommodation accommodation : accommodations) {
+                accommodation.setActive(false);
+                accommodationRepository.save(accommodation);
+            }
+        }
+
+
+        host.setActive(false);
+        repository.save(host);
     }
 
-    @Override
-    public void delete(Long id) {
-        hostRepository.delete(id);
+    private boolean hasActiveReservations(Long id) {
+        List<Accommodation> accommodations = accommodationService.findAllByHostId(id);
+
+        if (accommodations != null) {
+            for (Accommodation accommodation : accommodations) {
+                List<Reservation> reservations = accommodation.getReservations();
+
+                if (reservations != null) {
+                    for (Reservation reservation : reservations) {
+                        // Provera da li je rezervacija u budućnosti i da li je aktivna
+                        if (reservation.getStartDate().after(new Date())
+                                && reservation.getStatus() != ReservationStatus.CANCELLED
+                                && reservation.getStatus() != ReservationStatus.COMPLETED
+                                && reservation.getStatus() != ReservationStatus.REJECTED) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
+    public boolean isWithinDateRange(Date date, Date fromDate, Date toDate) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localFromDate = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localToDate = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return !localDate.isBefore(localFromDate) && !localDate.isAfter(localToDate);
+    }
 
 
 }

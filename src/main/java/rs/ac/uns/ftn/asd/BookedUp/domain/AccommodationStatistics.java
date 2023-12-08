@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,14 +13,29 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class AccommodationStatistics {
-    private Long id;
-    private Accommodation accommodation;
-    private int year;
-    private double profit;
-    private int numberOfReservations;
-    private List<StatisticsDetail> details;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "accommodation_id")
+    private Accommodation accommodation;
+
+    @Column(nullable = false)
+    private int year;
+
+    @Column(nullable = false)
+    private double profit;
+
+    @Column(nullable = false)
+    private int numberOfReservations;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "accommodation_id", nullable = true)
+    private List<StatisticsDetail> details;
 
     public void copyValues(AccommodationStatistics accommodationReport) {
         this.accommodation = accommodationReport.getAccommodation();

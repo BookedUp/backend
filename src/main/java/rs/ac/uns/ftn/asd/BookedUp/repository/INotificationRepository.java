@@ -1,17 +1,12 @@
 package rs.ac.uns.ftn.asd.BookedUp.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Notification;
 
 import java.util.Collection;
 
-public interface INotificationRepository {
-    Collection<Notification> getAll();
+public interface INotificationRepository extends JpaRepository<Notification, Long> {
 
-    Notification create(Notification notification);
 
-    Notification getById(Long id);
-
-    Notification update(Notification notification);
-
-    void delete(Long id);
 }
