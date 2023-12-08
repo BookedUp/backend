@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.PriceChangeDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
@@ -210,4 +211,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return (accommodation.getPrice() * num);
     }
 
+//    public List<Accommodation> filterAccommodations(List<Amenity> amenities, AccommodationType accommodationType, Double minPrice, Double maxPrice) {
+//        return repository.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
+//    }
 }

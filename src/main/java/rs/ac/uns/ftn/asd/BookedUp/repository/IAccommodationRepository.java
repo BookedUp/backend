@@ -4,8 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
 
 import java.util.Collection;
 import java.util.Date;
@@ -37,8 +38,6 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("guestsNumber") int guests,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
-
-
 
 
 }

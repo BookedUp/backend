@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.enums.PriceType;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
@@ -165,6 +166,27 @@ public class AccommodationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+//    @GetMapping("/filter")
+//    public ResponseEntity<List<AccommodationDTO>> filterAccommodations(
+//            @RequestParam(required = false) List<Amenity> amenities,
+//            @RequestParam(required = false) AccommodationType accommodationType,
+//            @RequestParam(required = false) Double minPrice,
+//            @RequestParam(required = false) Double maxPrice
+//    ) {
+//        try {
+////            List<Accommodation> filteredAccommodations = accommodationService.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
+//
+//            List<AccommodationDTO> results = filteredAccommodations.stream()
+//                    .map(AccommodationMapper::toDto)
+//                    .collect(Collectors.toList());
+//
+//            return new ResponseEntity<>(results, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 
 }
