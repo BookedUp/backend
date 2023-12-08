@@ -51,7 +51,7 @@ VALUES
 INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating, host_id, active)
 VALUES
     ('Luksuzni hotel', 'Ovo je opis hotela', 1, 200.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 7.8, 2, true),
-    ('Pansion "Suncokret"', 'Prijatan porodični pansion', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'HOSTEL', 8.0, 3, true),
+    ('Pansion "Suncokret"', 'Prijatan porodični pansion', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_GUEST', 'HOSTEL', 8.0, 3, true),
     ('Vila "Miris mora"', 'Vila sa pogledom na more', 3, 300.0, 4, 8, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 9.0, 2, true),
     ('Apartman "Sunce"', 'Centralni apartman u srcu grada', 4, 80.0, 1, 2, 2, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 9.5, 3, true),
     ('Luksuzni resort', 'Odmor iz snova', 5, 500.0, 2, 6, 14, true, 'ACTIVE', 'PER_NIGHT', 'RESORT', 7.5, 2, true),
@@ -109,7 +109,7 @@ INSERT INTO price_change (accommodation_id, change_date, new_price)
 VALUES
     (1, '2023-12-05', 120.0),
     (1, '2023-12-15', 130.0),
-    (2, '2023-12-10', 150.0),
+    (2, '2023-12-08', 150.0),
     (2, '2023-12-20', 160.0),
     (3, '2023-12-14', 100.0),
     (3, '2023-12-28', 110.0),

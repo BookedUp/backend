@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class ReviewService implements ServiceInterface<Review> {
@@ -65,5 +66,9 @@ public class ReviewService implements ServiceInterface<Review> {
     @Override
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    public List<Review> findAllByAccommodationId(Long id) {
+        return repository.findAllByAccommodationId(id);
     }
 }
