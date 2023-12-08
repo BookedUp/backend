@@ -69,12 +69,12 @@ public class Accommodation {
     @JoinColumn(name = "accommodation_id", nullable = true)
     private List<Photo> photos;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "accommodation_id", nullable = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "accommodation_id", nullable = false)
     private List<DateRange> availability;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "accommodation_id", nullable = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "accommodation_id", nullable = false)
     private List<PriceChange> priceChanges;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accommodation")
