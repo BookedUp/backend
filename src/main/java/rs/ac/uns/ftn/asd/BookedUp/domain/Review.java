@@ -44,6 +44,10 @@ public class Review {
     @Column(nullable = false)
     private Boolean isReviewActive;
 
+    @ManyToOne
+    @JoinColumn(name = "guest_id", nullable = false)
+    private Guest guest;
+
     public void copyValues(Review review) {
         this.id = review.getId();
         //this.guest = review.getGuest();

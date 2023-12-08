@@ -95,22 +95,17 @@ public class HostController {
 
         hostForUpdate.setAverageRating(hostDTO.getAverageRating());
         List<Accommodation> accommodations = new ArrayList<Accommodation>();
-        if(hostDTO.getAccommodations() != null) {
-            for(AccommodationDTO accommodationDTO : hostDTO.getAccommodations())
-                accommodations.add(AccommodationMapper.toEntity(accommodationDTO));
-        }
-
         List<Reservation> requests = new ArrayList<Reservation>();
-        if(hostDTO.getRequests() != null) {
-            for(ReservationDTO reservationDTO : hostDTO.getRequests())
-                requests.add(ReservationMapper.toEntity(reservationDTO));
-        }
+//        if(hostDTO.getRequests() != null) {
+//            for(ReservationDTO reservationDTO : hostDTO.getRequests())
+//                requests.add(ReservationMapper.toEntity(reservationDTO));
+//        }
 
-        List<Notification> notifications = new ArrayList<Notification>();
-        if(hostDTO.getNotifications() != null) {
-            for(NotificationDTO notificationDTO : hostDTO.getNotifications())
-                notifications.add(NotificationMapper.toEntity(notificationDTO));
-        }
+//        List<Notification> notifications = new ArrayList<Notification>();
+//        if(hostDTO.getNotifications() != null) {
+//            for(NotificationDTO notificationDTO : hostDTO.getNotifications())
+//                notifications.add(NotificationMapper.toEntity(notificationDTO));
+//        }
 //
 //        List<Statistics> statistics = new ArrayList<Statistics>();
 //        if(dto.getStatistics() != null) {
@@ -124,9 +119,8 @@ public class HostController {
 //                accommodationStatistics.add(accommodationStatisticsMapper.toEntity(accommodationStatisticsDTO));
 //        }
 
-        hostForUpdate.setAccommodations(accommodations);
-        hostForUpdate.setNotifications(notifications);
-        hostForUpdate.setRequests(requests);
+//        hostForUpdate.setNotifications(notifications);
+        //hostForUpdate.setRequests(requests);
         hostForUpdate.setReservationCreatedNotificationEnabled(hostDTO.isReservationCreatedNotificationEnabled());
         hostForUpdate.setCancellationNotificationEnabled(hostDTO.isCancellationNotificationEnabled());
         hostForUpdate.setHostRatingNotificationEnabled(hostDTO.isHostRatingNotificationEnabled());
@@ -150,27 +144,33 @@ public class HostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @GetMapping("/{id}/accommodations")
-//    public ResponseEntity<List<AccommodationDTO>> getHostAccommodations(@PathVariable Long id) {
-//        try {
-//            HostDTO hostDto = hostService.getById(id);
-//
-//            if (hostDto == null) {
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }
-//            List<AccommodationDTO> accommodations = hostDto.getAccommodations();
-//
-//            if (accommodations.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//
-//            return new ResponseEntity<>(accommodations, HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
+
+    @PreAuthorize("hasRole('HOST')")
+    @GetMapping("/{id}/accommodations")
+    public ResponseEntity<List<AccommodationDTO>> getHostAccommodations(@PathVariable Long id) {
+        try {
+            Host host = hostService.getById(id);
+
+            if (host == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            List<Accommodation> accommodations = accommodationService.findAllByHostId(host.getId());
+
+            if (accommodations.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            List<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                    .map(AccommodationMapper::toDto)
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 //    @GetMapping("/{id}/reservations")
 //    public ResponseEntity<List<ReservationDTO>> getHostReservations(@PathVariable Long id) {

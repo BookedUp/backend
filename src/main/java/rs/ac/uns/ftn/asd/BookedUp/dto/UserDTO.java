@@ -22,10 +22,10 @@ public class UserDTO {
     private String password;
     private boolean isBlocked;
     private boolean verified;
-    private boolean active;
+    private boolean active = true;
 
     private PhotoDTO profilePicture;
-    private List<NotificationDTO> notifications;
+    //private List<NotificationDTO> notifications;
 
 
     public UserDTO(Long id, String email, String password) {
@@ -67,16 +67,5 @@ public class UserDTO {
         this.profilePicture = profilePicture;
     }
 
-    public void copyValues(UserDTO dto) {
-        this.firstName = dto.getFirstName();
-        this.lastName = dto.getLastName();
-        this.address = dto.getAddress();
-        this.phone = dto.getPhone();
-        this.email = dto.getEmail();
-        this.password = dto.getPassword();
-        this.isBlocked = dto.isBlocked();
-        this.notifications = dto.getNotifications();
-        this.active = dto.isActive();
-    }
 }
 

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.enums.PriceType;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -68,12 +71,12 @@ public class Accommodation {
     @JoinColumn(name = "accommodation_id", nullable = true)
     private List<Photo> photos;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "accommodation_id", nullable = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "accommodation_id", nullable = false)
     private List<DateRange> availability;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "accommodation_id", nullable = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "accommodation_id", nullable = false)
     private List<PriceChange> priceChanges;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accommodation")
@@ -85,9 +88,17 @@ public class Accommodation {
     @Column(unique = false, nullable = true)
     private double averageRating;
 
+    @ManyToOne
+    @JoinColumn(name = "host_id", nullable = false)
+    private Host host;
+
+    @Column(nullable = false)
+    private boolean active = true;
+
+
 
     public void copyValues(Accommodation accommodation) {
-        //this.host = accommodation.getHost();
+        this.host = accommodation.getHost();
         this.name = accommodation.getName();
         this.address = accommodation.getAddress();
         this.description = accommodation.getDescription();
@@ -106,6 +117,7 @@ public class Accommodation {
         this.reservations = accommodation.getReservations();
         this.reviews = accommodation.getReviews();
         this.averageRating = accommodation.getAverageRating();
+
     }
 
 }

@@ -2,23 +2,49 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.dto.PriceChangeDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
+import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IPhotoRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccommodationService implements ServiceInterface<Accommodation>{
     @Autowired
     private IAccommodationRepository repository;
 
+    @Autowired
+    private IReservationRepository reservationRepository;
+
+    @Autowired
+    private IReviewRepository reviewRepository;
+
+    @Autowired
+    private ReservationService reservationService;
+
+    @Autowired
+    private ReviewService reviewService;
+
     @Override
     public Collection<Accommodation> getAll() {
-        return repository.findAll();
+        List<Accommodation> accommodations = repository.findAll();
+        for (Accommodation accommodation: accommodations){
+            updatePrice(accommodation);
+        }
+        return accommodations;
     }
 
     @Override
@@ -71,8 +97,64 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 //    }
 
     @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public void delete(Long id) throws Exception {
+
+        Accommodation accommodation = repository.findById(id).orElse(null);
+
+        if (accommodation == null)
+            throw new Exception("Accommodation doesn't exist");
+
+        if (hasActiveReservations(accommodation.getId())) {
+            throw new Exception("Guest has active reservations and cannot be deleted");
+        }
+
+        Address address = accommodation.getAddress();
+        if(address != null){
+            address.setActive(false);
+        }
+
+        List<Reservation> reservations = reservationService.findAllByAccommodationId(accommodation.getId());
+        if(!reservations.isEmpty()) {
+            for (Reservation reservation : reservations) {
+                reservation.setActive(false);
+                reservationRepository.save(reservation);
+            }
+        }
+
+        List<Photo> photos = accommodation.getPhotos();
+        if(!photos.isEmpty()) {
+            photos.clear();
+            accommodation.setPhotos(photos);
+        }
+
+        List<PriceChange> priceChanges = accommodation.getPriceChanges();
+        if(!priceChanges.isEmpty()) {
+            priceChanges.clear();
+            accommodation.setPriceChanges(priceChanges);
+        }
+
+        List<DateRange> availability = accommodation.getAvailability();
+        if(!availability.isEmpty()) {
+            availability.clear();
+            accommodation.setAvailability(availability);
+        }
+
+        List<Review> reviews = reviewService.findAllByAccommodationId(accommodation.getId());
+        if(!reviews.isEmpty()) {
+            for (Review review : reviews) {
+                review.setIsReviewActive(false);
+                reviewRepository.save(review);
+            }
+        }
+
+        List<Amenity> amenities = accommodation.getAmenities();
+        if(!amenities.isEmpty()) {
+            amenities.clear();
+            accommodation.setAmenities(amenities);
+        }
+
+        accommodation.setActive(false);
+        repository.save(accommodation);
     }
 
     public Accommodation approve(Accommodation accommodation) throws Exception {
@@ -95,5 +177,95 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return repository.save(accommodationToUpdate);
     }
 
+    public List<Accommodation> findAllByHostId(Long id){
+        return repository.findAllByHostId(id);
+    }
 
+    public List<Accommodation> findAllChanged(){
+        return repository.findAllChanged();
+    }
+
+    public List<Accommodation> findAllCreated(){
+        return repository.findAllCreated();
+    }
+
+    public List<Accommodation> findAllModified(){
+        return repository.findAllModified();
+    }
+
+    public boolean hasActiveReservations(Long id) {
+        List<Reservation> reservations = reservationService.findAllByAccommodationId(id);
+        if ( reservations!= null) {
+            return reservations.stream()
+                    .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED
+                            && reservation.getStatus() != ReservationStatus.COMPLETED
+                            && reservation.getStatus() != ReservationStatus.REJECTED);
+        }
+        return false;
+    }
+
+    public List<Accommodation> searchAccommodations(String country, String city, Integer guestsNumber, Date startDate, Date endDate){
+        return repository.searchAccommodations(country, city, guestsNumber, startDate, endDate);
+    }
+
+    public double calculateTotalPrice(Accommodation accommodation, Date startDate, Integer daysNumber, Integer guestsNumber){
+        if (!accommodation.getPriceChanges().isEmpty()) {
+
+            PriceChange selectedChangeDate = null;
+            for (PriceChange priceChange : accommodation.getPriceChanges()) {
+                if (priceChange.getChangeDate().before(startDate) || priceChange.getChangeDate().equals(startDate)) {
+                    if (selectedChangeDate == null || selectedChangeDate.getChangeDate().before(priceChange.getChangeDate())) {
+                        selectedChangeDate = priceChange;
+                    }
+                }
+            }
+
+            if (selectedChangeDate != null) {
+                return (selectedChangeDate.getNewPrice() * daysNumber * guestsNumber);
+            }
+        }
+//        System.out.println("Total price: " + accommodation.getPrice() * num);
+        return (accommodation.getPrice() * daysNumber * guestsNumber);
+    }
+
+    public void updatePrice(Accommodation accommodation){
+            Date today = new Date();
+            if (!accommodation.getPriceChanges().isEmpty()) {
+
+                PriceChange selectedChangeDate = null;
+                for (PriceChange priceChange : accommodation.getPriceChanges()) {
+                    if (priceChange.getChangeDate().before(today) || priceChange.getChangeDate().equals(today)) {
+                        if (selectedChangeDate == null || selectedChangeDate.getChangeDate().before(priceChange.getChangeDate())) {
+                            selectedChangeDate = priceChange;
+                        }
+                    }
+                }
+
+                if (selectedChangeDate != null) {
+                    accommodation.setPrice(selectedChangeDate.getNewPrice());
+                    repository.save(accommodation);
+                }
+            }
+        }
+
+
+    public List<Accommodation> filterAccommodations(List<Amenity> amenities, AccommodationType accommodationType, Double minPrice, Double maxPrice) {
+        List<Accommodation> filteredAccommodations = repository.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
+        return filteredAccommodations;
+//        for (Accommodation accommodation : filteredAccommodations){
+//            System.out.println(accommodation.getId());
+//            System.out.println(accommodation.getType());
+//            System.out.println(accommodation.getPrice());
+//            for (Amenity amenity : accommodation.getAmenities()){
+//                System.out.println(amenity);
+//            }
+//        }
+//        if (amenities != null && !amenities.isEmpty()) {
+//            filteredAccommodations = filteredAccommodations.stream()
+//                    .filter(accommodation -> accommodation.getAmenities().containsAll(amenities))
+//                    .collect(Collectors.toList());
+//        }
+//        return filteredAccommodations;
+    }
 }
+

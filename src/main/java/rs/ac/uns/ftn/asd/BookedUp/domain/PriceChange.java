@@ -24,6 +24,9 @@ public class PriceChange {
     @Column(nullable = false)
     private double newPrice;
 
+//    @Column(nullable = false)
+//    private boolean active = true;
+
 
 
 }

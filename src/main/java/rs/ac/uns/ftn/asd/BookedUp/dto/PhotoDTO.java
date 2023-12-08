@@ -13,6 +13,7 @@ public class PhotoDTO {
     private Long id;
     private String url;
     private String caption;
+    private boolean active = true;
 
     public void copyValues(PhotoDTO dto) {
         this.url = dto.getUrl();

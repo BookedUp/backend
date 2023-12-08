@@ -85,30 +85,30 @@ public class AdminController {
         if (adminDTO.getProfilePicture() != null) {
             adminForUpdate.setProfilePicture(PhotoMapper.toEntity(adminDTO.getProfilePicture()));
         }
-        List<ReviewReport> reviewReports = new ArrayList<ReviewReport>();
-        if(adminDTO.getReviewReports() != null) {
-            for(ReviewReportDTO reviewReportDTO : adminDTO.getReviewReports())
-                reviewReports.add(ReviewReportMapper.toEntity(reviewReportDTO));
-        }
-
-        List<UserReport> userReports = new ArrayList<UserReport>();
-        if(adminDTO.getUserReports() != null) {
-            for(UserReportDTO userReportDTO : adminDTO.getUserReports())
-                userReports.add(UserReportMapper.toEntity(userReportDTO));
-        }
-
-        List<Accommodation> requests = new ArrayList<Accommodation>();
-        if(adminDTO.getRequests() != null) {
-            for(AccommodationDTO accommodationDTO : adminDTO.getRequests())
-                requests.add(AccommodationMapper.toEntity(accommodationDTO));
-        }
-
-        List<Notification> notifications = new ArrayList<Notification>();
-
-        adminForUpdate.setNotifications(notifications);
-        adminForUpdate.setUserReports(userReports);
-        adminForUpdate.setReviewReports(reviewReports);
-        adminForUpdate.setRequests(requests);
+//        List<ReviewReport> reviewReports = new ArrayList<ReviewReport>();
+//        if(adminDTO.getReviewReports() != null) {
+//            for(ReviewReportDTO reviewReportDTO : adminDTO.getReviewReports())
+//                reviewReports.add(ReviewReportMapper.toEntity(reviewReportDTO));
+//        }
+//
+//        List<UserReport> userReports = new ArrayList<UserReport>();
+//        if(adminDTO.getUserReports() != null) {
+//            for(UserReportDTO userReportDTO : adminDTO.getUserReports())
+//                userReports.add(UserReportMapper.toEntity(userReportDTO));
+//        }
+//
+//        List<Accommodation> requests = new ArrayList<Accommodation>();
+//        if(adminDTO.getRequests() != null) {
+//            for(AccommodationDTO accommodationDTO : adminDTO.getRequests())
+//                requests.add(AccommodationMapper.toEntity(accommodationDTO));
+//        }
+//
+//        List<Notification> notifications = new ArrayList<Notification>();
+//
+//        adminForUpdate.setNotifications(notifications);
+//        adminForUpdate.setUserReports(userReports);
+//        adminForUpdate.setReviewReports(reviewReports);
+//        adminForUpdate.setRequests(requests);
         adminForUpdate = adminService.save(adminForUpdate);
 
         return new ResponseEntity<AdminDTO>(AdminMapper.toDto(adminForUpdate), HttpStatus.OK);

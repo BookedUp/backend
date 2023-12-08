@@ -2,23 +2,37 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.GuestDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.GuestMapper;
-import rs.ac.uns.ftn.asd.BookedUp.repository.IGuestRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GuestService implements ServiceInterface<Guest>{
     @Autowired
     private IGuestRepository repository;
+
+    @Autowired
+    private IReservationRepository reservationRepository;
+
+    @Autowired
+    private IPhotoRepository photoRepository;
+
+    @Autowired
+    private IReviewRepository reviewRepository;
+    @Autowired
+    private INotificationRepository notificationRepository;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @Autowired
     private GuestMapper guestMapper;
@@ -86,17 +100,63 @@ public class GuestService implements ServiceInterface<Guest>{
         if (guest == null)
             throw new Exception("Guest doesn't exist");
         
-        if (hasActiveReservations(guest)) {
+        if (hasActiveReservations(guest.getId())) {
             throw new Exception("Guest has active reservations and cannot be deleted");
         }
-        
+
+        List<Reservation> reservations = reservationService.findAllByGuestId(guest.getId());
+        if(!reservations.isEmpty()) {
+            for (Reservation reservation : reservations) {
+                reservation.setActive(false);
+                reservationRepository.save(reservation);
+            }
+        }
+
+        List<Accommodation> favorites = guest.getFavourites();
+        if (!favorites.isEmpty()) {
+            favorites.clear();
+            guest.setFavourites(favorites);
+
+        }
+
+//        List<Review> reviews = guest.getReviews();
+//        if(!reviews.isEmpty()) {
+//            for (Review review : reviews) {
+//                review.setIsReviewActive(false);
+//                reviewRepository.save(review);
+//            }
+//        }
+        //Dalje
+
+        Address address = guest.getAddress();
+        if(address != null){
+            address.setActive(false);
+        }
+
+        Photo profilePhoto = guest.getProfilePicture();
+        if(profilePhoto != null){
+            profilePhoto.setActive(false);
+            photoRepository.save(profilePhoto);
+        }
+
+//        List<Notification> notifications = guest.getNotifications();
+//        if(!notifications.isEmpty()) {
+//            for (Notification notification : notifications) {
+//                notification.setActive(false);
+//                notificationRepository.save(notification);
+//            }
+//        }
+
+
+
         guest.setActive(false);
-        guest = repository.save(guest);
+        repository.save(guest);
     }
 
-    private boolean hasActiveReservations(Guest guest) {
-        if (guest.getReservations() != null) {
-            return guest.getReservations().stream()
+    private boolean hasActiveReservations(Long id) {
+        List<Reservation> reservations = reservationService.findAllByGuestId(id);
+        if ( reservations!= null) {
+            return reservations.stream()
                     .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED
                             && reservation.getStatus() != ReservationStatus.COMPLETED
                             && reservation.getStatus() != ReservationStatus.REJECTED);
