@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 
 import java.util.Date;
 

@@ -24,8 +24,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+
         if (request.getRequestURL().toString().contains("/api/")) {
             System.out.println("####" + request.getMethod() + ":" + request.getRequestURL());
             System.out.println("#### Authorization: " + request.getHeader("Authorization"));
@@ -57,6 +60,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.warn("JWT Token does not exist.");
             }
         }
-        filterChain.doFilter(request, response);
+        chain.doFilter(request, response);
     }
+
 }

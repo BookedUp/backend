@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
-import rs.ac.uns.ftn.asd.BookedUp.enums.Role;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -38,8 +37,8 @@ public class Guest extends User {
     @Column(nullable = true)
     private boolean notificationEnable = true;
 
-    public Guest(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean active, boolean verified, Photo profilePicture, Set<Authority> authority, Timestamp lastPasswordResetDate, List<Accommodation> favourites, boolean notificationEnable) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, active, verified, profilePicture, authority, lastPasswordResetDate);
+    public Guest(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean active, boolean verified, Photo profilePicture, Role role, Timestamp lastPasswordResetDate, List<Accommodation> favourites, boolean notificationEnable) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, active, verified, profilePicture, role, lastPasswordResetDate);
         this.favourites = favourites;
         this.notificationEnable = notificationEnable;
     }

@@ -3,23 +3,17 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.dto.PriceChangeDTO;
-import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
-import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
-import rs.ac.uns.ftn.asd.BookedUp.repository.IPhotoRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AccommodationService implements ServiceInterface<Accommodation>{

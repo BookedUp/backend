@@ -4,10 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
-import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
