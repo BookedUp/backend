@@ -65,6 +65,9 @@ public class User {
     @Column(name = "last_password_reset_date",nullable = true)
     private Timestamp lastPasswordResetDate;
 
+    @Transient
+    private String jwt;
+
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -77,6 +80,10 @@ public class User {
         Timestamp now = new Timestamp(new Date().getTime());
         this.setLastPasswordResetDate(now);
         this.password = password;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
     }
 
 

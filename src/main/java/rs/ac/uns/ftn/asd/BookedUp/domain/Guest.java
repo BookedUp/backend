@@ -37,8 +37,8 @@ public class Guest extends User {
     @Column(nullable = true)
     private boolean notificationEnable = true;
 
-    public Guest(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean active, boolean verified, Photo profilePicture, Role role, Timestamp lastPasswordResetDate, List<Accommodation> favourites, boolean notificationEnable) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, active, verified, profilePicture, role, lastPasswordResetDate);
+    public Guest(Long id, String firstName, String lastName, Address address, Integer phone, String email, String password, boolean isBlocked, boolean active, boolean verified, Photo profilePicture, Role role, Timestamp lastPasswordResetDate, String jwt, List<Accommodation> favourites, boolean notificationEnable) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, active, verified, profilePicture, role, lastPasswordResetDate, jwt);
         this.favourites = favourites;
         this.notificationEnable = notificationEnable;
     }
