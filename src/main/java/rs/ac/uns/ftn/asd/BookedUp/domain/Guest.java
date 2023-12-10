@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@DiscriminatorValue("guest")
+@DiscriminatorValue("GUEST")
 public class Guest extends User {
 
 //    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL)

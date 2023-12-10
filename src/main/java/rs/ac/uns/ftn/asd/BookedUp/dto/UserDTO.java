@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.dto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
 
 import java.util.List;
 
@@ -23,7 +24,6 @@ public class UserDTO {
     private boolean isBlocked;
     private boolean verified;
     private boolean active = true;
-
     private PhotoDTO profilePicture;
     //private List<NotificationDTO> notifications;
 

@@ -28,25 +28,25 @@ VALUES
     ('src/main/resources/images/people/people7.png', 'Description7', 524, 476,true),
     ('src/main/resources/images/people/profilPicture.png', 'No profile picture', 640, 960,true);
 
-INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, type, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled, active)
+INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled, active, role)
 VALUES
-    ('Jovan', 'Jovanović', 1, 123456789, 'jovan.jovanovic@example.com', 'jovanpass', false, true, 1, 'admin', '2023-01-01 10:00:00', null, null, null, null, null, null,true),
-    ('Ana', 'Anić', 2, 987654321, 'ana.anic@example.com', 'anapass', false, true, 2, 'host', '2023-02-01 12:30:00', null, true, 9.8, true, true, true,true),
-    ('Milica', 'Milosavljević', 3, 987654322, 'milica.milosavljevic@example.com', 'milicinapass', false, true, 3, 'host', '2023-03-01 15:45:00', null, true, 8.0, false, true, false,true),
-    ('Marko', 'Marković', 4, 0631234567, 'marko.markovic@example.com', 'markopass', false, true, 4, 'guest', '2023-04-01 18:20:00', true, null, null, null, null, null,true),
-    ('Jovana', 'Jovanović', 5, 0649876543, 'jovana.jovanovic@example.com', 'jovanapass', false, true, 5, 'guest', '2023-04-01 18:20:00', true, null, null, null, null, null,true),
-    ('Nenad', 'Nenadić', 6, 0658765432, 'nenad.nenadic@example.com', 'nenadpass', false, true, 6, 'guest', '2023-05-01 21:10:00', true, null, null, null, null, null,true),
-    ('Mila', 'Milićević', 7, 0661122334, 'mila.milicevic@example.com', 'milinpass', false, true, 7, 'guest', '2022-06-01 09:30:00', false, null, null, null, null, null,true);
+    ('Jovan', 'Jovanović', 1, 123456789, 'jovan.jovanovic@example.com', 'jovanpass', false, true, 1, '2023-01-01 10:00:00', null, null, null, null, null, null,true, 'ADMIN'),
+    ('Ana', 'Anić', 2, 987654321, 'ana.anic@example.com', 'anapass', false, true, 2, '2023-02-01 12:30:00', null, true, 9.8, true, true, true,true, 'HOST'),
+    ('Milica', 'Milosavljević', 3, 987654322, 'milica.milosavljevic@example.com', 'milicinapass', false, true, 3, '2023-03-01 15:45:00', null, true, 8.0, false, true, false,true, 'HOST'),
+    ('Marko', 'Marković', 4, 0631234567, 'marko.markovic@example.com', 'markopass', false, true, 4, '2023-04-01 18:20:00', true, null, null, null, null, null,true, 'GUEST'),
+    ('Jovana', 'Jovanović', 5, 0649876543, 'jovana.jovanovic@example.com', 'jovanapass', false, true, 5, '2023-04-01 18:20:00', true, null, null, null, null, null,true, 'GUEST'),
+    ('Nenad', 'Nenadić', 6, 0658765432, 'nenad.nenadic@example.com', 'nenadpass', false, true, 6, '2023-05-01 21:10:00', true, null, null, null, null, null,true, 'GUEST'),
+    ('Mila', 'Milićević', 7, 0661122334, 'mila.milicevic@example.com', 'milinpass', false, true, 7, '2022-06-01 09:30:00', false, null, null, null, null, null,true, 'GUEST');
 
-INSERT INTO users_authority (user_id, authority_id)
-VALUES
-    (1, 1),
-    (2, 3),
-    (3, 3),
-    (4, 2),
-    (5, 2),
-    (6, 2),
-    (7, 2);
+-- INSERT INTO users_authority (user_id, authority_id)
+-- VALUES
+--     (1, 1),
+--     (2, 3),
+--     (3, 3),
+--     (4, 2),
+--     (5, 2),
+--     (6, 2),
+--     (7, 2);
 
 INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating, host_id, active)
 VALUES

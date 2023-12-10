@@ -19,7 +19,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 public class User {
 
     @Id
@@ -59,12 +59,11 @@ public class User {
     private Photo profilePicture;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role", insertable = false, updatable = false)
     private Role role;
 
     @Column(name = "last_password_reset_date",nullable = true)
     private Timestamp lastPasswordResetDate;
-
-
 
 
     public User(String firstName, String lastName, String email, String password) {

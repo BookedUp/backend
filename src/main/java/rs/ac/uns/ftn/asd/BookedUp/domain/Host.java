@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@DiscriminatorValue("host")
+@DiscriminatorValue("HOST")
 public class Host extends User {
 
     @Column(unique = false, nullable = true)

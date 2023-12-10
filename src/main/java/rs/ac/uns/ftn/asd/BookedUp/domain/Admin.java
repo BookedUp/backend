@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@DiscriminatorValue("admin")
+@DiscriminatorValue("ADMIN")
 public class Admin extends User{
 //    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @JoinColumn(name = "admin_id", nullable = true)
