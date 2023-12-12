@@ -29,13 +29,16 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT DISTINCT a FROM Accommodation a " +
             "JOIN FETCH a.availability dr " +
             "WHERE a.status = 'ACTIVE' " +
-            "AND (a.address.country = :country OR :country IS NULL) " +
-            "AND (a.address.city = :city OR :city IS NULL) " +
+            "AND (" +
+            "   COALESCE(:location, '') = '' OR " +
+            "   a.address.country = :location OR " +
+            "   a.address.city = :location OR " +
+            "   a.address.streetAndNumber = :location" +
+            ") " +
             "AND a.minGuests <= :guestsNumber AND a.maxGuests >= :guestsNumber " +
             "AND (:startDate BETWEEN dr.startDate AND dr.endDate OR :endDate BETWEEN dr.startDate AND dr.endDate)")
     List<Accommodation> searchAccommodations(
-            @Param("country") String country,
-            @Param("city") String city,
+            @Param("location") String location,
             @Param("guestsNumber") int guests,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);

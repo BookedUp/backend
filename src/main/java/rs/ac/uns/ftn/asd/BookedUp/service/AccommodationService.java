@@ -198,8 +198,8 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return false;
     }
 
-    public List<Accommodation> searchAccommodations(String country, String city, Integer guestsNumber, Date startDate, Date endDate){
-        return repository.searchAccommodations(country, city, guestsNumber, startDate, endDate);
+    public List<Accommodation> searchAccommodations(String location, Integer guestsNumber, Date startDate, Date endDate){
+        return repository.searchAccommodations(location, guestsNumber, startDate, endDate);
     }
 
     public double calculateTotalPrice(Accommodation accommodation, Date startDate, Integer daysNumber, Integer guestsNumber){

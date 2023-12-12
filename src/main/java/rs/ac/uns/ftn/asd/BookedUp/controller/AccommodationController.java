@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/accommodations")
 public class AccommodationController {
     @Autowired
@@ -194,15 +195,14 @@ public class AccommodationController {
 
     @GetMapping("/search")
     public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
-            @RequestParam(required = false) String country,
-            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String location,
             @RequestParam(required = false) Integer guestsNumber,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
+            @RequestParam(required = false)  Date startDate,
+            @RequestParam(required = false) Date endDate
     ) {
         try {
             List<Accommodation> searchedAccommodations = accommodationService.searchAccommodations(
-                    country, city, guestsNumber, startDate, endDate);
+                    location, guestsNumber, startDate, endDate);
 
             List<AccommodationDTO> results = searchedAccommodations.stream()
                     .map(AccommodationMapper::toDto)
