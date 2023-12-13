@@ -16,6 +16,7 @@ import rs.ac.uns.ftn.asd.BookedUp.service.ReservationService;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationController {
@@ -74,8 +75,9 @@ public class ReservationController {
         reservationForUpdate.setStartDate(reservationDTO.getStartDate());
         reservationForUpdate.setEndDate(reservationDTO.getEndDate());
         reservationForUpdate.setGuestsNumber(reservationDTO.getGuestsNumber());
-        reservationForUpdate.setAccommodation(AccommodationMapper.toEntity(reservationDTO.getAccommodationDTO()));
+        reservationForUpdate.setAccommodation(AccommodationMapper.toEntity(reservationDTO.getAccommodation()));
         reservationForUpdate.setStatus(reservationDTO.getStatus());
+        //dodati jos
 
         reservationForUpdate = reservationService.save(reservationForUpdate);
 
