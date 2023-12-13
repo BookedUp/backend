@@ -267,14 +267,21 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         List<Object[]> result = repository.findMostPopular();
         List<Accommodation> accommodations = new ArrayList<>();
 
+        int count = 0;
+
         for (Object[] row : result) {
-            Accommodation accommodation = (Accommodation) row[0];
-            System.out.println(((Accommodation) row[0]).getName() + row[1]);
-            accommodations.add(accommodation);
+            if (count < 4) {
+                Accommodation accommodation = (Accommodation) row[0];
+                accommodations.add(accommodation);
+                count++;
+            } else {
+                break;
+            }
         }
 
         return accommodations;
     }
+
 
 
 }
