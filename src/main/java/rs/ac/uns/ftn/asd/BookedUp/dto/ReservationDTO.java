@@ -29,7 +29,7 @@ public class ReservationDTO {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private GuestDTO guest;
     private ReservationStatus status;
-    //private boolean active = true;
+
     public void copyValues(ReservationDTO dto) {
         this.accommodation = dto.getAccommodation();
         this.startDate = dto.getStartDate();

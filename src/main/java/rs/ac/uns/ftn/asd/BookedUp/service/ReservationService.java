@@ -44,6 +44,25 @@ public class ReservationService implements ServiceInterface<Reservation> {
         return repository.findAllByGuestId(id);
     }
 
+    public List<Reservation> findAllByHostId(Long id){
+        return repository.findAllByHostId(id);
+    }
+    public List<Reservation> findAllCreatedByHostId(Long id){
+        return repository.findAllCreatedByHostId(id);
+    }
+    public List<Reservation> findAllAcceptedByHostId(Long id){
+        return repository.findAllAcceptedByHostId(id);
+    }
+    public List<Reservation> findAllRejectedByHostId(Long id){
+        return repository.findAllRejectedByHostId(id);
+    }
+    public List<Reservation> findAllCompletedByHostId(Long id){
+        return repository.findAllCompletedByHostId(id);
+    }
+    public List<Reservation> findAllCancelledByHostId(Long id){
+        return repository.findAllCancelledByHostId(id);
+    }
+
     public List<Reservation> findAllByAccommodationId(Long id){
         return repository.findAllByAccommodationId(id);
     }
