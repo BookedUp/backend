@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
 
 import java.util.List;
 @Getter
@@ -24,7 +25,7 @@ public class HostDTO extends UserDTO {
 
 
     public HostDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, boolean active, PhotoDTO profilePicture, double averageRating, boolean reservationCreatedNotificationEnabled, boolean cancellationNotificationEnabled, boolean hostRatingNotificationEnabled, boolean accommodationRatingNotificationEnabled) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, active, profilePicture);
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, active, profilePicture, Role.HOST);
         this.averageRating = averageRating;
         this.reservationCreatedNotificationEnabled = reservationCreatedNotificationEnabled;
         this.cancellationNotificationEnabled = cancellationNotificationEnabled;

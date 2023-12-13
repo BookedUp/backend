@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/statistics-details")
+@CrossOrigin
 public class StatisticsDetailController {
     @Autowired
     private StatisticsDetailService statisticsDetailService;

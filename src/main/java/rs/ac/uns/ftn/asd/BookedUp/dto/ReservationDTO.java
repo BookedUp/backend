@@ -19,6 +19,7 @@ public class ReservationDTO {
     private Date startDate;
     private Date endDate;
     private Integer guestsNumber;
+    private double totalPrice;
     private ReservationStatus status;
     private boolean active;
     public void copyValues(ReservationDTO dto) {
@@ -26,6 +27,7 @@ public class ReservationDTO {
         this.startDate = dto.getStartDate();
         this.endDate = dto.getEndDate();
         this.guestsNumber = dto.getGuestsNumber();
+        this.totalPrice = dto.getTotalPrice();
         this.status = dto.getStatus();
     }
 }

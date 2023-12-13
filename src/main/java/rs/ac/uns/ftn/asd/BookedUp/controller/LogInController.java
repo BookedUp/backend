@@ -11,10 +11,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.LogInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.TokenDTO;
 import rs.ac.uns.ftn.asd.BookedUp.security.jwt.JwtTokenUtil;
@@ -23,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class LogInController {
     private static final Logger logger = LoggerFactory.getLogger(LogInController.class);
 

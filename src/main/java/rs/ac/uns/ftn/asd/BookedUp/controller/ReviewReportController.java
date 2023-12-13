@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/review-reports")
+@CrossOrigin
 public class ReviewReportController {
     @Autowired
     private ReviewReportService reviewReportService;

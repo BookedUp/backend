@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.dto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class AdminDTO extends UserDTO{
 
 
     public AdminDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture);
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, Role.ADMIN);
 //        this.userReports = userReports;
 //        this.reviewReports = reviewReports;
 //        this.requests = requests;

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/notifications")
+@CrossOrigin
 public class NotificationController {
     @Autowired
     private NotificationService notificationService;
