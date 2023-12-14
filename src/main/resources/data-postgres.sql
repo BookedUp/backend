@@ -75,6 +75,7 @@ VALUES
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 8),
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 2);
 
+
 INSERT INTO amenities (accommodation_id, amenities)
 VALUES
     (1, 'FREE_WIFI'),
