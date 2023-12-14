@@ -21,8 +21,6 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT a FROM Accommodation a WHERE a.host.id = :hostId AND (a.status = 'CREATED' OR  a.status = 'CHANGED') ")
     List<Accommodation> findAllRequestsByHostId(@Param("hostId") Long hostId);
 
-
-
     @Query("SELECT a FROM Accommodation a WHERE  a.status = 'CREATED'")
     List<Accommodation> findAllCreated();
 
@@ -49,7 +47,6 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("guestsNumber") int guests,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
-
  
 
     @Query("SELECT a, COALESCE(COUNT(r.id), 0) AS reservationCount FROM Accommodation a " +
@@ -61,6 +58,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     List<Object[]> findMostPopular();
 
 
+    @Query("SELECT a FROM Accommodation a " +
             "WHERE a.status = 'ACTIVE' " +
             "AND (:accommodationType IS NULL OR a.type = :accommodationType)")
     List<Accommodation> filterAccommodationsByType(
