@@ -12,8 +12,15 @@ import java.util.List;
 
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
 
-    @Query("SELECT a FROM Accommodation a WHERE a.host.id = :hostId")
-    List<Accommodation> findAllByHostId(@Param("hostId") Long hostId);
+    @Query("SELECT a FROM Accommodation a WHERE a.host.id = :hostId AND a.status = 'ACTIVE' "  )
+    List<Accommodation> findAllActiveByHostId(@Param("hostId") Long hostId);
+
+    @Query("SELECT a FROM Accommodation a WHERE a.host.id = :hostId AND a.status = 'REJECTED' "  )
+    List<Accommodation> findAllRejectedByHostId(@Param("hostId") Long hostId);
+
+    @Query("SELECT a FROM Accommodation a WHERE a.host.id = :hostId AND (a.status = 'CREATED' OR  a.status = 'CHANGED') ")
+    List<Accommodation> findAllRequestsByHostId(@Param("hostId") Long hostId);
+
 
 
     @Query("SELECT a FROM Accommodation a WHERE  a.status = 'CREATED'")

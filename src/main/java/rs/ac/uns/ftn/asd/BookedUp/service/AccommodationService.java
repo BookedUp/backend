@@ -171,8 +171,16 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return repository.save(accommodationToUpdate);
     }
 
-    public List<Accommodation> findAllByHostId(Long id){
-        return repository.findAllByHostId(id);
+    public List<Accommodation> findAllActiveByHostId(Long id){
+        return repository.findAllActiveByHostId(id);
+    }
+
+    public List<Accommodation> findAllRejectedByHostId(Long id){
+        return repository.findAllRejectedByHostId(id);
+    }
+
+    public List<Accommodation> findAllRequestsByHostId(Long id){
+        return repository.findAllRequestsByHostId(id);
     }
 
     public List<Accommodation> findAllChanged(){

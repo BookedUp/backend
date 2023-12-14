@@ -42,6 +42,36 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/host/{hostId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getAllActiveByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Accommodation> accommodations = accommodationService.findAllActiveByHostId(hostId);
+        Collection<AccommodationDTO> accommodationDTOS = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/host/{hostId}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getAllRequestsByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Accommodation> accommodations = accommodationService.findAllRequestsByHostId(hostId);
+        Collection<AccommodationDTO> accommodationDTOS = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/host/{hostId}/rejected", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getAllRejectedByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Accommodation> accommodations = accommodationService.findAllRejectedByHostId(hostId);
+        Collection<AccommodationDTO> accommodationDTOS = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
+    }
+
     /* url: /api/accommodations/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> getAccommodation(@PathVariable("id") Long id) {
@@ -132,7 +162,7 @@ public class AccommodationController {
         return new ResponseEntity<Accommodation>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/confirmation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> approveAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
             throws Exception {
@@ -162,7 +192,7 @@ public class AccommodationController {
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/modified", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllModified() {
         Collection<Accommodation> accommodations = accommodationService.findAllModified();
@@ -173,7 +203,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllCreated() {
         Collection<Accommodation> accommodations = accommodationService.findAllCreated();
@@ -184,7 +214,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/changed", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllChanged() {
         Collection<Accommodation> accommodations = accommodationService.findAllChanged();
