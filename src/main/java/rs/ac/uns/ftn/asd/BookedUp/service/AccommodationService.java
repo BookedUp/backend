@@ -242,24 +242,8 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             }
         }
 
-
-    public List<Accommodation> filterAccommodations(List<Amenity> amenities, AccommodationType accommodationType, Double minPrice, Double maxPrice) {
-        List<Accommodation> filteredAccommodations = repository.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
-        return filteredAccommodations;
-//        for (Accommodation accommodation : filteredAccommodations){
-//            System.out.println(accommodation.getId());
-//            System.out.println(accommodation.getType());
-//            System.out.println(accommodation.getPrice());
-//            for (Amenity amenity : accommodation.getAmenities()){
-//                System.out.println(amenity);
-//            }
-//        }
-//        if (amenities != null && !amenities.isEmpty()) {
-//            filteredAccommodations = filteredAccommodations.stream()
-//                    .filter(accommodation -> accommodation.getAmenities().containsAll(amenities))
-//                    .collect(Collectors.toList());
-//        }
-//        return filteredAccommodations;
+    public List<Accommodation> filterAccommodationsByType(AccommodationType type){
+       return repository.filterAccommodationsByType(type);
     }
 }
 
