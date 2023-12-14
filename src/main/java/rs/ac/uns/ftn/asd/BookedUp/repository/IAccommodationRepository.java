@@ -44,20 +44,9 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("endDate") Date endDate);
 
     @Query("SELECT a FROM Accommodation a " +
-            "LEFT JOIN a.amenities amenity " +
-            "WHERE (?1 IS NULL OR amenity IN ?1) " +
-            "AND (?2 IS NULL OR a.type = ?2) " +
-            "AND (?3 IS NULL OR a.price >= ?3) " +
-            "AND (?4 IS NULL OR a.price <= ?4)")
-    List<Accommodation> filterAccommodations(
-            List<Amenity> amenities,
-            AccommodationType accommodationType,
-            Double minPrice,
-            Double maxPrice);
-
-
-
-
-
+            "WHERE a.status = 'ACTIVE' " +
+            "AND (:accommodationType IS NULL OR a.type = :accommodationType)")
+    List<Accommodation> filterAccommodationsByType(
+            @Param("accommodationType") AccommodationType accommodationType);
 
 }

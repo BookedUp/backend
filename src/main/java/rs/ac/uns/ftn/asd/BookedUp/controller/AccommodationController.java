@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -193,20 +195,48 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search-filter")
     public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Integer guestsNumber,
             @RequestParam(required = false)  Date startDate,
-            @RequestParam(required = false) Date endDate
+            @RequestParam(required = false) Date endDate,
+            @RequestParam(required = false) List<String> amenitiesStrings,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Double customMaxBudget,
+            @RequestParam(required = false) String selectedType,
+            @RequestParam(required = false) String name
     ) {
+        System.out.println(minPrice);
+        System.out.println(maxPrice);
         try {
+            AccommodationType accommodationType;
+            if (!selectedType.equals("") && !selectedType.equals("all")){
+                accommodationType = AccommodationType.valueOf(selectedType);
+            } else {
+                accommodationType = null;
+            }
+            System.out.println(accommodationType);
+            List<Amenity> amenities;
+            if (amenitiesStrings != null && !amenitiesStrings.isEmpty()) {
+                amenities = amenitiesStrings.stream()
+                        .map(String::trim)
+                        .map(Amenity::valueOf)
+                        .collect(Collectors.toList());
+            } else {
+                amenities = new ArrayList<>();
+            }
+
+            //SEARCH
             List<Accommodation> searchedAccommodations = accommodationService.searchAccommodations(
                     location, guestsNumber, startDate, endDate);
 
             List<AccommodationDTO> results = searchedAccommodations.stream()
                     .map(AccommodationMapper::toDto)
                     .collect(Collectors.toList());
+
+            List<AccommodationDTO> filteredAccommodations = new ArrayList<AccommodationDTO>();
 
             long differenceInMilliseconds = endDate.getTime() - startDate.getTime();
             long daysBetween = TimeUnit.DAYS.convert(differenceInMilliseconds, TimeUnit.MILLISECONDS);
@@ -221,29 +251,57 @@ public class AccommodationController {
                 }
             }
 
+            //FILTER
+            if (customMaxBudget > 50.0){
+                for (AccommodationDTO accommodationDTO : results){
+                    if (!amenities.isEmpty()){
+                        if (accommodationDTO.getTotalPrice() <= customMaxBudget && accommodationDTO.getAmenities().containsAll(amenities)){
+                            filteredAccommodations.add(accommodationDTO);
+                        }
+                    } else {
+                        if (accommodationDTO.getTotalPrice() <= customMaxBudget){
+                            filteredAccommodations.add(accommodationDTO);
+                        }
+                    }
+                }
+            } else if (customMaxBudget == 50){
+                for (AccommodationDTO accommodationDTO : results) {
+                    if (minPrice != 0.0 && maxPrice != 0.0 && !amenities.isEmpty()) {
+                        if (accommodationDTO.getTotalPrice() >= minPrice && accommodationDTO.getTotalPrice() <= maxPrice && accommodationDTO.getAmenities().containsAll(amenities)) {
+                            filteredAccommodations.add(accommodationDTO);
+                        }
+                    } else if (minPrice != 0.0 && maxPrice != 0.0 && amenities.isEmpty()) {
+                        if (accommodationDTO.getTotalPrice() >= minPrice && accommodationDTO.getTotalPrice() <= maxPrice) {
+                            filteredAccommodations.add(accommodationDTO);
+                        }
+                    } else if (minPrice == 0.0 && maxPrice == 0.0 && !amenities.isEmpty()) {
+                        if (accommodationDTO.getAmenities().containsAll(amenities)) {
+                            filteredAccommodations.add(accommodationDTO);
+                        }
+                    }
+                }
+            }
+            //ako je nije prazna ili bar jedno od tri polja za filtriranje je popunjeno (radjeno filtriranje)
+            //ako je prazna i sva polja nisu postavljena (vrati pretragu samo)
+            if (!filteredAccommodations.isEmpty() || (!amenities.isEmpty() || minPrice != 0.0 || maxPrice != 0.0)) {
+                if (accommodationType != null) {
+                    filteredAccommodations.removeIf(accommodationDTO -> accommodationDTO.getType() != accommodationType);
+                }
+                if (!name.equals("")){
+                    filteredAccommodations.removeIf(accommodationDTO -> !accommodationDTO.getName().contains(name));
+                }
+                System.out.println(filteredAccommodations.size() + " FILTER 1");
+                return new ResponseEntity<>(filteredAccommodations, HttpStatus.OK);
+            }
+            if (accommodationType != null) {
+                results.removeIf(accommodationDTO -> accommodationDTO.getType() != accommodationType);
+            }
+            if (!name.equals("")){
+                results.removeIf(accommodationDTO -> !accommodationDTO.getName().contains(name));
+            }
+            System.out.println(results.size() +  " FILTER 0");
             return new ResponseEntity<>(results, HttpStatus.OK);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<List<AccommodationDTO>> filterAccommodations(
-            @RequestParam(required = false) List<Amenity> amenities,
-            @RequestParam(required = false) AccommodationType accommodationType,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice
-    ) {
-        try {
-            List<Accommodation> filteredAccommodations = accommodationService.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
-
-            List<AccommodationDTO> results = filteredAccommodations.stream()
-                    .map(AccommodationMapper::toDto)
-                    .collect(Collectors.toList());
-
-            return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
