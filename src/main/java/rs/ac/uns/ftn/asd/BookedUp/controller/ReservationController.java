@@ -17,7 +17,6 @@ import rs.ac.uns.ftn.asd.BookedUp.service.ReservationService;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/reservations")
 @CrossOrigin
