@@ -68,10 +68,13 @@ VALUES
     ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description2', 488, 511, true, 3),
     ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description3', 980, 980, true, 5),
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description4', 535, 466, true, 6),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description5', 500, 500, true, 3),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description5', 500, 500, true, 4),
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description6', 220, 230, true, 10),
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description7', 524, 476,true, 7),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 9);
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 9),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 8),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 2);
+
 
 INSERT INTO amenities (accommodation_id, amenities)
 VALUES
@@ -262,14 +265,3 @@ INSERT INTO statistics_detail (key, profit, number_of_reservations, accommodatio
 VALUES
     ('May', 5000.75, 50, 1, null),
     ('Seoski dom za odmor', 3200.40, 30, null, 2);
-
-
-
-
-
-
-
-
-
-
-

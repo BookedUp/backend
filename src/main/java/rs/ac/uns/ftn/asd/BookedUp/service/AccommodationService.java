@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -253,5 +254,27 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
     public List<Accommodation> filterAccommodationsByType(AccommodationType type){
        return repository.filterAccommodationsByType(type);
     }
+
+    public List<Accommodation> findMostPopular() {
+        List<Object[]> result = repository.findMostPopular();
+        List<Accommodation> accommodations = new ArrayList<>();
+
+        int count = 0;
+
+        for (Object[] row : result) {
+            if (count < 4) {
+                Accommodation accommodation = (Accommodation) row[0];
+                accommodations.add(accommodation);
+                count++;
+            } else {
+                break;
+            }
+        }
+
+        return accommodations;
+    }
+
+
+
 }
 

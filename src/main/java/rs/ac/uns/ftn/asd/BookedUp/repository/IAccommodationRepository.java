@@ -50,7 +50,17 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
 
-    @Query("SELECT a FROM Accommodation a " +
+ 
+
+    @Query("SELECT a, COALESCE(COUNT(r.id), 0) AS reservationCount FROM Accommodation a " +
+            "LEFT JOIN a.reservations r " +
+            "ON r.status = 'COMPLETED' " +
+            "WHERE a.status = 'ACTIVE' " +
+            "GROUP BY a.id " +
+            "ORDER BY COALESCE(COUNT(r.id), 0) DESC")
+    List<Object[]> findMostPopular();
+
+
             "WHERE a.status = 'ACTIVE' " +
             "AND (:accommodationType IS NULL OR a.type = :accommodationType)")
     List<Accommodation> filterAccommodationsByType(

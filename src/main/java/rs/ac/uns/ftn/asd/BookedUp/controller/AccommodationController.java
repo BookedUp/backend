@@ -214,6 +214,17 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/mostPopular", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getMostPopular() {
+        Collection<Accommodation> accommodations = accommodationService.findMostPopular();
+        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+    }
+
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/changed", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllChanged() {
