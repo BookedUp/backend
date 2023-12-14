@@ -116,7 +116,7 @@ public class HostService implements ServiceInterface<Host>{
 //            }
 //        }
 
-        List<Accommodation> accommodations = accommodationService.findAllByHostId(id);
+        List<Accommodation> accommodations = accommodationService.findAllActiveByHostId(id); //ko zna sta je ovo
         if(!accommodations.isEmpty()) {
             for (Accommodation accommodation : accommodations) {
                 accommodation.setActive(false);
@@ -130,7 +130,7 @@ public class HostService implements ServiceInterface<Host>{
     }
 
     private boolean hasActiveReservations(Long id) {
-        List<Accommodation> accommodations = accommodationService.findAllByHostId(id);
+        List<Accommodation> accommodations = accommodationService.findAllActiveByHostId(id); //ko zna
 
         if (accommodations != null) {
             for (Accommodation accommodation : accommodations) {

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReservationMapper;
@@ -16,6 +17,7 @@ import rs.ac.uns.ftn.asd.BookedUp.service.ReservationService;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/reservations")
 @CrossOrigin
@@ -32,6 +34,67 @@ public class ReservationController {
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
+    }
+
+    //@PreAuthorize("hasAuthority('ROLE_HOST')")
+    @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getAllByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Reservation> reservations = reservationService.findAllByHostId(hostId);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/host/{hostId}/created", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getAllCreatedByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Reservation> reservations = reservationService.findAllCreatedByHostId(hostId);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/host/{hostId}/accepted", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getAllAcceptedByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Reservation> reservations = reservationService.findAllAcceptedByHostId(hostId);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/host/{hostId}/rejected", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getAllRejectedByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Reservation> reservations = reservationService.findAllRejectedByHostId(hostId);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/host/{hostId}/completed", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getAllCompletedByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Reservation> reservations = reservationService.findAllCompletedByHostId(hostId);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/host/{hostId}/cancelled", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getAllCancelledByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Reservation> reservations = reservationService.findAllCancelledByHostId(hostId);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
 
     /* url: /api/reservations/1 GET*/
@@ -75,8 +138,9 @@ public class ReservationController {
         reservationForUpdate.setStartDate(reservationDTO.getStartDate());
         reservationForUpdate.setEndDate(reservationDTO.getEndDate());
         reservationForUpdate.setGuestsNumber(reservationDTO.getGuestsNumber());
-        reservationForUpdate.setAccommodation(AccommodationMapper.toEntity(reservationDTO.getAccommodationDTO()));
+        reservationForUpdate.setAccommodation(AccommodationMapper.toEntity(reservationDTO.getAccommodation()));
         reservationForUpdate.setStatus(reservationDTO.getStatus());
+        //dodati jos
 
         reservationForUpdate = reservationService.save(reservationForUpdate);
 
