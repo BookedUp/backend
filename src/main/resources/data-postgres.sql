@@ -59,8 +59,8 @@ VALUES
     ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'CHANGED', 'PER_NIGHT', 'APARTMENT', 8.8, 3, true),
     ('Luksuzna vila na jezeru', 'Vila sa privatnim pristupom jezeru', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0, 2, true),
     ('Ekskluzivni hotel "Bella Vista"', 'Savršen odmor sa panoramskim pogledom', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8, 3, true),
-    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'CREATED', 'PER_NIGHT', 'VILLA', 8.4, 2, true),
-    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'CREATED', 'PER_NIGHT', 'APARTMENT', 8.7, 3, true);
+    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 8.4, 2, true),
+    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.7, 3, true);
 
 INSERT INTO photo (url, caption, width, height, active, accommodation_id)
 VALUES
@@ -112,7 +112,7 @@ VALUES
     (5, '2023-12-12', '2023-12-19'),
     (5, '2023-12-26', '2024-01-02'),
     (6, '2023-12-03', '2023-12-11'),
-    (7, '2023-12-07', '2023-12-14'),
+    (7, '2023-12-17', '2023-12-24'),
     (8, '2023-12-14', '2023-12-21'),
     (8, '2023-12-28', '2024-01-04'),
     (9, '2023-12-10', '2023-12-17'),
