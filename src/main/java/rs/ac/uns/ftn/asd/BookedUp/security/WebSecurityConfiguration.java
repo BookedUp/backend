@@ -28,7 +28,7 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .requestMatchers("/").permitAll()
-                .requestMatchers("/api/login/").permitAll()
+                .requestMatchers("/api/login").permitAll() //obrisala /
                 .requestMatchers("/api/register/").permitAll()
                 .requestMatchers("/api/notifications/").authenticated()
                 .requestMatchers("/api/reservations/").authenticated()

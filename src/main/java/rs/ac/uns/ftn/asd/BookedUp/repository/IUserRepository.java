@@ -19,4 +19,5 @@ public interface IUserRepository extends JpaRepository<User, Long> {
             "SET u.active = TRUE WHERE u.email = ?1") //stojalo .enabled
     int enableUser(String email);
 
+
 }

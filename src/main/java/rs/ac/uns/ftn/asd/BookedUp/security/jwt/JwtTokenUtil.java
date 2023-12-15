@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -13,12 +14,16 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 
 @Component
 public class JwtTokenUtil implements Serializable {
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     @Value("${jwt.secret}")
     private String secret;
+
+    @Autowired
+    private UserService userService;
 
     // retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -61,7 +66,8 @@ public class JwtTokenUtil implements Serializable {
     private String doGenerateToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
                 .claim("role", userDetails.getAuthorities())
-                .claim("username", userDetails.getUsername())
+                //.claim("username", userDetails.getUsername())
+                .claim("id", userService.getByEmail(userDetails.getUsername()).getId() )
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }

@@ -33,7 +33,7 @@ public class LogInController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping( value ="/login", consumes = "application/json")
+    @PostMapping( value ="/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<TokenDTO> login(@RequestBody LogInDTO loginDto) {
 
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
