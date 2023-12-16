@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.asd.BookedUp.domain.enums;
+package rs.ac.uns.ftn.asd.BookedUp.enums;
 
 public enum Amenity {
     FREE_WIFI,

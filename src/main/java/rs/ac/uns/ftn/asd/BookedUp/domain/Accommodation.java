@@ -1,15 +1,18 @@
 package rs.ac.uns.ftn.asd.BookedUp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.PriceType;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
+import rs.ac.uns.ftn.asd.BookedUp.enums.PriceType;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Getter

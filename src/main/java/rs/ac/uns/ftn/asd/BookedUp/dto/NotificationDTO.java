@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.NotificationType;
+import rs.ac.uns.ftn.asd.BookedUp.enums.NotificationType;
 
 import java.util.Date;
 

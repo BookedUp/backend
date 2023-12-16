@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class AccommodationMapper {
+public class AccommodationMapper  {
 
     private static ModelMapper modelMapper;
 

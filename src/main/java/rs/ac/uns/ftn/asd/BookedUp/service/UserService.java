@@ -6,7 +6,6 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IUserRepository;
 
-import javax.net.ssl.SSLSession;
 import java.util.Collection;
 
 @Service
@@ -112,10 +111,5 @@ public class UserService implements ServiceInterface<User>{
     public boolean registerHost(UserDTO userDTO) {
         //make sure to put user.role to host
         return false;
-    }
-
-    public User getByEmail(String email) {
-        User user = repository.findByEmail(email).orElse(null);
-        return user;
     }
 }

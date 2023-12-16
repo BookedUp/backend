@@ -3,11 +3,15 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.dto.PriceChangeDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.AccommodationType;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Amenity;
+import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IPhotoRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
@@ -15,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccommodationService implements ServiceInterface<Accommodation>{
@@ -172,16 +177,8 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return repository.save(accommodationToUpdate);
     }
 
-    public List<Accommodation> findAllActiveByHostId(Long id){
-        return repository.findAllActiveByHostId(id);
-    }
-
-    public List<Accommodation> findAllRejectedByHostId(Long id){
-        return repository.findAllRejectedByHostId(id);
-    }
-
-    public List<Accommodation> findAllRequestsByHostId(Long id){
-        return repository.findAllRequestsByHostId(id);
+    public List<Accommodation> findAllByHostId(Long id){
+        return repository.findAllByHostId(id);
     }
 
     public List<Accommodation> findAllChanged(){
@@ -207,8 +204,8 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return false;
     }
 
-    public List<Accommodation> searchAccommodations(String location, Integer guestsNumber, Date startDate, Date endDate){
-        return repository.searchAccommodations(location, guestsNumber, startDate, endDate);
+    public List<Accommodation> searchAccommodations(String country, String city, Integer guestsNumber, Date startDate, Date endDate){
+        return repository.searchAccommodations(country, city, guestsNumber, startDate, endDate);
     }
 
     public double calculateTotalPrice(Accommodation accommodation, Date startDate, Integer daysNumber, Integer guestsNumber){
@@ -251,30 +248,24 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             }
         }
 
-    public List<Accommodation> filterAccommodationsByType(AccommodationType type){
-       return repository.filterAccommodationsByType(type);
+
+    public List<Accommodation> filterAccommodations(List<Amenity> amenities, AccommodationType accommodationType, Double minPrice, Double maxPrice) {
+        List<Accommodation> filteredAccommodations = repository.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
+        return filteredAccommodations;
+//        for (Accommodation accommodation : filteredAccommodations){
+//            System.out.println(accommodation.getId());
+//            System.out.println(accommodation.getType());
+//            System.out.println(accommodation.getPrice());
+//            for (Amenity amenity : accommodation.getAmenities()){
+//                System.out.println(amenity);
+//            }
+//        }
+//        if (amenities != null && !amenities.isEmpty()) {
+//            filteredAccommodations = filteredAccommodations.stream()
+//                    .filter(accommodation -> accommodation.getAmenities().containsAll(amenities))
+//                    .collect(Collectors.toList());
+//        }
+//        return filteredAccommodations;
     }
-
-    public List<Accommodation> findMostPopular() {
-        List<Object[]> result = repository.findMostPopular();
-        List<Accommodation> accommodations = new ArrayList<>();
-
-        int count = 0;
-
-        for (Object[] row : result) {
-            if (count < 4) {
-                Accommodation accommodation = (Accommodation) row[0];
-                accommodations.add(accommodation);
-                count++;
-            } else {
-                break;
-            }
-        }
-
-        return accommodations;
-    }
-
-
-
 }
 

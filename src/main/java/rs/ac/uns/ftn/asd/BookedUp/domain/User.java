@@ -2,15 +2,16 @@ package rs.ac.uns.ftn.asd.BookedUp.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Role;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -21,7 +22,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public class User implements UserDetails {
 
     @Id
@@ -60,17 +61,15 @@ public class User implements UserDetails {
     @JoinColumn(name = "photo_id", nullable = true, unique = false)
     private Photo profilePicture;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", insertable = false, updatable = false)
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    //@JoinColumn(name = "user_id", nullable = false)
+    protected Set<Authority> authority;
 
     @Column(name = "last_password_reset_date",nullable = true)
     private Timestamp lastPasswordResetDate;
 
-    @Transient
-    private String jwt;
 
-    //razmisliti o locked isEnabled
+
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -85,20 +84,32 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+
+    public void copyValues(User user) {
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.address = user.getAddress();
+        this.phone = user.getPhone();
+        this.email = user.getEmail();
+        //this.role = user.getRole();
+        this.active = user.isActive();
+        this.password = user.getPassword();
+        this.isBlocked = user.isBlocked();
+//        this.notifications = user.getNotifications();
+        this.authority = user.getAuthority();
+        this.verified = user.isVerified();
+        this.profilePicture = user.getProfilePicture();
+        this.lastPasswordResetDate = user.getLastPasswordResetDate();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority =
-                new SimpleGrantedAuthority(role.name());
-        return Collections.singletonList(authority);
+        return this.authority;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return this.email;
     }
 
     @Override
@@ -118,26 +129,8 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return active;
+        return true;
     }
-
-
-//    public void copyValues(User user) {
-//        this.firstName = user.getFirstName();
-//        this.lastName = user.getLastName();
-//        this.address = user.getAddress();
-//        this.phone = user.getPhone();
-//        this.email = user.getEmail();
-//        //this.role = user.getRole();
-//        this.active = user.isActive();
-//        this.password = user.getPassword();
-//        this.isBlocked = user.isBlocked();
-////        this.notifications = user.getNotifications();
-//        this.authority = user.getAuthority();
-//        this.verified = user.isVerified();
-//        this.profilePicture = user.getProfilePicture();
-//        this.lastPasswordResetDate = user.getLastPasswordResetDate();
-//    }
 
 
 }

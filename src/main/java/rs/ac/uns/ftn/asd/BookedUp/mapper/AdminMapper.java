@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
+import rs.ac.uns.ftn.asd.BookedUp.enums.Role;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class AdminMapper {
