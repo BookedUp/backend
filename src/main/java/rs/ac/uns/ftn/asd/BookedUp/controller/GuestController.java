@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/guests")
+@CrossOrigin
 public class GuestController {
     @Autowired
     private GuestService guestService;

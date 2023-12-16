@@ -11,16 +11,14 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.LogInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.TokenDTO;
 import rs.ac.uns.ftn.asd.BookedUp.security.jwt.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class LogInController {
@@ -35,7 +33,7 @@ public class LogInController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping( value ="/login", consumes = "application/json")
+    @PostMapping( value ="/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<TokenDTO> login(@RequestBody LogInDTO loginDto) {
 
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
