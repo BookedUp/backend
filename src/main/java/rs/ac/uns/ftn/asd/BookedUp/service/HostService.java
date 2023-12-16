@@ -3,21 +3,14 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.HostDTO;
-import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.HostMapper;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.repository.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class HostService implements ServiceInterface<Host>{
@@ -123,7 +116,7 @@ public class HostService implements ServiceInterface<Host>{
 //            }
 //        }
 
-        List<Accommodation> accommodations = accommodationService.findAllByHostId(id);
+        List<Accommodation> accommodations = accommodationService.findAllActiveByHostId(id); //ko zna sta je ovo
         if(!accommodations.isEmpty()) {
             for (Accommodation accommodation : accommodations) {
                 accommodation.setActive(false);
@@ -137,7 +130,7 @@ public class HostService implements ServiceInterface<Host>{
     }
 
     private boolean hasActiveReservations(Long id) {
-        List<Accommodation> accommodations = accommodationService.findAllByHostId(id);
+        List<Accommodation> accommodations = accommodationService.findAllActiveByHostId(id); //ko zna
 
         if (accommodations != null) {
             for (Accommodation accommodation : accommodations) {

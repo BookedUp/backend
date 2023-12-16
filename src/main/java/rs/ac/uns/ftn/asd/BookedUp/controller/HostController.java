@@ -145,32 +145,32 @@ public class HostController {
     }
 
 
-    @PreAuthorize("hasRole('HOST')")
-    @GetMapping("/{id}/accommodations")
-    public ResponseEntity<List<AccommodationDTO>> getHostAccommodations(@PathVariable Long id) {
-        try {
-            Host host = hostService.getById(id);
-
-            if (host == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            List<Accommodation> accommodations = accommodationService.findAllByHostId(host.getId());
-
-            if (accommodations.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            List<AccommodationDTO> accommodationsDTO = accommodations.stream()
-                    .map(AccommodationMapper::toDto)
-                    .collect(Collectors.toList());
-
-            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PreAuthorize("hasRole('HOST')")
+//    @GetMapping("/{id}/accommodations")
+//    public ResponseEntity<List<AccommodationDTO>> getHostAccommodations(@PathVariable Long id) {
+//        try {
+//            Host host = hostService.getById(id);
+//
+//            if (host == null) {
+//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//            }
+//            List<Accommodation> accommodations = accommodationService.findAllByHostId(host.getId());
+//
+//            if (accommodations.isEmpty()) {
+//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            }
+//
+//            List<AccommodationDTO> accommodationsDTO = accommodations.stream()
+//                    .map(AccommodationMapper::toDto)
+//                    .collect(Collectors.toList());
+//
+//            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 //    @GetMapping("/{id}/reservations")
 //    public ResponseEntity<List<ReservationDTO>> getHostReservations(@PathVariable Long id) {

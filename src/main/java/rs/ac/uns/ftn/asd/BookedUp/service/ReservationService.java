@@ -2,9 +2,8 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
-import rs.ac.uns.ftn.asd.BookedUp.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReservationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
@@ -43,6 +42,25 @@ public class ReservationService implements ServiceInterface<Reservation> {
 
     public List<Reservation> findAllByGuestId(Long id){
         return repository.findAllByGuestId(id);
+    }
+
+    public List<Reservation> findAllByHostId(Long id){
+        return repository.findAllByHostId(id);
+    }
+    public List<Reservation> findAllCreatedByHostId(Long id){
+        return repository.findAllCreatedByHostId(id);
+    }
+    public List<Reservation> findAllAcceptedByHostId(Long id){
+        return repository.findAllAcceptedByHostId(id);
+    }
+    public List<Reservation> findAllRejectedByHostId(Long id){
+        return repository.findAllRejectedByHostId(id);
+    }
+    public List<Reservation> findAllCompletedByHostId(Long id){
+        return repository.findAllCompletedByHostId(id);
+    }
+    public List<Reservation> findAllCancelledByHostId(Long id){
+        return repository.findAllCancelledByHostId(id);
     }
 
     public List<Reservation> findAllByAccommodationId(Long id){

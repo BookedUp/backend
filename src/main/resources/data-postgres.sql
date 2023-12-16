@@ -19,47 +19,62 @@ INSERT INTO public.authority (role) VALUES
 
 INSERT INTO photo (url, caption, width, height, active)
 VALUES
-    ('src/main/resources/images/people/people1.png', 'Description1', 264, 264, true),
-    ('src/main/resources/images/people/people2.png', 'Description2', 488, 511, true),
-    ('src/main/resources/images/people/people3.png', 'Description3', 980, 980, true),
-    ('src/main/resources/images/people/people4.png', 'Description4', 535, 466, true),
-    ('src/main/resources/images/people/people5.png', 'Description5', 500, 500, true),
-    ('src/main/resources/images/people/people6.png', 'Description6', 220, 230, true),
-    ('src/main/resources/images/people/people7.png', 'Description7', 524, 476,true),
-    ('src/main/resources/images/people/profilPicture.png', 'No profile picture', 640, 960,true);
+    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description1', 264, 264, true),
+    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description2', 488, 511, true),
+    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description3', 980, 980, true),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description4', 535, 466, true),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description5', 500, 500, true),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description6', 220, 230, true),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description7', 524, 476,true),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true);
 
-INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, type, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled, active)
-VALUES
-    ('Jovan', 'Jovanović', 1, 123456789, 'jovan.jovanovic@example.com', 'jovanpass', false, true, 1, 'admin', '2023-01-01 10:00:00', null, null, null, null, null, null,true),
-    ('Ana', 'Anić', 2, 987654321, 'ana.anic@example.com', 'anapass', false, true, 2, 'host', '2023-02-01 12:30:00', null, true, 9.8, true, true, true,true),
-    ('Milica', 'Milosavljević', 3, 987654322, 'milica.milosavljevic@example.com', 'milicinapass', false, true, 3, 'host', '2023-03-01 15:45:00', null, true, 8.0, false, true, false,true),
-    ('Marko', 'Marković', 4, 0631234567, 'marko.markovic@example.com', 'markopass', false, true, 4, 'guest', '2023-04-01 18:20:00', true, null, null, null, null, null,true),
-    ('Jovana', 'Jovanović', 5, 0649876543, 'jovana.jovanovic@example.com', 'jovanapass', false, true, 5, 'guest', '2023-04-01 18:20:00', true, null, null, null, null, null,true),
-    ('Nenad', 'Nenadić', 6, 0658765432, 'nenad.nenadic@example.com', 'nenadpass', false, true, 6, 'guest', '2023-05-01 21:10:00', true, null, null, null, null, null,true),
-    ('Mila', 'Milićević', 7, 0661122334, 'mila.milicevic@example.com', 'milinpass', false, true, 7, 'guest', '2022-06-01 09:30:00', false, null, null, null, null, null,true);
 
-INSERT INTO users_authority (user_id, authority_id)
+INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled, active, role)
 VALUES
-    (1, 1),
-    (2, 3),
-    (3, 3),
-    (4, 2),
-    (5, 2),
-    (6, 2),
-    (7, 2);
+    ('Jovan', 'Jovanović', 1, 123456789, 'jovan.jovanovic@example.com', 'jovanpass', false, true, 1, '2023-01-01 10:00:00', null, null, null, null, null, null,true, 'ADMIN'),
+    ('Ana', 'Anić', 2, 987654321, 'ana.anic@example.com', 'anapass', false, true, 2, '2023-02-01 12:30:00', null, true, 9.8, true, true, true,true, 'HOST'),
+    ('Milica', 'Milosavljević', 3, 987654322, 'milica.milosavljevic@example.com', 'milicinapass', false, true, 3, '2023-03-01 15:45:00', null, true, 8.0, false, true, false,true, 'HOST'),
+    ('Marko', 'Marković', 4, 0631234567, 'marko.markovic@example.com', 'markopass', false, true, 4, '2023-04-01 18:20:00', true, null, null, null, null, null,true, 'GUEST'),
+    ('Jovana', 'Jovanović', 5, 0649876543, 'jovana.jovanovic@example.com', 'jovanapass', false, true, 5, '2023-04-01 18:20:00', true, null, null, null, null, null,true, 'GUEST'),
+    ('Nenad', 'Nenadić', 6, 0658765432, 'nenad.nenadic@example.com', 'nenadpass', false, true, 6, '2023-05-01 21:10:00', true, null, null, null, null, null,true, 'GUEST'),
+    ('Mila', 'Milićević', 7, 0661122334, 'mila.milicevic@example.com', 'milinpass', false, true, 7, '2022-06-01 09:30:00', false, null, null, null, null, null,true, 'GUEST');
+
+-- INSERT INTO users_authority (user_id, authority_id)
+-- VALUES
+--     (1, 1),
+--     (2, 3),
+--     (3, 3),
+--     (4, 2),
+--     (5, 2),
+--     (6, 2),
+--     (7, 2);
 
 INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating, host_id, active)
 VALUES
-    ('Luksuzni hotel', 'Ovo je opis hotela', 1, 200.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 7.8, 2, true),
+    ('Luksuzni hotel', 'Ovo je opis hotela', 1, 200.0, 2, 4, 7, true, 'CREATED', 'PER_NIGHT', 'HOTEL', 7.8, 2, true),
     ('Pansion "Suncokret"', 'Prijatan porodični pansion', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_GUEST', 'HOSTEL', 8.0, 3, true),
-    ('Vila "Miris mora"', 'Vila sa pogledom na more', 3, 300.0, 4, 8, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 9.0, 2, true),
+    ('Vila "Miris mora"', 'Vila sa pogledom na more', 3, 300.0, 4, 8, 14, true, 'CHANGED', 'PER_NIGHT', 'VILLA', 9.0, 2, true),
     ('Apartman "Sunce"', 'Centralni apartman u srcu grada', 4, 80.0, 1, 2, 2, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 9.5, 3, true),
     ('Luksuzni resort', 'Odmor iz snova', 5, 500.0, 2, 6, 14, true, 'ACTIVE', 'PER_NIGHT', 'RESORT', 7.5, 2, true),
-    ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.8, 3, true),
+    ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'CHANGED', 'PER_NIGHT', 'APARTMENT', 8.8, 3, true),
     ('Luksuzna vila na jezeru', 'Vila sa privatnim pristupom jezeru', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0, 2, true),
     ('Ekskluzivni hotel "Bella Vista"', 'Savršen odmor sa panoramskim pogledom', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8, 3, true),
     ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 8.4, 2, true),
     ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.7, 3, true);
+
+INSERT INTO photo (url, caption, width, height, active, accommodation_id)
+VALUES
+    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description1', 264, 264, true, 1),
+    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description2', 488, 511, true, 3),
+    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description3', 980, 980, true, 5),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description4', 535, 466, true, 6),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description5', 500, 500, true, 4),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description6', 220, 230, true, 10),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description7', 524, 476,true, 7),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 9),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 8),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 2);
+
 
 INSERT INTO amenities (accommodation_id, amenities)
 VALUES
@@ -250,14 +265,3 @@ INSERT INTO statistics_detail (key, profit, number_of_reservations, accommodatio
 VALUES
     ('May', 5000.75, 50, 1, null),
     ('Seoski dom za odmor', 3200.40, 30, null, 2);
-
-
-
-
-
-
-
-
-
-
-
