@@ -59,8 +59,8 @@ VALUES
     ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'CHANGED', 'PER_NIGHT', 'APARTMENT', 8.8, 3, true),
     ('Luksuzna vila na jezeru', 'Vila sa privatnim pristupom jezeru', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0, 2, true),
     ('Ekskluzivni hotel "Bella Vista"', 'Savršen odmor sa panoramskim pogledom', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8, 3, true),
-    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'CREATED', 'PER_NIGHT', 'VILLA', 8.4, 2, true),
-    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'CREATED', 'PER_NIGHT', 'APARTMENT', 8.7, 3, true);
+    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 8.4, 2, true),
+    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.7, 3, true);
 
 INSERT INTO photo (url, caption, width, height, active, accommodation_id)
 VALUES
@@ -68,10 +68,13 @@ VALUES
     ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description2', 488, 511, true, 3),
     ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description3', 980, 980, true, 5),
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description4', 535, 466, true, 6),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description5', 500, 500, true, 3),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description5', 500, 500, true, 4),
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description6', 220, 230, true, 10),
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description7', 524, 476,true, 7),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 9);
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 9),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 8),
+    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 2);
+
 
 INSERT INTO amenities (accommodation_id, amenities)
 VALUES
@@ -109,7 +112,7 @@ VALUES
     (5, '2023-12-12', '2023-12-19'),
     (5, '2023-12-26', '2024-01-02'),
     (6, '2023-12-03', '2023-12-11'),
-    (7, '2023-12-07', '2023-12-14'),
+    (7, '2023-12-17', '2023-12-24'),
     (8, '2023-12-14', '2023-12-21'),
     (8, '2023-12-28', '2024-01-04'),
     (9, '2023-12-10', '2023-12-17'),
@@ -262,14 +265,3 @@ INSERT INTO statistics_detail (key, profit, number_of_reservations, accommodatio
 VALUES
     ('May', 5000.75, 50, 1, null),
     ('Seoski dom za odmor', 3200.40, 30, null, 2);
-
-
-
-
-
-
-
-
-
-
-

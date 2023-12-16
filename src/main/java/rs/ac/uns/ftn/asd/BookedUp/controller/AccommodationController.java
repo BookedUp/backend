@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -213,6 +215,17 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/mostPopular", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getMostPopular() {
+        Collection<Accommodation> accommodations = accommodationService.findMostPopular();
+        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+    }
+
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/changed", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllChanged() {
@@ -224,17 +237,24 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search-filter")
     public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
-            @RequestParam(required = false) String country,
-            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String location,
             @RequestParam(required = false) Integer guestsNumber,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate
+            @RequestParam(required = false)  Date startDate,
+            @RequestParam(required = false) Date endDate,
+            @RequestParam(required = false) List<Object> amenities,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Double customMaxBudget,
+            @RequestParam(required = false) Object selectedType,
+            @RequestParam(required = false) String name
     ) {
+        String lowercaseName = name.toLowerCase();
         try {
+            //SEARCH
             List<Accommodation> searchedAccommodations = accommodationService.searchAccommodations(
-                    country, city, guestsNumber, startDate, endDate);
+                    location, guestsNumber, startDate, endDate);
 
             List<AccommodationDTO> results = searchedAccommodations.stream()
                     .map(AccommodationMapper::toDto)
@@ -252,36 +272,26 @@ public class AccommodationController {
                     accommodationDTO.setTotalPrice(totalPrice);
                 }
             }
-
-            return new ResponseEntity<>(results, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<List<AccommodationDTO>> filterAccommodations(
-            @RequestParam(required = false) List<Amenity> amenities,
-            @RequestParam(required = false) AccommodationType accommodationType,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice
-    ) {
-        try {
-            List<Accommodation> filteredAccommodations = accommodationService.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
-
-            List<AccommodationDTO> results = filteredAccommodations.stream()
-                    .map(AccommodationMapper::toDto)
+//            //FILTER
+            List<AccommodationDTO> filteredAccommodations = results.stream()
+                    .filter(accommodationDTO ->
+                            ((customMaxBudget == null || customMaxBudget == 0 || accommodationDTO.getTotalPrice() <= customMaxBudget) &&
+                                    (amenities == null || amenities.isEmpty() || amenities.stream().allMatch(amenity -> accommodationDTO.getAmenities().stream().anyMatch(accAmenity -> accAmenity instanceof Amenity && ((Amenity) accAmenity).name().equals((String) amenity)))) &&
+                                    (minPrice == null || minPrice == 0 || (accommodationDTO.getTotalPrice() >= minPrice)) &&
+                                    (maxPrice == null || maxPrice == 0 || (accommodationDTO.getTotalPrice() <= maxPrice)) &&
+                                    (selectedType == null || selectedType.equals("null") || accommodationDTO.getType().name().equals(selectedType)) &&
+                                    (name == null || name.isEmpty() || (accommodationDTO.getName().trim().toLowerCase().contains(lowercaseName)))))
                     .collect(Collectors.toList());
 
+            if (!filteredAccommodations.isEmpty() || (amenities != null || minPrice != 0.0 || maxPrice != 0.0 || customMaxBudget > 0.0 || !selectedType.equals("null") || !name.isEmpty())) {
+                return new ResponseEntity<>(filteredAccommodations, HttpStatus.OK);
+            }
             return new ResponseEntity<>(results, HttpStatus.OK);
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
 }
 

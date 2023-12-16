@@ -11,9 +11,14 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class AccommodationService implements ServiceInterface<Accommodation>{
@@ -206,9 +211,45 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return false;
     }
 
-    public List<Accommodation> searchAccommodations(String country, String city, Integer guestsNumber, Date startDate, Date endDate){
-        return repository.searchAccommodations(country, city, guestsNumber, startDate, endDate);
+    public List<Accommodation> searchAccommodations(String location, Integer guestsNumber, Date startDate, Date endDate){
+        List<Accommodation> accommodations = repository.findAll();
+        boolean isStartDateAndEndToday = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isEqual(LocalDate.now()) && endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isEqual(LocalDate.now());
+        List<Accommodation> filteredAccommodations = new ArrayList<Accommodation>();
+        if (isStartDateAndEndToday){
+            System.out.println("danas");
+            filteredAccommodations = filterByToday(accommodations, location, guestsNumber, startDate, endDate);
+        } else{
+            filteredAccommodations = createDynamicFilter(accommodations, location, guestsNumber, startDate, endDate);
+        }
+
+        // Print the filtered accommodations
+        filteredAccommodations.forEach(accommodation ->
+                System.out.println("IDDDDDDDDDDD: " + accommodation.getId()));
+        return filteredAccommodations;
     }
+
+
+    private static List<Accommodation> createDynamicFilter(List<Accommodation> accommodations, String location, Integer guestsNumber, Date startDate, Date endDate) {
+
+        return accommodations.stream()
+                .filter(accommodation ->
+                        (location.isEmpty() || accommodation.getAddress().getCity().equals(location) || accommodation.getAddress().getCountry().equals(location)) &&
+                                (guestsNumber == null || guestsNumber == 0 || (accommodation.getMinGuests() <= guestsNumber && guestsNumber <= accommodation.getMaxGuests())) &&
+                                (startDate == null || accommodation.getAvailability().stream().anyMatch(date -> startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) >= 0 && startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) < 0)) &&
+                                (endDate == null || accommodation.getAvailability().stream().anyMatch(date -> endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) <= 0 && endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) > 0)))
+                .collect(Collectors.toList());
+    }
+
+    private static List<Accommodation> filterByToday(List<Accommodation> accommodations, String location, Integer guestsNumber, Date startDate, Date endDate){
+        return accommodations.stream()
+                .filter(accommodation ->
+                        (location.isEmpty() || accommodation.getAddress().getCity().equals(location) || accommodation.getAddress().getCountry().equals(location)) &&
+                                (guestsNumber == null || guestsNumber == 0 || (accommodation.getMinGuests() <= guestsNumber && guestsNumber <= accommodation.getMaxGuests())) &&
+                                ((startDate == null || accommodation.getAvailability().stream().anyMatch(date -> startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) <= 0 && startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) < 0)))&&
+                                (endDate == null || accommodation.getAvailability().stream().anyMatch(date -> endDate.toInstant().compareTo(date.getEndDate().toInstant()) <= 0 && endDate.toInstant().compareTo(date.getStartDate().toInstant()) < 0)))
+                .collect(Collectors.toList());
+    }
+
 
     public double calculateTotalPrice(Accommodation accommodation, Date startDate, Integer daysNumber, Integer guestsNumber){
         if (!accommodation.getPriceChanges().isEmpty()) {
@@ -250,24 +291,30 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             }
         }
 
-
-    public List<Accommodation> filterAccommodations(List<Amenity> amenities, AccommodationType accommodationType, Double minPrice, Double maxPrice) {
-        List<Accommodation> filteredAccommodations = repository.filterAccommodations(amenities, accommodationType, minPrice, maxPrice);
-        return filteredAccommodations;
-//        for (Accommodation accommodation : filteredAccommodations){
-//            System.out.println(accommodation.getId());
-//            System.out.println(accommodation.getType());
-//            System.out.println(accommodation.getPrice());
-//            for (Amenity amenity : accommodation.getAmenities()){
-//                System.out.println(amenity);
-//            }
-//        }
-//        if (amenities != null && !amenities.isEmpty()) {
-//            filteredAccommodations = filteredAccommodations.stream()
-//                    .filter(accommodation -> accommodation.getAmenities().containsAll(amenities))
-//                    .collect(Collectors.toList());
-//        }
-//        return filteredAccommodations;
+    public List<Accommodation> filterAccommodationsByType(AccommodationType type){
+       return repository.filterAccommodationsByType(type);
     }
+
+    public List<Accommodation> findMostPopular() {
+        List<Object[]> result = repository.findMostPopular();
+        List<Accommodation> accommodations = new ArrayList<>();
+
+        int count = 0;
+
+        for (Object[] row : result) {
+            if (count < 4) {
+                Accommodation accommodation = (Accommodation) row[0];
+                accommodations.add(accommodation);
+                count++;
+            } else {
+                break;
+            }
+        }
+
+        return accommodations;
+    }
+
+
+
 }
 

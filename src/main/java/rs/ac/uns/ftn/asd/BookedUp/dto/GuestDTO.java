@@ -19,8 +19,9 @@ public class GuestDTO extends UserDTO {
     private boolean notificationEnable = true;
 
 
-    public GuestDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, List<AccommodationDTO> favourites, boolean notificationEnable) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, Role.GUEST);
+    public GuestDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, Role role, List<AccommodationDTO> favourites, boolean notificationEnable) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, role);
+
         //this.requests = requests;
 //        this.reservations = reservations;
         this.favourites = favourites;

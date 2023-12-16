@@ -18,6 +18,7 @@ import rs.ac.uns.ftn.asd.BookedUp.security.jwt.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
@@ -33,7 +34,7 @@ public class LogInController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping( value ="/login", consumes = "application/json")
+    @PostMapping( value ="/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<TokenDTO> login(@RequestBody LogInDTO loginDto) {
 
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),

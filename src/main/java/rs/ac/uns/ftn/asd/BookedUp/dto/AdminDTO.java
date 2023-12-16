@@ -16,8 +16,9 @@ public class AdminDTO extends UserDTO{
 //    private List<AccommodationDTO> requests;
 
 
-    public AdminDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture) {
-        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, Role.ADMIN);
+    public AdminDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, Role role) {
+        super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, role);
+
 //        this.userReports = userReports;
 //        this.reviewReports = reviewReports;
 //        this.requests = requests;
