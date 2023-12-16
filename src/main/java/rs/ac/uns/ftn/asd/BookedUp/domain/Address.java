@@ -30,10 +30,10 @@ public class Address {
     private String streetAndNumber;
 
     @Column(unique = false, nullable = false)
-    private double lat;
+    private double latitude;
 
     @Column(unique = false, nullable = false)
-    private double lon;
+    private double longitude;
 
     @Column(nullable = false)
     private boolean active = true;

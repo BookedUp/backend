@@ -16,4 +16,6 @@ public class AddressDTO {
     private String postalCode;
     private String streetAndNumber;
     private boolean active = true;
+    private double latitude;
+    private double longitude;
 }

@@ -1,4 +1,4 @@
-INSERT INTO address (country, city, postal_code, street_and_number, lat, lon, active)
+INSERT INTO address (country, city, postal_code, street_and_number, latitude, longitude, active)
 VALUES
     ('United Kingdom', 'London', 'W1J 9BR', '150 Piccadilly', 51.5074, -0.1278, true),
     ('France', 'Paris', '75008', '10 Place de la Concorde', 48.8656, 2.3111, true),
@@ -48,32 +48,36 @@ VALUES
 --     (5, 2),
 --     (6, 2),
 --     (7, 2);
+ALTER TABLE accommodation
+ALTER COLUMN description TYPE VARCHAR(1000);
 
 INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating, host_id, active)
 VALUES
-    ('Luksuzni hotel', 'Ovo je opis hotela', 1, 200.0, 2, 4, 7, true, 'CREATED', 'PER_NIGHT', 'HOTEL', 7.8, 2, true),
-    ('Pansion "Suncokret"', 'Prijatan porodični pansion', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_GUEST', 'HOSTEL', 8.0, 3, true),
-    ('Vila "Miris mora"', 'Vila sa pogledom na more', 3, 300.0, 4, 8, 14, true, 'CHANGED', 'PER_NIGHT', 'VILLA', 9.0, 2, true),
-    ('Apartman "Sunce"', 'Centralni apartman u srcu grada', 4, 80.0, 1, 2, 2, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 9.5, 3, true),
-    ('Luksuzni resort', 'Odmor iz snova', 5, 500.0, 2, 6, 14, true, 'ACTIVE', 'PER_NIGHT', 'RESORT', 7.5, 2, true),
-    ('Planinski apartman', 'Pogled na planine iz svih prozora', 6, 120.0, 2, 4, 7, true, 'CHANGED', 'PER_NIGHT', 'APARTMENT', 8.8, 3, true),
-    ('Luksuzna vila na jezeru', 'Vila sa privatnim pristupom jezeru', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0, 2, true),
-    ('Ekskluzivni hotel "Bella Vista"', 'Savršen odmor sa panoramskim pogledom', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8, 3, true),
-    ('Seoski dom za odmor', 'Uživajte u tišini seoskog ambijenta', 9, 70.0, 1, 3, 3, true, 'CREATED', 'PER_NIGHT', 'VILLA', 8.4, 2, true),
-    ('Moderan apartman blizu plaže', 'Savršen smeštaj za letovanje', 10, 90.0, 2, 4, 5, true, 'CREATED', 'PER_NIGHT', 'APARTMENT', 8.7, 3, true);
+    ('OceanViewEscape', 'Indulge in panoramic ocean views from this luxurious coastal retreat. The three-bedroom villa features contemporary design, a fully equipped gourmet kitchen, and a private terrace for soaking in the sea breeze. Enjoy access to resort-style amenities, including a beachfront pool and spa. Ideal for a tranquil getaway or entertaining guests.', 1, 200.0, 2, 4, 7, true, 'CREATED', 'PER_NIGHT', 'HOTEL', 7.8, 2, true),
+    ('Sky High Suite', 'Elevate your stay in the luxurious Sky High Suite, situated on the top floors of a landmark skyscraper. This opulent three-bedroom suite offers panoramic city views through floor-to-ceiling windows, a private chef''s kitchen, and a lavish entertainment lounge. Indulge in the epitome of sophistication and convenience in the heart of the urban skyline.', 2, 50.0, 1, 3, 3, true, 'ACTIVE', 'PER_GUEST', 'HOSTEL', 8.0, 3, true),
+    ('City Lights Penthouse', 'Experience the epitome of urban living in this breathtaking penthouse with floor-to-ceiling windows showcasing city lights. Boasting four bedrooms and a stylish modern interior, this high-rise oasis offers a fully stocked bar, entertainment lounge, and a private rooftop terrace with skyline views. Elevate your stay in the heart of the city.', 3, 300.0, 4, 8, 14, true, 'CHANGED', 'PER_NIGHT', 'VILLA', 9.0, 2, true),
+    ('Alpine Retreat Chalet', 'Nestled in the serene alpine landscape, this chalet offers a cozy escape with log cabin charm. Featuring two bedrooms, a wood-burning fireplace, and a hot tub on the deck, it''s an idyllic setting for a mountain retreat. Enjoy direct access to hiking trails and ski slopes for year-round outdoor adventures.', 4, 80.0, 1, 2, 2, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 9.5, 3, true),
+    ('Urban Retreat Suite', 'Welcome to your new urban oasis! This stylish two-bedroom apartment boasts modern elegance with an open-concept design, featuring sleek hardwood floors and large windows that flood the space with natural light. The kitchen is a culinary enthusiast''s dream, equipped with state-of-the-art stainless steel appliances and granite countertops. Unwind in the spacious living room, perfect for entertaining or cozy nights in, and retreat to the master bedroom with its en-suite bathroom for the ultimate in comfort. Located in a vibrant neighborhood, this apartment offers not just a home but a lifestyle, with trendy shops, restaurants, and parks just steps away.', 5, 500.0, 2, 6, 14, true, 'ACTIVE', 'PER_NIGHT', 'RESORT', 7.5, 2, true),
+    ('Historic Inn Elegance', 'Step back in time at this meticulously restored historic inn. Each room tells a story with antique furnishings and period decor. Indulge in a continental breakfast in the charming courtyard and explore nearby landmarks. Immerse yourself in the elegance of a bygone era while enjoying modern comforts.', 6, 120.0, 2, 4, 7, true, 'CHANGED', 'PER_NIGHT', 'APARTMENT', 8.8, 3, true),
+    ('Skyline View Loft', 'Perched atop a skyscraper, this contemporary loft offers unparalleled skyline views. The one-bedroom space features minimalist aesthetics, a fully equipped kitchen, and a spacious living area. Enjoy the luxury of a private balcony overlooking the city lights for a truly cosmopolitan experience.', 7, 450.0, 6, 10, 14, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 10.0, 2, true),
+    ('Tranquil Cottage Retreat', 'Escape to the countryside in this charming cottage surrounded by lush gardens. The two-bedroom retreat features a rustic fireplace, a fully equipped kitchen, and a private patio for enjoying morning coffee or evening stargazing. Immerse yourself in the tranquility of nature while being just a short drive from local vineyards and hiking trails.', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 9.8, 3, true),
+    ('Beachfront Bungalow Paradise', 'Experience paradise at this beachfront bungalow with direct access to the sandy shores. The tropical-themed two-bedroom haven offers a sun-soaked deck, hammocks for lazy afternoons, and stunning sunset views. Embrace the laid-back coastal lifestyle with surf lessons, beach picnics, and seaside relaxation.', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 8.4, 2, true),
+    ('Riverside Retreat Cabin', 'Unplug and unwind in this secluded cabin nestled by a serene river. The one-bedroom hideaway features a woodsy interior, a riverside deck for fishing or lounging, and a cozy fireplace. Disconnect from the hustle and bustle, and reconnect with nature in this peaceful riverside retreat.', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 8.7, 3, true);
 
 INSERT INTO photo (url, caption, width, height, active, accommodation_id)
 VALUES
     ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description1', 264, 264, true, 1),
-    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description2', 488, 511, true, 3),
-    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description3', 980, 980, true, 5),
+    ('https://www.home-designing.com/wp-content/uploads/2017/08/creative-studio-apartment-design.jpg', 'Description2', 488, 511, true, 3),
+    ('https://www.mydomaine.com/thmb/2EJFr6cCPoDd-nLnT8X4h78RkRw=/2121x0/filters:no_upscale():strip_icc()/GettyImages-1138401956-444c7e58471f41d3936b126c67bc0b66.jpg', 'Description3', 980, 980, true, 5),
     ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description4', 535, 466, true, 6),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description5', 500, 500, true, 4),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description6', 220, 230, true, 10),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description7', 524, 476,true, 7),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 9),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 8),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true, 2);
+    ('https://ppmapartments.com/wp-content/uploads/2021/03/1-3.jpg', 'Description5', 500, 500, true, 4),
+    ('https://www.redfin.com/blog/wp-content/uploads/2022/09/spacejoy-xkJ2_THgKmk-unsplash.jpg', 'Description6', 220, 230, true, 10),
+    ('https://cdn.mos.cms.futurecdn.net/vcKypmJpoxLHNrtjDyJnVa.jpg', 'Description7', 524, 476,true, 7),
+    ('https://i.pinimg.com/736x/f9/e2/53/f9e253dc1d18b53cacc560896cad8789.jpg', 'No profile picture', 640, 960,true, 9),
+    ('https://images1.forrent.com/i2/LetRViB02weV_zpN2v0D_VvhdCiiYoo0lNQuCtRUKBo/112/image.jpg', 'No profile picture', 640, 960,true, 8),
+    ('https://www.essexapartmenthomes.com/-/media/Project/EssexPropertyTrust/Sites/EssexApartmentHomes/Blog/2021/2021-01-12-Studio-vs-One-Bedroom-Apartment-How-They-Measure-Up/Studio-vs-One-Bedroom-Apartment-How-They-Measure-Up-1.jpg', 'No profile picture', 640, 960,true, 2),
+    ('https://www.thespruce.com/thmb/cPaZ1eA5WqKLYH4kSry7wrMYsDM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/EleanorEmail-847750221ae1499c972c977f279d2d5e.png', 'No profile picture', 640, 960,true, 5),
+    ('https://assets.nestiostatic.com/building_medias/full/d1c6422ba404e8cc5f87bdf76e0e96b7.jpg', 'No profile picture', 640, 960,true, 5);
 
 
 INSERT INTO amenities (accommodation_id, amenities)
