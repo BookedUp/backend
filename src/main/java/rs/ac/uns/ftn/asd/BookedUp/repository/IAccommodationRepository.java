@@ -30,24 +30,6 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT a FROM Accommodation a WHERE  a.status = 'CHANGED' OR a.status='CREATED'")
     List<Accommodation> findAllModified();
 
-    //ako ne radi nesto PRVO SUMNJIV OVAJ FETCH NJEGA SAM MENJALA
-    @Query("SELECT DISTINCT a FROM Accommodation a " +
-            "JOIN FETCH a.availability dr " +
-            "WHERE a.status = 'ACTIVE' " +
-            "AND (" +
-            "   COALESCE(:location, '') = '' OR " +
-            "   a.address.country = :location OR " +
-            "   a.address.city = :location OR " +
-            "   a.address.streetAndNumber = :location" +
-            ") " +
-            "AND a.minGuests <= :guestsNumber AND a.maxGuests >= :guestsNumber " +
-            "AND (:startDate BETWEEN dr.startDate AND dr.endDate OR :endDate BETWEEN dr.startDate AND dr.endDate)")
-    List<Accommodation> searchAccommodations(
-            @Param("location") String location,
-            @Param("guestsNumber") int guests,
-            @Param("startDate") Date startDate,
-            @Param("endDate") Date endDate);
- 
 
     @Query("SELECT a, COALESCE(COUNT(r.id), 0) AS reservationCount FROM Accommodation a " +
             "LEFT JOIN a.reservations r " +
