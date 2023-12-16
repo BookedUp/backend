@@ -21,6 +21,7 @@ public class GuestDTO extends UserDTO {
 
     public GuestDTO(Long id, String firstName, String lastName, AddressDTO address, Integer phone, String email, String password, boolean isBlocked, boolean verified, PhotoDTO profilePicture, Role role, List<AccommodationDTO> favourites, boolean notificationEnable) {
         super(id, firstName, lastName, address, phone, email, password, isBlocked, verified, profilePicture, role);
+
         //this.requests = requests;
 //        this.reservations = reservations;
         this.favourites = favourites;

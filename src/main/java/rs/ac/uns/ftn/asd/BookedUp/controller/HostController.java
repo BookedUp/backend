@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/hosts")
+@CrossOrigin
 public class HostController {
     @Autowired
     private HostService hostService;

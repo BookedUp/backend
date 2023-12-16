@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/photo")
+@CrossOrigin
 public class PhotoController {
     @Autowired
     private PhotoService photoService;

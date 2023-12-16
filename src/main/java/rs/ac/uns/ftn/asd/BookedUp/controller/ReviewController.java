@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/reviews")
+@CrossOrigin
 public class ReviewController {
     @Autowired
     private ReviewService reviewService;
