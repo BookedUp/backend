@@ -315,6 +315,14 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
     }
 
 
+    public void approveAccommodation(Accommodation accommodation) {
+        accommodation.setStatus(AccommodationStatus.ACTIVE);
+        repository.save(accommodation);
+    }
 
+    public void rejectAccommodation(Accommodation accommodation) {
+        accommodation.setStatus(AccommodationStatus.REJECTED);
+        repository.save(accommodation);
+    }
 }
 
