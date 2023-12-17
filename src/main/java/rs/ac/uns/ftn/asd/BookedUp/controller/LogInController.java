@@ -17,6 +17,9 @@ import rs.ac.uns.ftn.asd.BookedUp.dto.TokenDTO;
 import rs.ac.uns.ftn.asd.BookedUp.security.jwt.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.http.MediaType;
+
 
 @CrossOrigin
 @RestController
@@ -50,5 +53,19 @@ public class LogInController {
         tokenDto.setToken(token);
 
         return new ResponseEntity<>(tokenDto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/logout", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity logoutUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!(auth instanceof AnonymousAuthenticationToken)){
+            SecurityContextHolder.clearContext();
+
+            return new ResponseEntity<>("You successfully logged out!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User is not authenticated!", HttpStatus.UNAUTHORIZED);
+        }
+
     }
 }
