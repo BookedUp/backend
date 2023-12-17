@@ -128,4 +128,14 @@ public class ReservationService implements ServiceInterface<Reservation> {
         return ReservationMapper.toDto(updatedReservation);
 
     }
+
+    public void approveReservation(Reservation reservation) {
+        reservation.setStatus(ReservationStatus.ACCEPTED);
+        repository.save(reservation);
+    }
+
+    public void rejectReservation(Reservation reservation) {
+        reservation.setStatus(ReservationStatus.REJECTED);
+        repository.save(reservation);
+    }
 }

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
@@ -108,6 +111,46 @@ public class ReservationController {
         if (reservation == null) {
             return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
         }
+
+        return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PutMapping(value = "/{id}/confirmation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReservationDTO> approveReservation(@PathVariable("id") Long id)
+            throws Exception {
+        Reservation reservation = reservationService.getById(id);
+        if (reservation == null){
+            return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        if (reservation.getStatus()  != ReservationStatus.CREATED){
+            return new ResponseEntity<ReservationDTO>(HttpStatus.FORBIDDEN);
+        }
+
+//        da li dodati proveru za manualnu
+
+        reservationService.approveReservation(reservation);
+
+        return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PutMapping(value = "/{id}/rejection", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable("id") Long id)
+            throws Exception {
+        Reservation reservation = reservationService.getById(id);
+        if (reservation == null){
+            return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        if (reservation.getStatus()  != ReservationStatus.CREATED){
+            return new ResponseEntity<ReservationDTO>(HttpStatus.FORBIDDEN);
+        }
+
+//        da li dodati proveru za manualnu
+
+        reservationService.rejectReservation(reservation);
 
         return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
     }
