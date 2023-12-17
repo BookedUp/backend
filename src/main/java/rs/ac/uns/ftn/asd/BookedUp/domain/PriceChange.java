@@ -24,7 +24,12 @@ public class PriceChange {
     @Column(nullable = false)
     private double newPrice;
 
-//    @Column(nullable = false)
+    public PriceChange(Date changeDate, double newPrice) {
+        this.changeDate = changeDate;
+        this.newPrice = newPrice;
+    }
+
+    //    @Column(nullable = false)
 //    private boolean active = true;
 
 
