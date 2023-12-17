@@ -42,6 +42,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllActiveByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Accommodation> accommodations = accommodationService.findAllActiveByHostId(hostId);
@@ -52,6 +53,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllRequestsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Accommodation> accommodations = accommodationService.findAllRequestsByHostId(hostId);
@@ -62,6 +64,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/rejected", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllRejectedByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Accommodation> accommodations = accommodationService.findAllRejectedByHostId(hostId);
