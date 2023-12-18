@@ -131,13 +131,19 @@ public class GuestController {
 
     /** url: /api/guests/1 DELETE*/
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'GUEST')")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Void> deleteGuest(@PathVariable("id") Long id) {
+
+        Guest guest = guestService.getById(id);
+        if( guest == null ){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         try {
             guestService.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
