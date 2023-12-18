@@ -54,7 +54,7 @@ public class User implements UserDetails {
     private boolean active = true;
 
     @Column(nullable = false)
-    private boolean verified;
+    private boolean verified = true;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "photo_id", nullable = true, unique = false)
