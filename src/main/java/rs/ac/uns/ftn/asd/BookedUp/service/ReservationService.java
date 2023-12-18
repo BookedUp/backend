@@ -67,6 +67,11 @@ public class ReservationService implements ServiceInterface<Reservation> {
         return repository.findAllByAccommodationId(id);
     }
 
+    public List<Reservation> findReservtaionsByStatusAndGuestId(Long id){
+        return repository.findAllByAccommodationId(id);
+    }
+
+
 //    @Override
 //    public ReservationDTO update(ReservationDTO reservationDto) throws Exception {
 //        Reservation reservation = reservationMapper.toEntity(reservationDto);
@@ -137,5 +142,13 @@ public class ReservationService implements ServiceInterface<Reservation> {
     public void rejectReservation(Reservation reservation) {
         reservation.setStatus(ReservationStatus.REJECTED);
         repository.save(reservation);
+    }
+
+    public List<Reservation> getReservationsByStatusAndGuestId(Long guestId, ReservationStatus reservationStatus) {
+        return repository.getReservationsByStatusAndGuestId(guestId, reservationStatus);
+    }
+
+    public List<Reservation> getReservationsByGuestId(Long guestId) {
+        return repository.getReservationsByGuestId(guestId);
     }
 }

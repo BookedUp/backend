@@ -38,6 +38,28 @@ public class ReservationController {
         return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    @GetMapping(value = "/guest/{guestId}/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getReservationsByStatusAndGuestId(@PathVariable("guestId") Long guestId, @RequestParam(required = true) ReservationStatus reservationStatus) {
+        Collection<Reservation> reservations = reservationService.getReservationsByStatusAndGuestId(guestId, reservationStatus);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getReservationsByGuestId(@PathVariable("guestId") Long guestId) {
+        Collection<Reservation> reservations = reservationService.getReservationsByGuestId(guestId);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAuthority('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getAllByHostId(@PathVariable("hostId") Long hostId) {
