@@ -10,11 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.*;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.PriceType;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +39,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllActiveByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Accommodation> accommodations = accommodationService.findAllActiveByHostId(hostId);
@@ -52,6 +50,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllRequestsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Accommodation> accommodations = accommodationService.findAllRequestsByHostId(hostId);
@@ -62,6 +61,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/rejected", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllRejectedByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Accommodation> accommodations = accommodationService.findAllRejectedByHostId(hostId);
@@ -162,34 +162,41 @@ public class AccommodationController {
         return new ResponseEntity<Accommodation>(HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PutMapping(value = "/{id}/confirmation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> approveAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping(value = "/{id}/confirmation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccommodationDTO> approveReservation(@PathVariable("id") Long id)
             throws Exception {
-        Accommodation accommodationForUpdate = accommodationService.getById(id);
-        if (accommodationForUpdate == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Accommodation accommodation = accommodationService.getById(id);
+        if (accommodation == null){
+            return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        accommodationForUpdate.setStatus(AccommodationStatus.ACTIVE);
-        accommodationForUpdate = accommodationService.save(accommodationForUpdate);
+        if (accommodation.getStatus() == AccommodationStatus.ACTIVE || accommodation.getStatus() == AccommodationStatus.REJECTED){
+            return new ResponseEntity<AccommodationDTO>(HttpStatus.FORBIDDEN);
+        }
 
-        return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
+//        da li dodati proveru za manualnu
+
+        accommodationService.approveAccommodation(accommodation);
+        return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodation), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PutMapping(value = "/{id}/rejection", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> rejectAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
+    @PutMapping(value = "/{id}/rejection", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccommodationDTO> rejectReservation(@PathVariable("id") Long id)
             throws Exception {
-        Accommodation accommodationForUpdate = accommodationService.getById(id);
-        if (accommodationForUpdate == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Accommodation accommodation = accommodationService.getById(id);
+        if (accommodation == null){
+            return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        accommodationForUpdate.setStatus(AccommodationStatus.REJECTED);
-        accommodationForUpdate = accommodationService.save(accommodationForUpdate);
+        if (accommodation.getStatus() == AccommodationStatus.ACTIVE || accommodation.getStatus() == AccommodationStatus.REJECTED){
+            return new ResponseEntity<AccommodationDTO>(HttpStatus.FORBIDDEN);
+        }
 
-        return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
+//        da li dodati proveru za manualnu
+        accommodationService.approveAccommodation(accommodation);
+        return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodation), HttpStatus.OK);
     }
 
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
