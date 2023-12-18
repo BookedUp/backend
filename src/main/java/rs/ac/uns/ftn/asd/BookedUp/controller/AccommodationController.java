@@ -249,11 +249,16 @@ public class AccommodationController {
             @RequestParam(required = false) Object selectedType,
             @RequestParam(required = false) String name
     ) {
+
         String lowercaseName = name.toLowerCase();
         try {
             //SEARCH
             List<Accommodation> searchedAccommodations = accommodationService.searchAccommodations(
                     location, guestsNumber, startDate, endDate);
+            for (Accommodation accommodation : searchedAccommodations) {
+                accommodationService.updatePrice(accommodation);
+                System.out.println(accommodation.getPrice());
+            }
 
             List<AccommodationDTO> results = searchedAccommodations.stream()
                     .map(AccommodationMapper::toDto)
@@ -264,10 +269,10 @@ public class AccommodationController {
 
             for (AccommodationDTO accommodationDTO : results){
                 if (accommodationDTO.getPriceType().equals(PriceType.PER_NIGHT)) {
-                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, (int)daysBetween, 1);
+                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, endDate, (int)daysBetween, 1);
                     accommodationDTO.setTotalPrice(totalPrice);
                 } else {
-                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, (int)daysBetween,guestsNumber);
+                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, endDate, (int)daysBetween,guestsNumber);
                     accommodationDTO.setTotalPrice(totalPrice);
                 }
             }

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
@@ -11,12 +12,11 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -222,7 +222,6 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             filteredAccommodations = createDynamicFilter(accommodations, location, guestsNumber, startDate, endDate);
         }
 
-        // Print the filtered accommodations
         filteredAccommodations.forEach(accommodation ->
                 System.out.println("IDDDDDDDDDDD: " + accommodation.getId()));
         return filteredAccommodations;
@@ -230,45 +229,120 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
 
     private static List<Accommodation> createDynamicFilter(List<Accommodation> accommodations, String location, Integer guestsNumber, Date startDate, Date endDate) {
-
         return accommodations.stream()
                 .filter(accommodation ->
                         (location.isEmpty() || accommodation.getAddress().getCity().equals(location) || accommodation.getAddress().getCountry().equals(location)) &&
                                 (guestsNumber == null || guestsNumber == 0 || (accommodation.getMinGuests() <= guestsNumber && guestsNumber <= accommodation.getMaxGuests())) &&
-                                (startDate == null || accommodation.getAvailability().stream().anyMatch(date -> startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) >= 0 && startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) < 0)) &&
-                                (endDate == null || accommodation.getAvailability().stream().anyMatch(date -> endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) <= 0 && endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) > 0)))
-                .collect(Collectors.toList());
+                                (isContinuousAvailability(accommodation.getAvailability(), startDate, endDate) ||
+                                (startDate == null || endDate == null || accommodation.getAvailability().stream().anyMatch(date ->
+                                        startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) >= 0 &&
+                                                startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) < 0 &&
+                                                endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) <= 0 &&
+                                                endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) > 0))))
+
+                        .collect(Collectors.toList());
     }
+
+
+
+    private static boolean isContinuousAvailability(List<DateRange> availability, Date startDate, Date endDate) {
+        List<LocalDate> requestedDates = new ArrayList<>();
+        LocalDate currentDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        while (!currentDate.isAfter(endLocalDate)) {
+            requestedDates.add(currentDate);
+            currentDate = currentDate.plusDays(1);
+        }
+
+        List<Date> allDates = new ArrayList<Date>();
+        for (DateRange dr : availability){
+            LocalDate start= dr.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate end = dr.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            while (!start.isAfter(end)) {
+                allDates.add(Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                start = start.plusDays(1);
+            }
+        }
+        boolean allDatesMatch = true;
+        for (LocalDate localDate : requestedDates) {
+            Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            if (!allDates.contains(date)) {
+                allDatesMatch = false;
+            }
+        }
+
+        if (allDatesMatch) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     private static List<Accommodation> filterByToday(List<Accommodation> accommodations, String location, Integer guestsNumber, Date startDate, Date endDate){
         return accommodations.stream()
                 .filter(accommodation ->
                         (location.isEmpty() || accommodation.getAddress().getCity().equals(location) || accommodation.getAddress().getCountry().equals(location)) &&
                                 (guestsNumber == null || guestsNumber == 0 || (accommodation.getMinGuests() <= guestsNumber && guestsNumber <= accommodation.getMaxGuests())) &&
-                                ((startDate == null || accommodation.getAvailability().stream().anyMatch(date -> startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) <= 0 && startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) < 0)))&&
-                                (endDate == null || accommodation.getAvailability().stream().anyMatch(date -> endDate.toInstant().compareTo(date.getEndDate().toInstant()) <= 0 && endDate.toInstant().compareTo(date.getStartDate().toInstant()) < 0)))
+                                (endDate == null || accommodation.getAvailability().stream().anyMatch(date -> endDate.toInstant().compareTo(date.getEndDate().toInstant()) <= 0)))
                 .collect(Collectors.toList());
     }
 
-
-    public double calculateTotalPrice(Accommodation accommodation, Date startDate, Integer daysNumber, Integer guestsNumber){
+    public double calculateTotalPrice(Accommodation accommodation, Date startDate, Date endDate, Integer daysNumber, Integer guestsNumber) {
+        double total = 0.0;
         if (!accommodation.getPriceChanges().isEmpty()) {
+            List<PriceChange> datesBetweenSorted = new ArrayList<>();
+            PriceChange closestDateBeforeStartDate = null;
 
-            PriceChange selectedChangeDate = null;
-            for (PriceChange priceChange : accommodation.getPriceChanges()) {
-                if (priceChange.getChangeDate().before(startDate) || priceChange.getChangeDate().equals(startDate)) {
-                    if (selectedChangeDate == null || selectedChangeDate.getChangeDate().before(priceChange.getChangeDate())) {
-                        selectedChangeDate = priceChange;
+            for (PriceChange pr : accommodation.getPriceChanges()) {
+                Date prDate = pr.getChangeDate();
+
+                if (prDate.before(startDate)) {
+                    if (closestDateBeforeStartDate == null || prDate.after(closestDateBeforeStartDate.getChangeDate())) {
+                        closestDateBeforeStartDate = pr;
                     }
                 }
             }
-
-            if (selectedChangeDate != null) {
-                return (selectedChangeDate.getNewPrice() * daysNumber * guestsNumber);
+            if (closestDateBeforeStartDate != null) {
+                datesBetweenSorted.add(new PriceChange(closestDateBeforeStartDate.getId(), startDate, closestDateBeforeStartDate.getNewPrice()));
+            } else {
+                datesBetweenSorted.add(new PriceChange(startDate, accommodation.getPrice()));
             }
+            datesBetweenSorted.add(new PriceChange(endDate, 0.0));
+            datesBetweenSorted.addAll(
+                    accommodation.getPriceChanges().stream()
+                            .filter(date -> (date.getChangeDate().equals(startDate) || date.getChangeDate().equals(endDate) || (date.getChangeDate().after(startDate)  && date.getChangeDate().before(endDate))))
+                            .collect(Collectors.toList())
+            );
+
+            Collections.sort(datesBetweenSorted, Comparator.comparing(PriceChange::getChangeDate));
+            List<Double> calculatedPrices = new ArrayList<Double>();
+            for (int i = 1; i < datesBetweenSorted.size(); i++) {
+                PriceChange currentPriceChange = datesBetweenSorted.get(i);
+                PriceChange previousPriceChange = datesBetweenSorted.get(i - 1);
+
+                LocalDate currentLocalDate = currentPriceChange.getChangeDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                LocalDate previousLocalDate = previousPriceChange.getChangeDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+
+                long daysDifference = ChronoUnit.DAYS.between(previousLocalDate, currentLocalDate);
+                double calculatedPrice = 0;
+                if ((i - 1) == 0 && datesBetweenSorted.get(0).getChangeDate() == startDate) {
+                    calculatedPrice = daysDifference * previousPriceChange.getNewPrice();
+                } else {
+                    calculatedPrice = daysDifference * previousPriceChange.getNewPrice();
+                }
+                calculatedPrices.add(calculatedPrice);
+            }
+            for (Double price : calculatedPrices) {
+                total += price;
+            }
+            total *= guestsNumber;
+        } else {
+            total = accommodation.getPrice() * daysNumber * guestsNumber;
         }
-//        System.out.println("Total price: " + accommodation.getPrice() * num);
-        return (accommodation.getPrice() * daysNumber * guestsNumber);
+        return  total;
     }
 
     public void updatePrice(Accommodation accommodation){
