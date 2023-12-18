@@ -151,4 +151,12 @@ public class ReservationService implements ServiceInterface<Reservation> {
     public List<Reservation> getReservationsByGuestId(Long guestId) {
         return repository.getReservationsByGuestId(guestId);
     }
+
+    public List<Reservation> getReservationsByStatusAndHostId(Long hostId, ReservationStatus reservationStatus) {
+        return repository.getReservationsByStatusAndHostId(hostId, reservationStatus);
+    }
+
+    public List<Reservation> getReservationsByHostId(Long hostId) {
+        return repository.getReservationsByHostId(hostId);
+    }
 }

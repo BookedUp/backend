@@ -61,63 +61,20 @@ public class ReservationController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @GetMapping(value = "/host/{hostId}/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> getReservationsByStatusAndHostId(@PathVariable("hostId") Long hostId, @RequestParam(required = true) ReservationStatus reservationStatus) {
+        Collection<Reservation> reservations = reservationService.getReservationsByStatusAndHostId(hostId, reservationStatus);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReservationDTO>> getAllByHostId(@PathVariable("hostId") Long hostId) {
-        Collection<Reservation> reservations = reservationService.findAllByHostId(hostId);
-        Collection<ReservationDTO> reservationDTOS = reservations.stream()
-                .map(ReservationMapper::toDto)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
-    @GetMapping(value = "/host/{hostId}/created", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReservationDTO>> getAllCreatedByHostId(@PathVariable("hostId") Long hostId) {
-        Collection<Reservation> reservations = reservationService.findAllCreatedByHostId(hostId);
-        Collection<ReservationDTO> reservationDTOS = reservations.stream()
-                .map(ReservationMapper::toDto)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
-    @GetMapping(value = "/host/{hostId}/accepted", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReservationDTO>> getAllAcceptedByHostId(@PathVariable("hostId") Long hostId) {
-        Collection<Reservation> reservations = reservationService.findAllAcceptedByHostId(hostId);
-        Collection<ReservationDTO> reservationDTOS = reservations.stream()
-                .map(ReservationMapper::toDto)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
-    }
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
-    @GetMapping(value = "/host/{hostId}/rejected", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReservationDTO>> getAllRejectedByHostId(@PathVariable("hostId") Long hostId) {
-        Collection<Reservation> reservations = reservationService.findAllRejectedByHostId(hostId);
-        Collection<ReservationDTO> reservationDTOS = reservations.stream()
-                .map(ReservationMapper::toDto)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
-    @GetMapping(value = "/host/{hostId}/completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReservationDTO>> getAllCompletedByHostId(@PathVariable("hostId") Long hostId) {
-        Collection<Reservation> reservations = reservationService.findAllCompletedByHostId(hostId);
-        Collection<ReservationDTO> reservationDTOS = reservations.stream()
-                .map(ReservationMapper::toDto)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
-    @GetMapping(value = "/host/{hostId}/cancelled", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReservationDTO>> getAllCancelledByHostId(@PathVariable("hostId") Long hostId) {
-        Collection<Reservation> reservations = reservationService.findAllCancelledByHostId(hostId);
+    public ResponseEntity<Collection<ReservationDTO>> getReservationsByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Reservation> reservations = reservationService.getReservationsByHostId(hostId);
         Collection<ReservationDTO> reservationDTOS = reservations.stream()
                 .map(ReservationMapper::toDto)
                 .collect(Collectors.toList());

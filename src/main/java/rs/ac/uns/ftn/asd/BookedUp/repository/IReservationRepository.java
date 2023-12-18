@@ -36,10 +36,17 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
     @Query("SELECT r FROM Reservation r WHERE r.accommodation.id = :accommodationId")
     List<Reservation> findAllByAccommodationId(@Param("accommodationId") Long accommodationId);
 
+//    iznad orbisati
     @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guestId AND r.status = :reservationStatus")
     List<Reservation> getReservationsByStatusAndGuestId(@Param("guestId") Long guestId, @Param("reservationStatus") ReservationStatus reservationStatus);
 
     @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guestId")
     List<Reservation> getReservationsByGuestId(@Param("guestId") Long guestId);
+
+    @Query("SELECT r FROM Reservation r JOIN r.accommodation a JOIN a.host h WHERE h.id = :hostId AND r.status = :reservationStatus")
+    List<Reservation> getReservationsByStatusAndHostId(@Param("hostId") Long hostId, @Param("reservationStatus") ReservationStatus reservationStatus);
+
+    @Query("SELECT r FROM Reservation r JOIN r.accommodation a JOIN a.host h WHERE h.id = :hostId")
+    List<Reservation> getReservationsByHostId(@Param("hostId") Long hostId);
 
 }
