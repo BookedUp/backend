@@ -85,7 +85,7 @@ public class AccommodationController {
     }
 
     /*url: /api/accommodations POST*/
-    @PreAuthorize("hasRole('HOST')")
+    @PreAuthorize("hasAuthority('ROLE_HOST')")
     @RequestMapping(method=RequestMethod.POST)
     public ResponseEntity<AccommodationDTO> createAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO) throws Exception {
         Accommodation createdAccommodation = null;
