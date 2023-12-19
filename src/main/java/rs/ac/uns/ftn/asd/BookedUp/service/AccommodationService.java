@@ -227,7 +227,6 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         return filteredAccommodations;
     }
 
-
     private static List<Accommodation> createDynamicFilter(List<Accommodation> accommodations, String location, Integer guestsNumber, Date startDate, Date endDate) {
         return accommodations.stream()
                 .filter(accommodation ->
@@ -235,15 +234,9 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
                                 (guestsNumber == null || guestsNumber == 0 || (accommodation.getMinGuests() <= guestsNumber && guestsNumber <= accommodation.getMaxGuests())) &&
                                 (isContinuousAvailability(accommodation.getAvailability(), startDate, endDate) ||
                                 (startDate == null || endDate == null || accommodation.getAvailability().stream().anyMatch(date ->
-                                        startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) >= 0 &&
-                                                startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) < 0 &&
-                                                endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) <= 0 &&
-                                                endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().compareTo(date.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()) > 0))))
-
+                                        startDate.compareTo(date.getStartDate()) >= 0 && startDate.compareTo(date.getEndDate()) < 0 && endDate.compareTo(date.getEndDate()) <= 0 && endDate.compareTo(date.getStartDate()) > 0))))
                         .collect(Collectors.toList());
     }
-
-
 
     private static boolean isContinuousAvailability(List<DateRange> availability, Date startDate, Date endDate) {
         List<LocalDate> requestedDates = new ArrayList<>();
@@ -279,7 +272,6 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             return false;
         }
     }
-
 
     private static List<Accommodation> filterByToday(List<Accommodation> accommodations, String location, Integer guestsNumber, Date startDate, Date endDate){
         return accommodations.stream()
