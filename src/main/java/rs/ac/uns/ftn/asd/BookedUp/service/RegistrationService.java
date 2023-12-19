@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-public class RegistrationService implements IRegistrationService{
+public class RegistrationService implements IRegistrationService {
     @Autowired
     private UserService service;
     @Autowired
-    private  ConfirmationTokenService confirmationTokenService;
+    private ConfirmationTokenService confirmationTokenService;
     @Autowired
-    private  IEmailService emailSender;
+    private IEmailService emailSender;
 
     @Transactional
     public String register(User user) {
@@ -68,71 +68,67 @@ public class RegistrationService implements IRegistrationService{
     }
 
     private String buildEmail(String name, String link) {
-        return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
-                "\n" +
-                "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
-                "\n" +
-                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
-                "    <tbody><tr>\n" +
-                "      <td width=\"100%\" height=\"53\" bgcolor=\"#0b0c0c\">\n" +
-                "        \n" +
-                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                "          <tbody><tr>\n" +
-                "            <td width=\"70\" bgcolor=\"#0b0c0c\" valign=\"middle\">\n" +
-                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
-                "                  <tbody><tr>\n" +
-                "                    <td style=\"padding-left:10px\">\n" +
-                "                  \n" +
-                "                    </td>\n" +
-                "                    <td style=\"font-size:28px;line-height:1.315789474;Margin-top:4px;padding-left:10px\">\n" +
-                "                      <span style=\"font-family:Helvetica,Arial,sans-serif;font-weight:700;color:#ffffff;text-decoration:none;vertical-align:top;display:inline-block\">Confirm your email</span>\n" +
-                "                    </td>\n" +
-                "                  </tr>\n" +
-                "                </tbody></table>\n" +
-                "              </a>\n" +
-                "            </td>\n" +
-                "          </tr>\n" +
-                "        </tbody></table>\n" +
-                "        \n" +
-                "      </td>\n" +
-                "    </tr>\n" +
-                "  </tbody></table>\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n" +
-                "    <tbody><tr>\n" +
-                "      <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
-                "      <td>\n" +
-                "        \n" +
-                "                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
-                "                  <tbody><tr>\n" +
-                "                    <td bgcolor=\"#1D70B8\" width=\"100%\" height=\"10\"></td>\n" +
-                "                  </tr>\n" +
-                "                </tbody></table>\n" +
-                "        \n" +
-                "      </td>\n" +
-                "      <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
-                "    </tr>\n" +
-                "  </tbody></table>\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse;max-width:580px;width:100%!important\" width=\"100%\">\n" +
-                "    <tbody><tr>\n" +
-                "      <td height=\"30\"><br></td>\n" +
-                "    </tr>\n" +
-                "    <tr>\n" +
-                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
-                "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
-                "        \n" +
-                "      </td>\n" +
-                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "    </tr>\n" +
-                "    <tr>\n" +
-                "      <td height=\"30\"><br></td>\n" +
-                "    </tr>\n" +
-                "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
-                "\n" +
-                "</div></div>";
+        return "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "  <meta charset=\"UTF-8\">\n" +
+                "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "  <style>\n" +
+                "    body {\n" +
+                "      font-family: 'Adamina', sans-serif;\n" +
+                "      background-color: #ffffff;\n" +
+                "      margin: 0;\n" +
+                "      padding: 0;\n" +
+                "    }\n" +
+                "    .container {\n" +
+                "      max-width: 600px;\n" +
+                "      margin: 20px auto;\n" +
+                "      padding: 20px;\n" +
+                "      background-color: #fff;\n" +
+                "      border-radius: 8px;\n" +
+                "      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n" +
+                "    }\n" +
+                "    h1 {\n" +
+                "      color: #9e8d5f;\n" +
+                "      text-align: center;\n" +
+                "    }\n" +
+                "    p {\n" +
+                "      color: #333;\n" +
+                "      line-height: 1.6;\n" +
+                "      margin-bottom: 20px;\n" +
+                "    }\n" +
+                "    .cta-button {\n" +
+                "      display: inline-block;\n" +
+                "      padding: 10px 20px;\n" +
+                "      background-color: #9e8d5f;\n" +
+                "      color: #fff;\n" +
+                "      text-decoration: none;\n" +
+                "      border-radius: 5px;\n" +
+                "    }\n" +
+                "    .footer {\n" +
+                "      margin-top: 20px;\n" +
+                "      text-align: center;\n" +
+                "      color: #777;\n" +
+                "    }\n" +
+                "  </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "  <div class=\"container\">\n" +
+                "    <h1>Welcome to BookedUp!</h1>\n" +
+                "    <p>Hello " + name + ",</p>\n" +
+                "    <p>We're thrilled to have you on board. Your journey with BookedUp begins now!</p>\n" +
+                "    <p>This warm welcome comes to you from Vesna, Ana, and Dušica!</p>\n" +
+                "    <p>To activate your account, simply click the button below:</p>\n" +
+                "    <p style=\"text-align: center;\">\n" +
+                "      <a href=\"" + link + "\" class=\"cta-button\">Activate Account</a>\n" +
+                "    </p>\n" +
+                "    <p>This link will expire in 24 hours.</p>\n" +
+                "    <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>\n" +
+                "    <div class=\"footer\">\n" +
+                "      <p>Best regards,<br> The BookedUp Team (Vesna, Ana, Dušica)</p>\n" +
+                "    </div>\n" +
+                "  </div>\n" +
+                "</body>\n" +
+                "</html>";
     }
 }

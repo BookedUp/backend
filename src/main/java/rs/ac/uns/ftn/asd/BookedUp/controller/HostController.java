@@ -134,66 +134,22 @@ public class HostController {
 
     /** url: /api/hosts/1 DELETE*/
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'HOST')")
+    @PreAuthorize("hasAuthority('ROLE_HOST')")
     public ResponseEntity<Void> deleteHost(@PathVariable("id") Long id) {
+        Host host = hostService.getById(id);
+        if( host == null ){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         try {
            hostService.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-//    @PreAuthorize("hasRole('HOST')")
-//    @GetMapping("/{id}/accommodations")
-//    public ResponseEntity<List<AccommodationDTO>> getHostAccommodations(@PathVariable Long id) {
-//        try {
-//            Host host = hostService.getById(id);
-//
-//            if (host == null) {
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }
-//            List<Accommodation> accommodations = accommodationService.findAllByHostId(host.getId());
-//
-//            if (accommodations.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//
-//            List<AccommodationDTO> accommodationsDTO = accommodations.stream()
-//                    .map(AccommodationMapper::toDto)
-//                    .collect(Collectors.toList());
-//
-//            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
-//    @GetMapping("/{id}/reservations")
-//    public ResponseEntity<List<ReservationDTO>> getHostReservations(@PathVariable Long id) {
-//        try {
-//            HostDTO hostDto = hostService.getById(id);
-//
-//            if (hostDto == null) {
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }
-//            List<ReservationDTO> requests = hostDto.getRequests();
-//
-//            if (requests.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//
-//            return new ResponseEntity<>(requests, HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
 
     @GetMapping("/{id}/reservations/search")
     public ResponseEntity<?> searchReservations(
@@ -216,64 +172,5 @@ public class HostController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
-//    @GetMapping("/{id}/statistics")
-//    public ResponseEntity<List<StatisticsDTO>> getStatistics(
-//            @PathVariable Long id,
-//            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
-//            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
-//
-//        try {
-//            HostDTO hostDto = hostService.getById(id);
-//
-//            if (hostDto == null) {
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }
-//
-//            List<StatisticsDTO> filteredStatistics = hostDto.getStatistics().stream()
-//                    .filter(statistics -> hostService.isWithinDateRange(statistics.getFromDate(), fromDate, toDate))
-//                    .collect(Collectors.toList());
-//
-//            if (filteredStatistics.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//
-//            return new ResponseEntity<>(filteredStatistics, HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
-
-//    @GetMapping("/{id}/{accommodation_id}/accommodation-statistics")
-//    public ResponseEntity<List<AccommodationStatisticsDTO>> getAccommodationStatistics(@PathVariable Long id, @PathVariable Long accommodation_id) {
-//        try {
-//            HostDTO hostDto = hostService.getById(id);
-//            AccommodationDTO accommodationDTO = accommodationService.getById(accommodation_id);
-//
-//            if (hostDto == null) {
-//                System.out.println("Host not found");
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }
-//            if (accommodationDTO == null){
-//                System.out.println("Accommodation not found");
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }
-//            List<AccommodationStatisticsDTO> accommodationStatistics = hostDto.getAccommodationStatistics();
-//            if (accommodationStatistics.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//
-//            return new ResponseEntity<>(accommodationStatistics, HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
 
 }

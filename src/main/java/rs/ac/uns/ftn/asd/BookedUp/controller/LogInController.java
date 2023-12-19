@@ -48,6 +48,10 @@ public class LogInController {
 
         UserDetails userDetail = userDetailsService.loadUserByUsername(loginDto.getEmail());
 
+        if (!userDetail.isEnabled()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         String token = jwtTokenUtil.generateToken(userDetail);
         TokenDTO tokenDto = new TokenDTO();
         tokenDto.setToken(token);

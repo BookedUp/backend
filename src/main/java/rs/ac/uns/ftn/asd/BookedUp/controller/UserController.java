@@ -73,7 +73,7 @@ public class UserController {
         return new ResponseEntity<>(UserMapper.toDto(createdUser), HttpStatus.CREATED);
     }
     /** url: /api/users/1 PUT*/
-    @PreAuthorize("hasRole('GUEST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDto, @PathVariable Long id)
             throws Exception {
