@@ -8,6 +8,13 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.PriceChangeDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AddressMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.DateRangeMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.PriceChangeMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
@@ -397,6 +404,41 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
     public void rejectAccommodation(Accommodation accommodation) {
         accommodation.setStatus(AccommodationStatus.REJECTED);
         repository.save(accommodation);
+    }
+
+    public void updateAccommodation(Accommodation accommodationForUpdate, AccommodationDTO accommodationDTO) {
+        accommodationForUpdate.setName(accommodationDTO.getName());
+        accommodationForUpdate.setDescription(accommodationDTO.getDescription());
+        accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
+        accommodationForUpdate.setAmenities(accommodationDTO.getAmenities());
+        List<Photo> photos = new ArrayList<Photo>();
+        if (accommodationDTO.getPhotos() != null){
+            for (PhotoDTO photoDTO : accommodationDTO.getPhotos())
+                photos.add(PhotoMapper.toEntity(photoDTO));
+        }
+        accommodationForUpdate.setPhotos(photos);
+        accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
+        accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
+//        accommodationForUpdate.setType(accommodationDTO.getType()); ???
+        List<DateRange> availability = accommodationDTO.getAvailability().stream()
+                .map(DateRangeMapper::toEntity)
+                .collect(Collectors.toList());
+
+        accommodationForUpdate.setAvailability(availability);
+        accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
+        List<PriceChange> priceChanges = new ArrayList<PriceChange>();
+        if (accommodationDTO.getPriceChanges() != null){
+            for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
+                priceChanges.add(PriceChangeMapper.toEntity(dto));
+        }
+        accommodationForUpdate.setPriceChanges(priceChanges);
+        accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
+        accommodationForUpdate.setPrice(accommodationDTO.getPrice());
+        accommodationForUpdate.setCancellationDeadline(accommodationDTO.getCancellationDeadline());
+        accommodationForUpdate.setStatus(AccommodationStatus.CHANGED);
+
+        repository.save(accommodationForUpdate);
+
     }
 }
 

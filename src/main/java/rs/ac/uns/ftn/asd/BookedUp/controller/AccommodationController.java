@@ -102,7 +102,7 @@ public class AccommodationController {
     }
 
     /* url: /api/accommodations/1 PUT*/
-    @PreAuthorize("hasRole('HOST')")
+    //@PreAuthorize("hasAuthority('ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> updateAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
             throws Exception {
@@ -115,36 +115,7 @@ public class AccommodationController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        accommodationForUpdate.setName(accommodationDTO.getName());
-        accommodationForUpdate.setDescription(accommodationDTO.getDescription());
-        accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
-        accommodationForUpdate.setAmenities(accommodationDTO.getAmenities());
-        List<Photo> photos = new ArrayList<Photo>();
-        if (accommodationDTO.getPhotos() != null){
-            for (PhotoDTO photoDTO : accommodationDTO.getPhotos())
-                photos.add(PhotoMapper.toEntity(photoDTO));
-        }
-        accommodationForUpdate.setPhotos(photos);
-        accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
-        accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
-//        accommodationForUpdate.setType(accommodationDTO.getType()); ???
-        List<DateRange> availability = accommodationDTO.getAvailability().stream()
-                .map(DateRangeMapper::toEntity)
-                .collect(Collectors.toList());
-
-        accommodationForUpdate.setAvailability(availability);
-        accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
-        List<PriceChange> priceChanges = new ArrayList<PriceChange>();
-        if (accommodationDTO.getPriceChanges() != null){
-            for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
-                priceChanges.add(PriceChangeMapper.toEntity(dto));
-        }
-        accommodationForUpdate.setPriceChanges(priceChanges);
-        accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
-        accommodationForUpdate.setPrice(accommodationDTO.getPrice());
-        accommodationForUpdate.setCancellationDeadline(accommodationDTO.getCancellationDeadline());
-        accommodationForUpdate.setStatus(AccommodationStatus.CHANGED);
-        accommodationForUpdate = accommodationService.save(accommodationForUpdate);
+        this.accommodationService.updateAccommodation(accommodationForUpdate, accommodationDTO);
 
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
     }
