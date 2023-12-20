@@ -9,6 +9,13 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
+import rs.ac.uns.ftn.asd.BookedUp.dto.PriceChangeDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AddressMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.DateRangeMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.PriceChangeMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
@@ -57,6 +64,14 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
     public Accommodation create(Accommodation accommodation) throws Exception {
         if (accommodation.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
+        }
+        Calendar calendar = Calendar.getInstance();
+
+        for(DateRange dr: accommodation.getAvailability()){
+            calendar.setTime(dr.getStartDate());
+            calendar.set(Calendar.HOUR_OF_DAY, 13);
+            calendar.setTime(dr.getEndDate());
+            calendar.set(Calendar.HOUR_OF_DAY, 13);
         }
         return repository.save(accommodation);
     }
@@ -204,9 +219,9 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
                         (location.isEmpty() || accommodation.getAddress().getCity().equals(location) || accommodation.getAddress().getCountry().equals(location)) &&
                                 (guestsNumber == null || guestsNumber == 0 || (accommodation.getMinGuests() <= guestsNumber && guestsNumber <= accommodation.getMaxGuests())) &&
                                 (isContinuousAvailability(accommodation.getAvailability(), startDate, endDate) ||
-                                (startDate == null || endDate == null || accommodation.getAvailability().stream().anyMatch(date ->
-                                        startDate.compareTo(date.getStartDate()) >= 0 && startDate.compareTo(date.getEndDate()) < 0 && endDate.compareTo(date.getEndDate()) <= 0 && endDate.compareTo(date.getStartDate()) > 0))))
-                        .collect(Collectors.toList());
+                                        (startDate == null || endDate == null || accommodation.getAvailability().stream().anyMatch(date ->
+                                                startDate.compareTo(date.getStartDate()) >= 0 && startDate.compareTo(date.getEndDate()) < 0 && endDate.compareTo(date.getEndDate()) <= 0 && endDate.compareTo(date.getStartDate()) > 0))))
+                .collect(Collectors.toList());
     }
 
     private static boolean isContinuousAvailability(List<DateRange> availability, Date startDate, Date endDate) {
@@ -309,27 +324,27 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
     }
 
     public void updatePrice(Accommodation accommodation){
-            Date today = new Date();
-            if (!accommodation.getPriceChanges().isEmpty()) {
+        Date today = new Date();
+        if (!accommodation.getPriceChanges().isEmpty()) {
 
-                PriceChange selectedChangeDate = null;
-                for (PriceChange priceChange : accommodation.getPriceChanges()) {
-                    if (priceChange.getChangeDate().before(today) || priceChange.getChangeDate().equals(today)) {
-                        if (selectedChangeDate == null || selectedChangeDate.getChangeDate().before(priceChange.getChangeDate())) {
-                            selectedChangeDate = priceChange;
-                        }
+            PriceChange selectedChangeDate = null;
+            for (PriceChange priceChange : accommodation.getPriceChanges()) {
+                if (priceChange.getChangeDate().before(today) || priceChange.getChangeDate().equals(today)) {
+                    if (selectedChangeDate == null || selectedChangeDate.getChangeDate().before(priceChange.getChangeDate())) {
+                        selectedChangeDate = priceChange;
                     }
                 }
+            }
 
-                if (selectedChangeDate != null) {
-                    accommodation.setPrice(selectedChangeDate.getNewPrice());
-                    repository.save(accommodation);
-                }
+            if (selectedChangeDate != null) {
+                accommodation.setPrice(selectedChangeDate.getNewPrice());
+                repository.save(accommodation);
             }
         }
+    }
 
     public List<Accommodation> filterAccommodationsByType(AccommodationType type){
-       return repository.filterAccommodationsByType(type);
+        return repository.filterAccommodationsByType(type);
     }
 
     public List<Accommodation> findMostPopular() {
@@ -362,15 +377,16 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         repository.save(accommodation);
     }
 
-    public void updateAvailibility(Accommodation accommodation, Date startDate, Date endDate){
+    public void updateAvailibility(Accommodation accommodation, Date startDate, Date endDate) {
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(endDate);;
+        calendar.setTime(endDate);
+        ;
         calendar.set(Calendar.HOUR_OF_DAY, 13);
 
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         Date newStartDate = calendar.getTime();
-        System.out.println("CALENDAR "  + newStartDate);
+        System.out.println("CALENDAR " + newStartDate);
 
         calendar.setTime(startDate);
         calendar.set(Calendar.HOUR_OF_DAY, 13);
@@ -382,7 +398,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         for (int i = 0; i < availability.size(); i++) {
             DateRange dr = availability.get(i);
             System.out.println(dr.getStartDate());
-            if (startDate.compareTo(dr.getStartDate()) >= 0 && startDate.before(dr.getEndDate()) && endDate.after(dr.getStartDate()) && endDate.compareTo(dr.getEndDate()) <= 0){
+            if (startDate.compareTo(dr.getStartDate()) >= 0 && startDate.before(dr.getEndDate()) && endDate.after(dr.getStartDate()) && endDate.compareTo(dr.getEndDate()) <= 0) {
 
                 LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -394,13 +410,13 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
                 long endDaysDifference = Duration.between(endLocalDate.atStartOfDay(), end.atStartOfDay()).toDays();
 
 
-                if (startDaysDifference > 1 && endDaysDifference > 1){
+                if (startDaysDifference > 1 && endDaysDifference > 1) {
                     DateRange dateRange = new DateRange(newStartDate, dr.getEndDate());
                     accommodation.getAvailability().add(dateRange);
                     dr.setEndDate(newEndDate);
-                } else if (startDaysDifference <= 1){
+                } else if (startDaysDifference <= 1) {
                     dr.setStartDate(newStartDate);
-                } else if (endDaysDifference <= 1 ) {
+                } else if (endDaysDifference <= 1) {
                     dr.setEndDate(newEndDate);
                 } else {
                     System.out.println("Nesto ne radi kako treba");
@@ -409,5 +425,39 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         }
         repository.save(accommodation);
     }
-}
+        public void updateAccommodation(Accommodation accommodationForUpdate, AccommodationDTO accommodationDTO) {
+            accommodationForUpdate.setName(accommodationDTO.getName());
+            accommodationForUpdate.setDescription(accommodationDTO.getDescription());
+            accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
+            accommodationForUpdate.setAmenities(accommodationDTO.getAmenities());
+            List<Photo> photos = new ArrayList<Photo>();
+            if (accommodationDTO.getPhotos() != null){
+                for (PhotoDTO photoDTO : accommodationDTO.getPhotos())
+                    photos.add(PhotoMapper.toEntity(photoDTO));
+            }
+            accommodationForUpdate.setPhotos(photos);
+            accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
+            accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
+//        accommodationForUpdate.setType(accommodationDTO.getType()); ???
+            List<DateRange> availability = accommodationDTO.getAvailability().stream()
+                    .map(DateRangeMapper::toEntity)
+                    .collect(Collectors.toList());
+
+            accommodationForUpdate.setAvailability(availability);
+            accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
+            List<PriceChange> priceChanges = new ArrayList<PriceChange>();
+            if (accommodationDTO.getPriceChanges() != null){
+                for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
+                    priceChanges.add(PriceChangeMapper.toEntity(dto));
+            }
+            accommodationForUpdate.setPriceChanges(priceChanges);
+            accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
+            accommodationForUpdate.setPrice(accommodationDTO.getPrice());
+            accommodationForUpdate.setCancellationDeadline(accommodationDTO.getCancellationDeadline());
+            accommodationForUpdate.setStatus(AccommodationStatus.CHANGED);
+
+            repository.save(accommodationForUpdate);
+
+        }
+    }
 
