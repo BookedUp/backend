@@ -63,6 +63,14 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         if (accommodation.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
+        Calendar calendar = Calendar.getInstance();
+
+        for(DateRange dr: accommodation.getAvailability()){
+            calendar.setTime(dr.getStartDate());
+            calendar.set(Calendar.HOUR_OF_DAY, 13);
+            calendar.setTime(dr.getEndDate());
+            calendar.set(Calendar.HOUR_OF_DAY, 13);
+        }
         return repository.save(accommodation);
     }
 
