@@ -2,10 +2,14 @@ package rs.ac.uns.ftn.asd.BookedUp.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Photo;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
@@ -15,15 +19,75 @@ import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.PhotoService;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/photo")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PhotoController {
     @Autowired
     private PhotoService photoService;
+    private static final String UPLOAD_DIR = "images/";
+
+
+    /* url: /api/photo/1 GET*/
+    @GetMapping("/{id}/load")
+    public ResponseEntity<byte[]> loadPhoto(@PathVariable Long id) throws IOException {
+        Photo photo = photoService.getById(id);
+        if (photo != null) {
+            String[] splitPath = photo.getUrl().split("/");
+            String imageName = splitPath[splitPath.length - 1];
+            System.out.println(imageName);
+
+            String fileExtension = imageName.substring(imageName.lastIndexOf(".") + 1);
+
+            MediaType mediaType;
+            if ("png".equalsIgnoreCase(fileExtension)) {
+                mediaType = MediaType.IMAGE_PNG;
+            } else if ("jpg".equalsIgnoreCase(fileExtension) || "jpeg".equalsIgnoreCase(fileExtension)) {
+                mediaType = MediaType.IMAGE_JPEG;
+            } else {
+                // Ako format slike nije prepoznat, možete koristiti opšti tip
+                mediaType = MediaType.APPLICATION_OCTET_STREAM;
+            }
+
+            Resource resource = new ClassPathResource(UPLOAD_DIR + imageName);
+
+            byte[] imageBytes = Files.readAllBytes(resource.getFile().toPath());
+            System.out.println(resource.getFile().toPath());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(mediaType);
+
+            return ResponseEntity.ok().headers(headers).body(imageBytes);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImage (@RequestParam("image") MultipartFile imageFile) throws Exception {
+        String uploadDirectory = "src/main/resources/images";
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+
+        Path uploadPath = Path.of(uploadDirectory);
+        Path filePath = uploadPath.resolve(uniqueFileName);
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 
     /*url: /api/photo GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,4 +156,5 @@ public class PhotoController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
