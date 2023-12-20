@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -63,37 +65,6 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
     public Accommodation save(Accommodation accommodation) throws Exception {
         return repository.save(accommodation);
     }
-//
-//    @Override
-//    public AccommodationDTO update(AccommodationDTO accommodationDto) throws Exception {
-//        Accommodation accommodation = accommodationMapper.toEntity(accommodationDto);
-//        Accommodation accommodationToUpdate = repository.findById(accommodation.getId()).orElse(null);
-//        if (accommodationToUpdate == null) {
-//            throw new Exception("Trazeni entitet nije pronadjen.");
-//        }
-//        //accommodationToUpdate.setHost(accommodation.getHost());
-//        accommodationToUpdate.setName(accommodation.getName());
-//        accommodationToUpdate.setDescription(accommodation.getDescription());
-//        accommodationToUpdate.setAddress(accommodation.getAddress());
-//        accommodationToUpdate.setAmenities(accommodation.getAmenities());
-//        accommodationToUpdate.setPhotos(accommodation.getPhotos());
-//        accommodationToUpdate.setMinGuests(accommodation.getMinGuests());
-//        accommodationToUpdate.setMaxGuests(accommodation.getMaxGuests());
-//        accommodationToUpdate.setType(accommodation.getType());
-//        accommodationToUpdate.setPriceType(accommodation.getPriceType());
-//        accommodationToUpdate.setAvailability(accommodation.getAvailability());
-//        accommodationToUpdate.setPrice(accommodation.getPrice());
-//        accommodationToUpdate.setStatus(accommodation.getStatus());
-//        accommodationToUpdate.setCancellationDeadline(accommodation.getCancellationDeadline());
-//        accommodationToUpdate.setAutomaticReservationAcceptance(accommodation.isAutomaticReservationAcceptance());
-//        accommodationToUpdate.setReservations(accommodation.getReservations());
-//        accommodationToUpdate.setReviews(accommodation.getReviews());
-//        accommodationToUpdate.setAverageRating(accommodation.getAverageRating());
-//        accommodationToUpdate.setPriceChanges(accommodation.getPriceChanges());
-//
-//        Accommodation updatedAcommodation = repository.save(accommodationToUpdate);
-//        return accommodationMapper.toDto(updatedAcommodation);
-//    }
 
     @Override
     public void delete(Long id) throws Exception {
@@ -388,6 +359,54 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
     public void rejectAccommodation(Accommodation accommodation) {
         accommodation.setStatus(AccommodationStatus.REJECTED);
+        repository.save(accommodation);
+    }
+
+    public void updateAvailibility(Accommodation accommodation, Date startDate, Date endDate){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(endDate);;
+        calendar.set(Calendar.HOUR_OF_DAY, 13);
+
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date newStartDate = calendar.getTime();
+        System.out.println("CALENDAR "  + newStartDate);
+
+        calendar.setTime(startDate);
+        calendar.set(Calendar.HOUR_OF_DAY, 13);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date newEndDate = calendar.getTime();
+
+        List<DateRange> availability = accommodation.getAvailability();
+
+        for (int i = 0; i < availability.size(); i++) {
+            DateRange dr = availability.get(i);
+            System.out.println(dr.getStartDate());
+            if (startDate.compareTo(dr.getStartDate()) >= 0 && startDate.before(dr.getEndDate()) && endDate.after(dr.getStartDate()) && endDate.compareTo(dr.getEndDate()) <= 0){
+
+                LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                LocalDate start = dr.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate end = dr.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                long startDaysDifference = Duration.between(start.atStartOfDay(), startLocalDate.atStartOfDay()).toDays();
+                long endDaysDifference = Duration.between(endLocalDate.atStartOfDay(), end.atStartOfDay()).toDays();
+
+
+                if (startDaysDifference > 1 && endDaysDifference > 1){
+                    DateRange dateRange = new DateRange(newStartDate, dr.getEndDate());
+                    accommodation.getAvailability().add(dateRange);
+                    dr.setEndDate(newEndDate);
+                } else if (startDaysDifference <= 1){
+                    dr.setStartDate(newStartDate);
+                } else if (endDaysDifference <= 1 ) {
+                    dr.setEndDate(newEndDate);
+                } else {
+                    System.out.println("Nesto ne radi kako treba");
+                }
+            }
+        }
         repository.save(accommodation);
     }
 }

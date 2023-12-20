@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
@@ -26,7 +28,6 @@ public class UserDTO {
     private boolean active = true;
     private PhotoDTO profilePicture;
     private Role role;
-    //private List<NotificationDTO> notifications;
 
 
     public UserDTO(Long id, String email, String password) {

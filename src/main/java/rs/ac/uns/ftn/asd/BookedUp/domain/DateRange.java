@@ -24,4 +24,9 @@ public class DateRange {
     @Column(nullable = false)
     private Date endDate;
 
+    public DateRange(Date start, Date end){
+        this.startDate = start;
+        this.endDate = end;
+    }
+
 }

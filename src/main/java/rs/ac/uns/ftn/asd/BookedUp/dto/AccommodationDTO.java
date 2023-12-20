@@ -33,7 +33,6 @@ public class AccommodationDTO {
     private List<PriceChangeDTO> priceChanges;
     private boolean automaticReservationAcceptance;
     private AccommodationStatus status;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private HostDTO host;
     private double price;
     private double totalPrice = 0.0;

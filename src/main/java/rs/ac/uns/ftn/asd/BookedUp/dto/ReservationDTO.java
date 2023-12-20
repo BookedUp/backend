@@ -24,17 +24,8 @@ public class ReservationDTO {
     private Date endDate;
     private double totalPrice;
     private int guestsNumber;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private AccommodationDTO accommodation;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private GuestDTO guest;
     private ReservationStatus status;
 
-    public void copyValues(ReservationDTO dto) {
-        this.accommodation = dto.getAccommodation();
-        this.startDate = dto.getStartDate();
-        this.endDate = dto.getEndDate();
-        this.guestsNumber = dto.getGuestsNumber();
-        this.status = dto.getStatus();
-    }
 }

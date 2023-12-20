@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -20,7 +21,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = false, nullable = false)
+    @Column(unique = false, nullable = true)
     private LocalDateTime createdTime;
 
     @Column(nullable = false)
