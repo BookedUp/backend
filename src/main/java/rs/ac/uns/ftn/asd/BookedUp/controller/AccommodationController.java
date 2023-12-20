@@ -227,8 +227,6 @@ public class AccommodationController {
             @RequestParam(required = false) Object selectedType,
             @RequestParam(required = false) String name
     ) {
-        System.out.println(startDate);
-        System.out.println(endDate);
         String lowercaseName = name.toLowerCase();
         try {
             //SEARCH

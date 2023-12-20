@@ -15,8 +15,6 @@ import java.util.List;
 public class HostDTO extends UserDTO {
 
     private double averageRating;
-//    private List<NotificationDTO> notifications;
-    //private List<ReservationDTO> requests;
 
     private boolean reservationCreatedNotificationEnabled = true;
     private boolean cancellationNotificationEnabled = true;
@@ -34,6 +32,8 @@ public class HostDTO extends UserDTO {
         this.hostRatingNotificationEnabled = hostRatingNotificationEnabled;
         this.accommodationRatingNotificationEnabled = accommodationRatingNotificationEnabled;
     }
+
+
 
 
 }

@@ -136,7 +136,7 @@ public class ReservationController {
 
     /*url: /api/reservations POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody ReservationDTO reservationDTO) throws Exception {
+    public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody  ReservationDTO reservationDTO) throws Exception {
         Reservation createdReservation = null;
 
         try {
