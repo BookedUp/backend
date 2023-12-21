@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
@@ -20,6 +22,12 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -73,7 +81,55 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             calendar.setTime(dr.getEndDate());
             calendar.set(Calendar.HOUR_OF_DAY, 13);
         }
+
+        if(accommodation.getAddress().getLatitude() == 0 && accommodation.getAddress().getLongitude() ==0){
+            createCoordinates(accommodation.getAddress());
+        }
         return repository.save(accommodation);
+    }
+
+    public void createCoordinates(Address address) throws IOException {
+        String fullAddress = address.getStreetAndNumber() + ", " + address.getPostalCode() + " " + address.getCity() + ", " + address.getCountry();
+
+        // Encode the address to handle special characters
+        String encodedAddress = URLEncoder.encode(fullAddress, StandardCharsets.UTF_8);
+
+        String apiUrl = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodedAddress;
+
+        URL url = new URL(apiUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        try (InputStream response = connection.getInputStream(); Scanner scanner = new Scanner(response)) {
+            if (scanner.hasNext()) {
+                String jsonResponse = scanner.useDelimiter("\\A").next();
+                parseJsonResponse(jsonResponse, address);
+            } else {
+                throw new IOException("No response from the geocoding service");
+            }
+        }
+    }
+
+    private static void parseJsonResponse(String jsonResponse, Address address) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = objectMapper.readTree(jsonResponse);
+
+        // Check if the response contains any results
+        if (root.isArray() && root.size() > 0) {
+            JsonNode result = root.get(0); // Assuming the first result is sufficient
+
+            // Extract latitude and longitude
+            if (result.has("lat") && result.has("lon")) {
+                String latitude = result.get("lat").asText();
+                String longitude = result.get("lon").asText();
+
+                address.setLatitude(Double.parseDouble(latitude));
+                address.setLongitude(Double.parseDouble(longitude));
+            } else {
+                throw new IOException("Latitude or longitude not found in the geocoding response");
+            }
+        } else {
+            throw new IOException("No results found in the geocoding response");
+        }
     }
 
     @Override
