@@ -55,6 +55,13 @@ public class RegistrationService implements IRegistrationService {
 
         confirmationTokenService.setConfirmedAt(token);
 //        TODO user is verified
+
+        User user = confirmationToken.getUser();
+        user.setActive(true);
+        user.setVerified(true);
+
+        service.save(user);
+
         return "confirmed";
     }
 
