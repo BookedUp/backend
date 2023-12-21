@@ -57,7 +57,10 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
     @Override
     public Accommodation getById(Long id) {
-        return repository.findById(id).orElse(null);
+        Accommodation acc =  repository.findById(id).orElse(null);
+        assert acc != null;
+        updatePrice(acc);
+        return acc;
     }
 
     @Override
@@ -163,7 +166,11 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
     }
 
     public List<Accommodation> findAllActiveByHostId(Long id){
-        return repository.findAllActiveByHostId(id);
+        List<Accommodation> accommodations =  repository.findAllActiveByHostId(id);
+        for (Accommodation acc : accommodations){
+            updatePrice(acc);
+        }
+        return accommodations;
     }
 
     public List<Accommodation> findAllRejectedByHostId(Long id){
@@ -431,7 +438,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
             accommodationForUpdate.setAmenities(accommodationDTO.getAmenities());
             List<Photo> photos = new ArrayList<Photo>();
-            if (accommodationDTO.getPhotos() != null){
+            if (accommodationDTO.getPhotos() != null) {
                 for (PhotoDTO photoDTO : accommodationDTO.getPhotos())
                     photos.add(PhotoMapper.toEntity(photoDTO));
             }
@@ -446,7 +453,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             accommodationForUpdate.setAvailability(availability);
             accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
             List<PriceChange> priceChanges = new ArrayList<PriceChange>();
-            if (accommodationDTO.getPriceChanges() != null){
+            if (accommodationDTO.getPriceChanges() != null) {
                 for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
                     priceChanges.add(PriceChangeMapper.toEntity(dto));
             }

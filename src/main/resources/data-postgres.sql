@@ -19,14 +19,14 @@ INSERT INTO public.authority (role) VALUES
 
 INSERT INTO photo (url, caption, width, height, active)
 VALUES
-    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description1', 264, 264, true),
-    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description2', 488, 511, true),
-    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description3', 980, 980, true),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description4', 535, 466, true),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description5', 500, 500, true),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description6', 220, 230, true),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description7', 524, 476,true),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'No profile picture', 640, 960,true);
+    ('images/usx.png', 'Description1', 264, 264, true),
+    ('images/usx.png', 'Description2', 488, 511, true),
+    ('images/usx.png', 'Description3', 980, 980, true),
+    ('images/usx.png', 'Description4', 535, 466, true),
+    ('images/usx.png', 'Description5', 500, 500, true),
+    ('images/usx.png', 'Description6', 220, 230, true),
+    ('images/usx.png', 'Description7', 524, 476,true),
+    ('images/acc1.jpg', 'No profile picture', 640, 960,true);
 
 
 INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled, active, role)
@@ -49,7 +49,7 @@ VALUES
 --     (6, 2),
 --     (7, 2);
 ALTER TABLE accommodation
-ALTER COLUMN description TYPE VARCHAR(1000);
+    ALTER COLUMN description TYPE VARCHAR(1000);
 
 INSERT INTO accommodation (name, description, address_id, price, min_guests, max_guests, cancellation_deadline, automatic_reservation_acceptance, status, price_type, type, average_rating, host_id, active)
 VALUES
@@ -66,18 +66,18 @@ VALUES
 
 INSERT INTO photo (url, caption, width, height, active, accommodation_id)
 VALUES
-    ('https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2022/10/condo-vs-apartment.jpeg.jpg', 'Description1', 264, 264, true, 1),
-    ('https://www.home-designing.com/wp-content/uploads/2017/08/creative-studio-apartment-design.jpg', 'Description2', 488, 511, true, 3),
-    ('https://www.mydomaine.com/thmb/2EJFr6cCPoDd-nLnT8X4h78RkRw=/2121x0/filters:no_upscale():strip_icc()/GettyImages-1138401956-444c7e58471f41d3936b126c67bc0b66.jpg', 'Description3', 980, 980, true, 5),
-    ('https://images1.forrent.com/i2/6Pi86B8pdd9vFDnkdjVetbEUmaxhySTxfJVleD8tWkM/117/image.jpg', 'Description4', 535, 466, true, 6),
-    ('https://ppmapartments.com/wp-content/uploads/2021/03/1-3.jpg', 'Description5', 500, 500, true, 4),
-    ('https://www.redfin.com/blog/wp-content/uploads/2022/09/spacejoy-xkJ2_THgKmk-unsplash.jpg', 'Description6', 220, 230, true, 10),
-    ('https://cdn.mos.cms.futurecdn.net/vcKypmJpoxLHNrtjDyJnVa.jpg', 'Description7', 524, 476,true, 7),
-    ('https://i.pinimg.com/736x/f9/e2/53/f9e253dc1d18b53cacc560896cad8789.jpg', 'No profile picture', 640, 960,true, 9),
-    ('https://images1.forrent.com/i2/LetRViB02weV_zpN2v0D_VvhdCiiYoo0lNQuCtRUKBo/112/image.jpg', 'No profile picture', 640, 960,true, 8),
-    ('https://www.essexapartmenthomes.com/-/media/Project/EssexPropertyTrust/Sites/EssexApartmentHomes/Blog/2021/2021-01-12-Studio-vs-One-Bedroom-Apartment-How-They-Measure-Up/Studio-vs-One-Bedroom-Apartment-How-They-Measure-Up-1.jpg', 'No profile picture', 640, 960,true, 2),
-    ('https://www.thespruce.com/thmb/cPaZ1eA5WqKLYH4kSry7wrMYsDM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/EleanorEmail-847750221ae1499c972c977f279d2d5e.png', 'No profile picture', 640, 960,true, 5),
-    ('https://assets.nestiostatic.com/building_medias/full/d1c6422ba404e8cc5f87bdf76e0e96b7.jpg', 'No profile picture', 640, 960,true, 5);
+    ('images/acc1.jpg', 'Description1', 264, 264, true, 1),
+    ('images/acc1.jpg', 'Description2', 488, 511, true, 3),
+    ('images/acc1.jpg', 'Description3', 980, 980, true, 5),
+    ('images/acc1.jpg', 'Description4', 535, 466, true, 6),
+    ('images/acc1.jpg', 'Description5', 500, 500, true, 4),
+    ('images/acc1.jpg', 'Description6', 220, 230, true, 10),
+    ('images/acc1.jpg', 'Description7', 524, 476,true, 7),
+    ('images/acc1.jpg', 'No profile picture', 640, 960,true, 9),
+    ('images/acc1.jpg', 'No profile picture', 640, 960,true, 8),
+    ('images/acc1.jpg', 'No profile picture', 640, 960,true, 2),
+    ('images/acc1.jpg', 'No profile picture', 640, 960,true, 5),
+    ('images/acc1.jpg', 'No profile picture', 640, 960,true, 5);
 
 
 INSERT INTO amenities (accommodation_id, amenities)
