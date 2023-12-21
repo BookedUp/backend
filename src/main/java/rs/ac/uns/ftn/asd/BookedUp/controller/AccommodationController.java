@@ -102,7 +102,7 @@ public class AccommodationController {
     }
 
     /* url: /api/accommodations/1 PUT*/
-    //@PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PreAuthorize("hasAuthority('ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> updateAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
             throws Exception {
@@ -170,7 +170,7 @@ public class AccommodationController {
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodation), HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/modified", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllModified() {
         Collection<Accommodation> accommodations = accommodationService.findAllModified();
@@ -181,7 +181,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllCreated() {
         Collection<Accommodation> accommodations = accommodationService.findAllCreated();
@@ -203,7 +203,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/changed", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllChanged() {
         Collection<Accommodation> accommodations = accommodationService.findAllChanged();
