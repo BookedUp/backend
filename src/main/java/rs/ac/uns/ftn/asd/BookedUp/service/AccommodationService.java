@@ -73,6 +73,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             calendar.setTime(dr.getEndDate());
             calendar.set(Calendar.HOUR_OF_DAY, 13);
         }
+
         return repository.save(accommodation);
     }
 
