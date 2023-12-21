@@ -125,12 +125,21 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
                 address.setLatitude(Double.parseDouble(latitude));
                 address.setLongitude(Double.parseDouble(longitude));
             } else {
-                throw new IOException("Latitude or longitude not found in the geocoding response");
+                // Set latitude and longitude to 0.0 if not found
+                address.setLatitude(0.0);
+                address.setLongitude(0.0);
+
+                System.out.println("Latitude or longitude not found in the geocoding response. Setting to 0.0.");
             }
         } else {
-            throw new IOException("No results found in the geocoding response");
+            // Set latitude and longitude to 0.0 if no results found
+            address.setLatitude(0.0);
+            address.setLongitude(0.0);
+
+            System.out.println("No results found in the geocoding response. Setting latitude and longitude to 0.0.");
         }
     }
+
 
     @Override
     public Accommodation save(Accommodation accommodation) throws Exception {
