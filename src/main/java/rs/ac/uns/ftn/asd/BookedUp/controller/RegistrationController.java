@@ -45,7 +45,8 @@ public class RegistrationController {
             host.setEmail(userDTO.getEmail());
             host.setPassword(userDTO.getPassword());
             host.setRole(userDTO.getRole());
-
+            host.setActive(false);
+            host.setVerified(false);
 
             return registrationService.register(host);
         } else if (userDTO.getRole() == Role.GUEST) {
@@ -59,6 +60,9 @@ public class RegistrationController {
             guest.setEmail(userDTO.getEmail());
             guest.setPassword(userDTO.getPassword());
             guest.setRole(userDTO.getRole());
+
+            guest.setActive(false);
+            guest.setVerified(false);
 
             return registrationService.register(guest);
         } else {
