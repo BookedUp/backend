@@ -197,18 +197,26 @@ public class GuestService implements ServiceInterface<Guest>{
     }
 
     public boolean isFavouriteAccommodation(Long guestId, Long accommodationId) {
+        System.out.println("Checking favourite status for guestId: " + guestId + " accommodationId: " + accommodationId);
+
         Optional<Guest> optionalGuest = repository.findById(guestId);
 
         if (optionalGuest.isPresent()) {
             Guest guest = optionalGuest.get();
             List<Accommodation> favourites = guest.getFavourites();
 
-            return favourites.stream()
+            boolean isFavourite = favourites.stream()
                     .anyMatch(accommodation -> accommodation.getId().equals(accommodationId));
+
+            System.out.println("Favourite status: " + isFavourite);
+            return isFavourite;
+        } else {
+            System.out.println("Guest not found");
         }
 
         return false;
     }
+
 
 
 

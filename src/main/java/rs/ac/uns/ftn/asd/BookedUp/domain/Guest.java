@@ -24,7 +24,7 @@ public class Guest extends User {
 //    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL)
 //    private List<Reservation> reservations;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "guest_favourite",
             joinColumns = @JoinColumn(name = "guest_id"),
