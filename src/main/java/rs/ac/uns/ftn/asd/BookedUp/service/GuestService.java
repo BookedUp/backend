@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
@@ -17,6 +18,9 @@ public class GuestService implements ServiceInterface<Guest>{
 
     @Autowired
     private IReservationRepository reservationRepository;
+
+    @Autowired
+    private IAccommodationRepository accommodationRepository;
 
     @Autowired
     private IPhotoRepository photoRepository;
@@ -157,6 +161,38 @@ public class GuestService implements ServiceInterface<Guest>{
                             && reservation.getStatus() != ReservationStatus.REJECTED);
         }
         return false;
+    }
+
+    @Transactional
+    public void addFavouriteAccommodation(Long guestId, Long accommodationId) throws Exception {
+        Guest guest = repository.findById(guestId).orElse(null);
+        Accommodation accommodation = accommodationRepository.findById(accommodationId).orElse(null);
+
+        if (guest == null || accommodation == null) {
+            throw new Exception("Guest or accommodation not found");
+        }
+
+        List<Accommodation> favourites = guest.getFavourites();
+        favourites.add(accommodation);
+        guest.setFavourites(favourites);
+
+        repository.save(guest);
+    }
+
+    @Transactional
+    public void removeFavouriteAccommodation(Long guestId, Long accommodationId) throws Exception {
+        Guest guest = repository.findById(guestId).orElse(null);
+        Accommodation accommodation = accommodationRepository.findById(accommodationId).orElse(null);
+
+        if (guest == null || accommodation == null) {
+            throw new Exception("Guest or accommodation not found");
+        }
+
+        List<Accommodation> favourites = guest.getFavourites();
+        favourites.remove(accommodation);
+        guest.setFavourites(favourites);
+
+        repository.save(guest);
     }
 
 

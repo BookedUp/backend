@@ -170,6 +170,32 @@ public class GuestController {
             }
         }
 
+    @PutMapping("/{guestId}/add-favourite/{accommodationId}")
+    public ResponseEntity<Void> addFavouriteAccommodation(
+            @PathVariable Long guestId,
+            @PathVariable Long accommodationId
+    ) {
+        try {
+            guestService.addFavouriteAccommodation(guestId, accommodationId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @PutMapping("/{guestId}/remove-favourite/{accommodationId}")
+    public ResponseEntity<Void> removeFavouriteAccommodation(
+            @PathVariable Long guestId,
+            @PathVariable Long accommodationId
+    ) {
+        try {
+            guestService.removeFavouriteAccommodation(guestId, accommodationId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
