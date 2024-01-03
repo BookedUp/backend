@@ -198,4 +198,19 @@ public class GuestController {
         }
     }
 
+    @GetMapping("/{guestId}/is-favourite/{accommodationId}")
+    public ResponseEntity<Boolean> isFavouriteAccommodation(
+            @PathVariable Long guestId,
+            @PathVariable Long accommodationId
+    ) {
+        try {
+            boolean isFavourite = guestService.isFavouriteAccommodation(guestId, accommodationId);
+            return new ResponseEntity<>(isFavourite, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }

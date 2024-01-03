@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GuestService implements ServiceInterface<Guest>{
@@ -193,6 +194,20 @@ public class GuestService implements ServiceInterface<Guest>{
         guest.setFavourites(favourites);
 
         repository.save(guest);
+    }
+
+    public boolean isFavouriteAccommodation(Long guestId, Long accommodationId) {
+        Optional<Guest> optionalGuest = repository.findById(guestId);
+
+        if (optionalGuest.isPresent()) {
+            Guest guest = optionalGuest.get();
+            List<Accommodation> favourites = guest.getFavourites();
+
+            return favourites.stream()
+                    .anyMatch(accommodation -> accommodation.getId().equals(accommodationId));
+        }
+
+        return false;
     }
 
 
