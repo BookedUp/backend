@@ -49,6 +49,17 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(ReviewMapper.toDto(review), HttpStatus.OK);
     }
 
+    /* url: /api/reviews/accommodation/1 GET*/
+    @GetMapping(value = "/accommodation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getAccommodationReviews(@PathVariable("id") Long id) {
+        Collection<Review> reviews = reviewService.findAllByAccommodationId(id);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
     /*url: /api/reviews POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) throws Exception {
