@@ -56,6 +56,42 @@ public class UserController {
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
+    /** url: /api/users/active-users GET*/
+    @GetMapping(value = "/active-users",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<UserDTO>> getActiveUsers() {
+        Collection<User> users = userService.getActiveAll();
+
+        Collection<UserDTO> usersDTO = users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
+    }
+
+    /** url: /api/users/blocked-users GET*/
+    @GetMapping(value = "/blocked-users",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<UserDTO>> getBlockedUsers() {
+        Collection<User> users = userService.getBlockedAll();
+
+        Collection<UserDTO> usersDTO = users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
+    }
+
+    /** url: /api/users/reported-users GET*/
+    @GetMapping(value = "/reported-users",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<UserDTO>> getReportedUsers() {
+        Collection<User> users = userService.getReportedAll();
+
+        Collection<UserDTO> usersDTO = users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
+    }
+
     /** url: /api/users POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDto) throws Exception {
