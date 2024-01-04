@@ -8,6 +8,8 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IUserRepository;
 
 import javax.net.ssl.SSLSession;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements ServiceInterface<User>{
@@ -117,5 +119,44 @@ public class UserService implements ServiceInterface<User>{
     public User getByEmail(String email) {
         User user = repository.findByEmail(email).orElse(null);
         return user;
+    }
+
+    public Collection<User> getActiveAll() {
+        Collection<User> users = repository.findAll();
+        UserReportService reportService = new UserReportService();
+        Collection<UserReport> reports = reportService.getAll();
+
+        Collection<User> activeUsers = users.stream()
+                .filter(user -> reports.stream()
+                        .noneMatch(report -> report.getReportedUser().getId().equals(user.getId()) && report.isStatus()))
+                .collect(Collectors.toList());
+
+        return activeUsers;
+    }
+
+    public Collection<User> getBlockedAll() {
+        Collection<User> users = repository.findAll();
+        UserReportService reportService = new UserReportService();
+        Collection<UserReport> reports = reportService.getAll();
+
+        Collection<User> blockedUsers = users.stream()
+                .filter(user -> reports.stream()
+                        .anyMatch(report -> report.getReportedUser().getId().equals(user.getId()) && report.isStatus()))
+                .collect(Collectors.toList());
+
+        return blockedUsers;
+    }
+
+    public Collection<User> getReportedAll() {
+        Collection<User> users = repository.findAll();
+        UserReportService reportService = new UserReportService();
+        Collection<UserReport> reports = reportService.getAll();
+
+        Collection<User> reportedUsers = users.stream()
+                .filter(user -> reports.stream()
+                        .anyMatch(report -> report.getReportedUser().getId().equals(user.getId()) && !report.isStatus()))
+                .collect(Collectors.toList());
+
+        return reportedUsers;
     }
 }
