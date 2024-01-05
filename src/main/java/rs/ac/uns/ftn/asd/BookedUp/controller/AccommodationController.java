@@ -195,6 +195,7 @@ public class AccommodationController {
 
     @GetMapping(value = "/mostPopular", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getMostPopular() {
+        System.out.println("USAOOOO");
         Collection<Accommodation> accommodations = accommodationService.findMostPopular();
         Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
                 .map(AccommodationMapper::toDto)
@@ -218,8 +219,8 @@ public class AccommodationController {
     public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Integer guestsNumber,
-            @RequestParam(required = false)  Date startDate,
-            @RequestParam(required = false) Date endDate,
+            @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
             @RequestParam(required = false) List<Object> amenities,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
@@ -227,6 +228,7 @@ public class AccommodationController {
             @RequestParam(required = false) Object selectedType,
             @RequestParam(required = false) String name
     ) {
+        System.out.println("USAAAAAAAO u SEEEARCHHHH");
         String lowercaseName = name.toLowerCase();
         try {
             //SEARCH
@@ -261,10 +263,10 @@ public class AccommodationController {
                                     (minPrice == null || minPrice == 0 || (accommodationDTO.getTotalPrice() >= minPrice)) &&
                                     (maxPrice == null || maxPrice == 0 || (accommodationDTO.getTotalPrice() <= maxPrice)) &&
                                     (selectedType == null || selectedType.equals("null") || accommodationDTO.getType().name().equals(selectedType)) &&
-                                    (name == null || name.isEmpty() || (accommodationDTO.getName().trim().toLowerCase().contains(lowercaseName)))))
+                                    (name.equals("") || (accommodationDTO.getName().trim().toLowerCase().contains(lowercaseName)))))
                     .collect(Collectors.toList());
 
-            if (!filteredAccommodations.isEmpty() || (amenities != null || minPrice != 0.0 || maxPrice != 0.0 || customMaxBudget > 0.0 || !selectedType.equals("null") || !name.isEmpty())) {
+            if (!filteredAccommodations.isEmpty() || (amenities != null || minPrice != 0.0 || maxPrice != 0.0 || customMaxBudget > 0.0 || !selectedType.equals("null") || !name.equals(""))) {
                 return new ResponseEntity<>(filteredAccommodations, HttpStatus.OK);
             }
             return new ResponseEntity<>(results, HttpStatus.OK);
