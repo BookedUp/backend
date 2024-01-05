@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.asd.BookedUp.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -172,5 +173,21 @@ public class HostController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    /* url: /api/hosts/{id}/guests GET */
+    @GetMapping(value = "/{id}/guests", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<GuestDTO>> getHostGuests(@PathVariable("id") Long hostId) {
+        try {
+            Collection<GuestDTO> guestsDTO = hostService.getGuestsByHostId(hostId).stream()
+                    .map(GuestMapper::toDto) // Assuming you have a GuestMapper class
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(guestsDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 
 }
