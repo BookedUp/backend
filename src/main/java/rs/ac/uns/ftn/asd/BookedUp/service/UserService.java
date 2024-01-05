@@ -135,16 +135,7 @@ public class UserService implements ServiceInterface<User>{
     }
 
     public Collection<User> getBlockedAll() {
-        Collection<User> users = repository.findAll();
-        UserReportService reportService = new UserReportService();
-        Collection<UserReport> reports = reportService.getAll();
-
-        Collection<User> blockedUsers = users.stream()
-                .filter(user -> reports.stream()
-                        .anyMatch(report -> report.getReportedUser().getId().equals(user.getId()) && report.isStatus()))
-                .collect(Collectors.toList());
-
-        return blockedUsers;
+        return repository.findAllBlockedUsers();
     }
 
     public Collection<User> getReportedAll() {

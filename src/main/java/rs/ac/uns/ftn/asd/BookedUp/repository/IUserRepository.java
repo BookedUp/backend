@@ -19,5 +19,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
             "SET u.active = TRUE WHERE u.email = ?1") //stojalo .enabled
     int enableUser(String email);
 
+    @Query("SELECT u FROM User u WHERE u.isBlocked = TRUE")
+    Collection<User> findAllBlockedUsers();
+
 
 }

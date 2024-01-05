@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.ReviewReport;
+import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.domain.UserReport;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewReportDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserReportDTO;
@@ -60,5 +61,10 @@ public class UserReportService implements ServiceInterface<UserReport> {
     @Override
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+
+    public Collection<User> getAllReportedUsers() {
+        return repository.findAllReportedUsers();
     }
 }

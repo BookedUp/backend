@@ -93,4 +93,18 @@ public class UserReportController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    /*url: /api/user-reports/reported-users GET*/
+    @GetMapping(value = "/reported-users", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<UserDTO>> getAllReportedUsers() {
+        Collection<User> reportedUsers = userReportService.getAllReportedUsers();
+        Collection<UserDTO> reportedUsersDTO = reportedUsers.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reportedUsersDTO, HttpStatus.OK);
+    }
+
+
+
 }
