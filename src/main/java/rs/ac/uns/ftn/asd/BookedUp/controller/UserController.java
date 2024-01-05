@@ -9,10 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.LogInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AddressMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
@@ -198,5 +201,39 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Host registration failed");
         }
     }
+
+    @PutMapping(value = "/{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> blockUser(@PathVariable("id") Long id)
+            throws Exception {
+        User user = userService.getById(id);
+        if (user == null){
+            return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!user.isActive() || !user.isVerified() || user.isBlocked()){
+            return new ResponseEntity<UserDTO>(HttpStatus.FORBIDDEN);
+        }
+
+        userService.blockUser(user);
+        return new ResponseEntity<UserDTO>(UserMapper.toDto(user), HttpStatus.OK);
+    }
+
+
+    @PutMapping(value = "/{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> unblockUser(@PathVariable("id") Long id)
+            throws Exception {
+        User user = userService.getById(id);
+        if (user == null){
+            return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!user.isActive() || !user.isVerified() || !user.isBlocked()){
+            return new ResponseEntity<UserDTO>(HttpStatus.FORBIDDEN);
+        }
+
+        userService.unblockUser(user);
+        return new ResponseEntity<UserDTO>(UserMapper.toDto(user), HttpStatus.OK);
+    }
+
 
 }

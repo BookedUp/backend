@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IUserRepository;
 
@@ -79,27 +80,16 @@ public class UserService implements ServiceInterface<User>{
         repository.deleteById(id);
     }
 
-    public void blockUser(Long id) throws Exception{
-        User user = repository.findById(id).orElse(null);
-        if (user == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
-        }
 
+    public void blockUser(User user) {
         user.setBlocked(true);
-
         repository.save(user);
     }
 
-    public void unblockUser(Long id) throws Exception {
-        User user = repository.findById(id).orElse(null);
-        if (user == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
-        }
 
+    public void unblockUser(User user) {
         user.setBlocked(false);
-
         repository.save(user);
-
     }
 
     public boolean authenticateUser(String email, String password) {
