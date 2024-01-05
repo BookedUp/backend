@@ -16,6 +16,9 @@ public class GuestService implements ServiceInterface<Guest>{
     private IGuestRepository repository;
 
     @Autowired
+    private IAccommodationRepository accommodationRepository;
+
+    @Autowired
     private IReservationRepository reservationRepository;
 
     @Autowired
@@ -160,5 +163,14 @@ public class GuestService implements ServiceInterface<Guest>{
     }
 
 
+    public Collection<Host> getHostsByGuestId(Long guestId) throws Exception {
+        Guest guest = repository.findById(guestId).orElse(null);
+
+        if (guest == null) {
+            throw new Exception("Guest doesn't exist");
+        }
+
+        return accommodationRepository.findHostsByGuestWithCompletedOrActiveReservations(guest);
+    }
 
 }
