@@ -105,6 +105,15 @@ public class UserReportController {
         return new ResponseEntity<>(reportedUsersDTO, HttpStatus.OK);
     }
 
+    /* url: /api/user-reports/reasons/{reportUserId} GET */
+// UserReportController.java
+    @GetMapping(value = "/reasons/{reportUserId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<String>> getReportReasons(@PathVariable("reportUserId") Long reportUserId) {
+        Collection<String> reportReasons = userReportService.getReportReasonsForUser(reportUserId);
+        return new ResponseEntity<>(reportReasons, HttpStatus.OK);
+    }
+
+
 
 
 }

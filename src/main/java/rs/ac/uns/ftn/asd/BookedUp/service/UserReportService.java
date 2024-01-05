@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IUserReportRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class UserReportService implements ServiceInterface<UserReport> {
@@ -67,4 +68,16 @@ public class UserReportService implements ServiceInterface<UserReport> {
     public Collection<User> getAllReportedUsers() {
         return repository.findAllReportedUsers();
     }
+
+    // UserReportService.java
+    public Collection<String> getReportReasonsForUser(Long reportUserId) {
+        Collection<UserReport> userReportsForUser = getAll().stream()
+                .filter(userReport -> userReport.getReportedUser().getId().equals(reportUserId))
+                .collect(Collectors.toList());
+
+        return userReportsForUser.stream()
+                .map(UserReport::getReason)
+                .collect(Collectors.toList());
+    }
+
 }

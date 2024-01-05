@@ -235,5 +235,4 @@ public class UserController {
         return new ResponseEntity<UserDTO>(UserMapper.toDto(user), HttpStatus.OK);
     }
 
-
 }
