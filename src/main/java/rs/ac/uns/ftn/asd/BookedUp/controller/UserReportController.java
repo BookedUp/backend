@@ -74,7 +74,7 @@ public class UserReportController {
         }
 
         userReportForUpdate.setReason(userReportDTO.getReason());
-        userReportForUpdate.setReportedUser(UserMapper.toEntity(userReportDTO.getReportedUserDTO()));
+        userReportForUpdate.setReportedUser(UserMapper.toEntity(userReportDTO.getReportedUser()));
         userReportForUpdate.setStatus(userReportDTO.isStatus());
 
         userReportForUpdate = userReportService.save(userReportForUpdate);

@@ -13,13 +13,7 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 public class UserReportDTO {
     private Long id;
     private String reason;
-    private UserDTO reportedUserDTO;
+    private UserDTO reportedUser;
     private boolean status;
 
-    public void copyValues(UserReportDTO dto) {
-        this.reason = dto.getReason();
-        this.reportedUserDTO = dto.getReportedUserDTO();
-        this.status = dto.isStatus();
-
-    }
 }
