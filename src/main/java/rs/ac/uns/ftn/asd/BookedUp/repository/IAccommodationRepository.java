@@ -49,10 +49,11 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("accommodationType") AccommodationType accommodationType);
 
     @Query("SELECT DISTINCT r.guest FROM Accommodation a " +
-            "JOIN a.reservations r " +
+            "INNER JOIN  a.reservations r " +
             "WHERE a.host = :host " +
-            "AND (r.status = 'COMPLETED' OR r.status = 'ACCEPTED' )")
+            "AND (r.status = 'COMPLETED' OR r.status = 'ACCEPTED')")
     List<Guest> findGuestsByHostWithCompletedOrActiveReservations(@Param("host") Host host);
+
 
     @Query("SELECT DISTINCT a.host FROM Accommodation a " +
             "INNER JOIN a.reservations r " +
