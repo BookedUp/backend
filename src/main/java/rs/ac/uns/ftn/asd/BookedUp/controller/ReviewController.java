@@ -90,8 +90,8 @@ public class ReviewController {
         reviewForUpdate.setReview(reviewDTO.getReview());
         reviewForUpdate.setComment(reviewDTO.getComment());
         reviewForUpdate.setDate(reviewDTO.getDate());
-        reviewForUpdate.setHost(HostMapper.toEntity(reviewDTO.getHostDTO()));
-        reviewForUpdate.setAccommodation(AccommodationMapper.toEntity(reviewDTO.getAccommodationDTO()));
+        reviewForUpdate.setHost(HostMapper.toEntity(reviewDTO.getHost()));
+        reviewForUpdate.setAccommodation(AccommodationMapper.toEntity(reviewDTO.getAccommodation()));
         reviewForUpdate.setType(reviewDTO.getType());
 
         reviewForUpdate = reviewService.save(reviewForUpdate);

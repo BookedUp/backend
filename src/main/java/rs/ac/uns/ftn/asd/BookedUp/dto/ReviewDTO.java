@@ -14,21 +14,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewDTO {
     private Long id;
-    //private GuestDTO guestDTO;
+    private GuestDTO guest;
     private int review;
     private String comment;
     private LocalDateTime date;
-    private HostDTO hostDTO;
-    private AccommodationDTO accommodationDTO;
+    private HostDTO host;
+    private AccommodationDTO accommodation;
     private ReviewType type;
 
-    public void copyValues(ReviewDTO dto) {
-        //this.guestDTO=dto.getGuestDTO();
-        this.review=dto.getReview();
-        this.comment = dto.getComment();
-        this.date = dto.getDate();
-        this.hostDTO = dto.getHostDTO();
-        this.accommodationDTO = dto.getAccommodationDTO();
-        this.type = dto.getType();
-    }
 }
