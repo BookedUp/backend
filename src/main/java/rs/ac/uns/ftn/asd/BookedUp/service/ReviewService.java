@@ -33,6 +33,8 @@ public class ReviewService implements ServiceInterface<Review> {
         if (review.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
+
+        review.setIsReviewActive(true);
         return  repository.save(review);
     }
 
@@ -70,5 +72,16 @@ public class ReviewService implements ServiceInterface<Review> {
 
     public List<Review> findAllByAccommodationId(Long id) {
         return repository.findAllByAccommodationId(id);
+    }
+    public List<Review> findAllAccommodationReviewsByGuestId(Long guestId) {
+        return repository.findAllAccommodationReviewsByGuestId(guestId);
+    }
+
+    public List<Review> findAllHostReviewsByGuestId(Long guestId) {
+        return repository.findAllHostReviewsByGuestId(guestId);
+    }
+
+    public List<Review> findAllByGuestId(Long guestId) {
+        return repository.findAllByGuestId(guestId);
     }
 }

@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Review;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
@@ -111,7 +114,37 @@ public class ReviewController {
         return new ResponseEntity<Review>(HttpStatus.NO_CONTENT);
     }
 
-    private boolean validateReviewDTO(ReviewDTO reviewDTO) {
-        return true;
+    /* url: /api/reviews/guest/{guestId} GET*/
+    @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getReviewsByGuestId(@PathVariable("guestId") Long guestId) {
+        Collection<Review> reviews = reviewService.findAllByGuestId(guestId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
     }
+
+    /* url: /api/reviews/guest/{guestId}/accommodation GET*/
+    @GetMapping(value = "/guest/{guestId}/accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getAccommodationReviewsByGuestId(@PathVariable("guestId") Long guestId) {
+        Collection<Review> reviews = reviewService.findAllAccommodationReviewsByGuestId(guestId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
+    /* url: /api/reviews/guest/{guestId}/host GET*/
+    @GetMapping(value = "/guest/{guestId}/host", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getHostReviewsByGuestId(@PathVariable("guestId") Long guestId) {
+        Collection<Review> reviews = reviewService.findAllHostReviewsByGuestId(guestId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
 }
