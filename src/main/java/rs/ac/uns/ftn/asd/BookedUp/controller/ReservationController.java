@@ -134,7 +134,7 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+//    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     /*url: /api/reservations POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody  ReservationDTO reservationDTO) throws Exception {

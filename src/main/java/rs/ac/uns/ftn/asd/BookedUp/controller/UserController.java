@@ -108,14 +108,14 @@ public class UserController {
     /** url: /api/users/1 DELETE*/
     @PreAuthorize("hasAnyRole('HOST', 'GUEST')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<UserDTO> deleteUser(@PathVariable("id") Long id) {
         try {
             userService.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<UserDTO>(HttpStatus.NO_CONTENT);
     }
 
     private boolean validateUserDTO(UserDTO userDto) {

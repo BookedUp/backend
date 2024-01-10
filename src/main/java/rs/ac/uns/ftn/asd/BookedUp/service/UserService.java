@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.IUserRepository;
 
 import javax.net.ssl.SSLSession;
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class UserService implements ServiceInterface<User>{
@@ -74,7 +75,9 @@ public class UserService implements ServiceInterface<User>{
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        User userForDelete = repository.findById(id).orElse(null);
+        userForDelete.setActive(false);
+        repository.save(userForDelete);
     }
 
     public void blockUser(Long id) throws Exception{

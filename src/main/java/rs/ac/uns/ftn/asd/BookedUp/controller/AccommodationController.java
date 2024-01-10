@@ -135,7 +135,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/confirmation", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> approveReservation(@PathVariable("id") Long id)
+    public ResponseEntity<AccommodationDTO> approveAccommodation(@PathVariable("id") Long id)
             throws Exception {
         Accommodation accommodation = accommodationService.getById(id);
         if (accommodation == null){
@@ -154,7 +154,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/rejection", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> rejectReservation(@PathVariable("id") Long id)
+    public ResponseEntity<AccommodationDTO> rejectAccommodation(@PathVariable("id") Long id)
             throws Exception {
         Accommodation accommodation = accommodationService.getById(id);
         if (accommodation == null){
@@ -166,7 +166,7 @@ public class AccommodationController {
         }
 
 //        da li dodati proveru za manualnu
-        accommodationService.approveAccommodation(accommodation);
+        accommodationService.rejectAccommodation(accommodation);
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodation), HttpStatus.OK);
     }
 
