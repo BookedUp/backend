@@ -92,4 +92,16 @@ public class ReviewService implements ServiceInterface<Review> {
     public List<Review> findAllByGuestId(Long guestId) {
         return repository.findAllByGuestId(guestId);
     }
+
+    public List<Review> findAllAccommodationReviewsByHostId(Long hostId) {
+        return repository.findAllAccommodationReviewsByHostId(hostId);
+    }
+
+    public List<Review> findAllHostReviewsByHostId(Long hostId) {
+        return repository.findAllHostReviewsByHostId(hostId);
+    }
+
+    public List<Review> findAllByHostId(Long hostId) {
+        return repository.findAllByHostId(hostId);
+    }
 }

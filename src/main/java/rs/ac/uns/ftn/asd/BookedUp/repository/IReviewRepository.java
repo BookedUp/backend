@@ -21,6 +21,15 @@ public interface IReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r WHERE r.guest.id = :guestId AND r.host IS NOT NULL AND r.isReviewActive = true")
     List<Review> findAllHostReviewsByGuestId(@Param("guestId") Long guestId);
 
+    @Query("SELECT r FROM Review r WHERE r.host.id = :hostId AND r.isReviewActive = true")
+    List<Review> findAllHostReviewsByHostId(@Param("hostId") Long hostId);
+
+    @Query("SELECT r FROM Review r WHERE r.accommodation.host.id = :hostId AND r.accommodation IS NOT NULL AND r.isReviewActive = true")
+    List<Review> findAllAccommodationReviewsByHostId(@Param("hostId") Long hostId);
+
+    @Query("SELECT r FROM Review r WHERE r.host.id = :hostId AND r.isReviewActive = true")
+    List<Review> findAllByHostId(@Param("hostId") Long hostId);
+
     @Query("SELECT r FROM Review r WHERE r.guest.id = :guestId AND r.isReviewActive = true")
     List<Review> findAllByGuestId(@Param("guestId") Long guestId);
 

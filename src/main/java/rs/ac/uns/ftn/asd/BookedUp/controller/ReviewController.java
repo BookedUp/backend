@@ -147,4 +147,37 @@ public class ReviewController {
         return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
     }
 
+    /* url: /api/reviews/host/{hostId}/accommodation GET*/
+    @GetMapping(value = "/host/{hostId}/accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getAccommodationReviewsByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Review> reviews = reviewService.findAllAccommodationReviewsByHostId(hostId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
+    /* url: /api/reviews/host/{hostId}/host GET*/
+    @GetMapping(value = "/host/{hostId}/host", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getHostReviewsByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Review> reviews = reviewService.findAllHostReviewsByHostId(hostId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
+    /* url: /api/reviews/host/{hostId} GET*/
+    @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getReviewsByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Review> reviews = reviewService.findAllByHostId(hostId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
 }
