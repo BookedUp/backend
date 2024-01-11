@@ -35,6 +35,7 @@ public class ReviewService implements ServiceInterface<Review> {
         }
 
         review.setIsReviewActive(true);
+        review.setApproved(false);
         return  repository.save(review);
     }
 

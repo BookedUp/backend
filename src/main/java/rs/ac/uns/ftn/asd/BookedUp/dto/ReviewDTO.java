@@ -21,5 +21,7 @@ public class ReviewDTO {
     private HostDTO host;
     private AccommodationDTO accommodation;
     private ReviewType type;
+    private Boolean approved;
+
 
 }

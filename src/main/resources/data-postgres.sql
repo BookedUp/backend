@@ -171,18 +171,18 @@ VALUES
     ('Hate speech', 4, true),
     ('Other', 7, false);
 
-INSERT INTO review (guest_id, review, comment, date, host_id, accommodation_id, type, is_review_active)
+INSERT INTO review (guest_id, review, comment, date, host_id, accommodation_id, type, is_review_active, approved)
 VALUES
-    (4, 4, 'Great experience! Highly recommended.', '2023-12-01T10:30:00', null, 1, 'ACCOMMODATION', true),
-    (5, 3, 'Good place, but could be better.', '2023-12-02T11:45:00', null, 2, 'ACCOMMODATION', true),
-    (6, 5, 'Amazing host and accommodation!', '2023-12-03T09:15:00', 2, null, 'HOST', true),
-    (7, 2, 'Not satisfied with the service.', '2023-12-04T08:00:00', null, 4, 'ACCOMMODATION', true),
-    (4, 4, 'Excellent stay, would come back!', '2023-12-05T14:20:00', null, 5, 'ACCOMMODATION', true),
-    (5, 2, 'Disappointing experience.', '2023-12-06T16:30:00', 3, null, 'HOST', true),
-    (6, 5, 'Host was very helpful and friendly.', '2023-12-07T12:10:00', null, 7, 'ACCOMMODATION', true),
-    (7, 3, 'Average place, nothing special.', '2023-12-08T13:45:00', null, 8, 'ACCOMMODATION', true),
-    (4, 4, 'Lovely accommodation with a great view.', '2023-12-09T18:00:00', 2, null, 'HOST', true),
-    (5, 1, 'Terrible experience, do not recommend.', '2023-12-10T22:00:00',null, 10, 'ACCOMMODATION', true);
+    (4, 4, 'Great experience! Highly recommended.', '2023-12-01T10:30:00', null, 1, 'ACCOMMODATION', true, false),
+    (5, 3, 'Good place, but could be better.', '2023-12-02T11:45:00', null, 2, 'ACCOMMODATION', true, false),
+    (6, 5, 'Amazing host and accommodation!', '2023-12-03T09:15:00', 2, null, 'HOST', true,false),
+    (7, 2, 'Not satisfied with the service.', '2023-12-04T08:00:00', null, 4, 'ACCOMMODATION', true,false),
+    (4, 4, 'Excellent stay, would come back!', '2023-12-05T14:20:00', null, 5, 'ACCOMMODATION', true,false),
+    (5, 2, 'Disappointing experience.', '2023-12-06T16:30:00', 3, null, 'HOST', true, false),
+    (6, 5, 'Host was very helpful and friendly.', '2023-12-07T12:10:00', null, 7, 'ACCOMMODATION', true, false),
+    (7, 3, 'Average place, nothing special.', '2023-12-08T13:45:00', null, 8, 'ACCOMMODATION', true, false),
+    (4, 4, 'Lovely accommodation with a great view.', '2023-12-09T18:00:00', 2, null, 'HOST', true, false),
+    (5, 1, 'Terrible experience, do not recommend.', '2023-12-10T22:00:00',null, 10, 'ACCOMMODATION', true, false);
 
 
 INSERT INTO review_report (reason, reported_review_id, status)

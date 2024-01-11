@@ -44,6 +44,9 @@ public class Review {
     @Column(nullable = false)
     private Boolean isReviewActive;
 
+    @Column(nullable = false)
+    private Boolean approved;
+
     @ManyToOne
     @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
