@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
@@ -8,9 +9,7 @@ import rs.ac.uns.ftn.asd.BookedUp.repository.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class HostService implements ServiceInterface<Host>{
@@ -160,6 +159,16 @@ public class HostService implements ServiceInterface<Host>{
 
         return !localDate.isBefore(localFromDate) && !localDate.isAfter(localToDate);
     }
+    public Collection<Guest> getGuestsByHostId(Long hostId) throws Exception {
+        Host host = repository.findById(hostId).orElse(null);
+
+        if (host == null) {
+            throw new Exception("Host doesn't exist");
+        }
+
+        return accommodationRepository.findGuestsByHostWithCompletedOrActiveReservations(host);
+    }
+
 
 
 }

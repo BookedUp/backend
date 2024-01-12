@@ -3,11 +3,14 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IUserRepository;
 
 import javax.net.ssl.SSLSession;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements ServiceInterface<User>{
@@ -77,27 +80,16 @@ public class UserService implements ServiceInterface<User>{
         repository.deleteById(id);
     }
 
-    public void blockUser(Long id) throws Exception{
-        User user = repository.findById(id).orElse(null);
-        if (user == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
-        }
 
+    public void blockUser(User user) {
         user.setBlocked(true);
-
         repository.save(user);
     }
 
-    public void unblockUser(Long id) throws Exception {
-        User user = repository.findById(id).orElse(null);
-        if (user == null) {
-            throw new Exception("Trazeni entitet nije pronadjen.");
-        }
 
+    public void unblockUser(User user) {
         user.setBlocked(false);
-
         repository.save(user);
-
     }
 
     public boolean authenticateUser(String email, String password) {
@@ -117,5 +109,35 @@ public class UserService implements ServiceInterface<User>{
     public User getByEmail(String email) {
         User user = repository.findByEmail(email).orElse(null);
         return user;
+    }
+
+    public Collection<User> getActiveAll() {
+        Collection<User> users = repository.findAll();
+        UserReportService reportService = new UserReportService();
+        Collection<UserReport> reports = reportService.getAll();
+
+        Collection<User> activeUsers = users.stream()
+                .filter(user -> reports.stream()
+                        .noneMatch(report -> report.getReportedUser().getId().equals(user.getId()) && report.isStatus()))
+                .collect(Collectors.toList());
+
+        return activeUsers;
+    }
+
+    public Collection<User> getBlockedAll() {
+        return repository.findAllBlockedUsers();
+    }
+
+    public Collection<User> getReportedAll() {
+        Collection<User> users = repository.findAll();
+        UserReportService reportService = new UserReportService();
+        Collection<UserReport> reports = reportService.getAll();
+
+        Collection<User> reportedUsers = users.stream()
+                .filter(user -> reports.stream()
+                        .anyMatch(report -> report.getReportedUser().getId().equals(user.getId()) && !report.isStatus()))
+                .collect(Collectors.toList());
+
+        return reportedUsers;
     }
 }

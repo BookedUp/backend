@@ -9,10 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.LogInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.AddressMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
@@ -54,6 +57,42 @@ public class UserController {
         }
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+    }
+
+    /** url: /api/users/active-users GET*/
+    @GetMapping(value = "/active-users",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<UserDTO>> getActiveUsers() {
+        Collection<User> users = userService.getActiveAll();
+
+        Collection<UserDTO> usersDTO = users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
+    }
+
+    /** url: /api/users/blocked-users GET*/
+    @GetMapping(value = "/blocked-users",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<UserDTO>> getBlockedUsers() {
+        Collection<User> users = userService.getBlockedAll();
+
+        Collection<UserDTO> usersDTO = users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
+    }
+
+    /** url: /api/users/reported-users GET*/
+    @GetMapping(value = "/reported-users",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<UserDTO>> getReportedUsers() {
+        Collection<User> users = userService.getReportedAll();
+
+        Collection<UserDTO> usersDTO = users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
 
     /** url: /api/users POST*/
@@ -161,6 +200,39 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Host registration failed");
         }
+    }
+
+    @PutMapping(value = "/{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> blockUser(@PathVariable("id") Long id)
+            throws Exception {
+        User user = userService.getById(id);
+        if (user == null){
+            return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!user.isActive() || !user.isVerified() || user.isBlocked()){
+            return new ResponseEntity<UserDTO>(HttpStatus.FORBIDDEN);
+        }
+
+        userService.blockUser(user);
+        return new ResponseEntity<UserDTO>(UserMapper.toDto(user), HttpStatus.OK);
+    }
+
+
+    @PutMapping(value = "/{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> unblockUser(@PathVariable("id") Long id)
+            throws Exception {
+        User user = userService.getById(id);
+        if (user == null){
+            return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!user.isActive() || !user.isVerified() || !user.isBlocked()){
+            return new ResponseEntity<UserDTO>(HttpStatus.FORBIDDEN);
+        }
+
+        userService.unblockUser(user);
+        return new ResponseEntity<UserDTO>(UserMapper.toDto(user), HttpStatus.OK);
     }
 
 }

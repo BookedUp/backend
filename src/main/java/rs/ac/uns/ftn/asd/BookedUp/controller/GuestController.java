@@ -170,6 +170,20 @@ public class GuestController {
             }
         }
 
+    /* url: /api/guests/{id}/hosts GET */
+    @GetMapping(value = "/{id}/hosts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<HostDTO>> getGuestHosts(@PathVariable("id") Long guestId) {
+        try {
+            Collection<HostDTO> hostDTOS = guestService.getHostsByGuestId(guestId).stream()
+                    .map(HostMapper::toDto) // Assuming you have a GuestMapper class
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(hostDTOS, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+  
     @PutMapping("/{guestId}/add-favourite/{accommodationId}")
     public ResponseEntity<Void> addFavouriteAccommodation(
             @PathVariable Long guestId,
@@ -211,6 +225,5 @@ public class GuestController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 }

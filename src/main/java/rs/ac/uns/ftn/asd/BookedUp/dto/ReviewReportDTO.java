@@ -15,13 +15,7 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.ReviewReport;
 public class ReviewReportDTO {
     private Long id;
     private String reason;
-    private ReviewDTO reportedReviewDTO;
+    private ReviewDTO reportedReview;
     private boolean status;
 
-    public void copyValues(ReviewReportDTO dto) {
-        this.reason = dto.getReason();
-        this.reportedReviewDTO = dto.getReportedReviewDTO();
-        this.status = dto.isStatus();
-
-    }
 }

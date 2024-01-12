@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
 
@@ -45,5 +47,18 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "AND (:accommodationType IS NULL OR a.type = :accommodationType)")
     List<Accommodation> filterAccommodationsByType(
             @Param("accommodationType") AccommodationType accommodationType);
+
+    @Query("SELECT DISTINCT r.guest FROM Accommodation a " +
+            "INNER JOIN  a.reservations r " +
+            "WHERE a.host = :host " +
+            "AND (r.status = 'COMPLETED' OR r.status = 'ACCEPTED')")
+    List<Guest> findGuestsByHostWithCompletedOrActiveReservations(@Param("host") Host host);
+
+
+    @Query("SELECT DISTINCT a.host FROM Accommodation a " +
+            "INNER JOIN a.reservations r " +
+            "WHERE r.guest = :guest " +
+            "AND (r.status = 'COMPLETED' OR r.status = 'ACCEPTED')")
+    List<Host> findHostsByGuestWithCompletedOrActiveReservations(@Param("guest") Guest guest);
 
 }

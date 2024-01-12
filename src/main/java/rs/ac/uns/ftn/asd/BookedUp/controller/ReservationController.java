@@ -135,6 +135,26 @@ public class ReservationController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    @PutMapping(value = "/{id}/cancellation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("id") Long id)
+            throws Exception {
+        Reservation reservation = reservationService.getById(id);
+        if (reservation == null){
+            return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        if (reservation.getStatus()  != ReservationStatus.CREATED){
+            return new ResponseEntity<ReservationDTO>(HttpStatus.FORBIDDEN);
+        }
+
+//        da li dodati proveru za manualnu
+
+        reservationService.cancelReservation(reservation);
+
+        return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
+    }
+
+    //@PreAuthorize("hasAuthority('ROLE_GUEST')")
     /*url: /api/reservations POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody  ReservationDTO reservationDTO) throws Exception {

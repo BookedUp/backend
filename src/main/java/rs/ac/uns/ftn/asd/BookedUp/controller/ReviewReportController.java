@@ -76,7 +76,7 @@ public class ReviewReportController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         reviewReportForUpdate.setReason(reviewReportDTO.getReason());
-        reviewReportForUpdate.setReportedReview(ReviewMapper.toEntity(reviewReportDTO.getReportedReviewDTO()));
+        reviewReportForUpdate.setReportedReview(ReviewMapper.toEntity(reviewReportDTO.getReportedReview()));
         reviewReportForUpdate.setStatus(reviewReportDTO.isStatus());
 
         reviewReportForUpdate = reviewReportService.save(reviewReportForUpdate);
