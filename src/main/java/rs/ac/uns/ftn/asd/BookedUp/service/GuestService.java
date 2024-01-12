@@ -24,9 +24,6 @@ public class GuestService implements ServiceInterface<Guest>{
     private IReservationRepository reservationRepository;
 
     @Autowired
-    private IAccommodationRepository accommodationRepository;
-
-    @Autowired
     private IPhotoRepository photoRepository;
 
     @Autowired
