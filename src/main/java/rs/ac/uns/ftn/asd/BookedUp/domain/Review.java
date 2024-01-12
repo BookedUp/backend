@@ -20,13 +20,13 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = false, nullable = false)
+    @Column(nullable = false)
     private int review;
 
     @Column(nullable = false)
     private String comment;
 
-    @Column(unique = false, nullable = false)
+    @Column(nullable = false)
     private LocalDateTime date;
 
     @ManyToOne
@@ -44,13 +44,15 @@ public class Review {
     @Column(nullable = false)
     private Boolean isReviewActive;
 
+    @Column(nullable = false)
+    private Boolean approved;
+
     @ManyToOne
     @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
 
     public void copyValues(Review review) {
         this.id = review.getId();
-        //this.guest = review.getGuest();
         this.review = review.getReview();
         this.comment = review.getComment();
         this.date = review.getDate();
@@ -58,5 +60,6 @@ public class Review {
         this.accommodation = review.getAccommodation();
         this.type = review.getType();
         this.isReviewActive = review.isReviewActive;
+        this.guest = review.getGuest();
     }
 }
