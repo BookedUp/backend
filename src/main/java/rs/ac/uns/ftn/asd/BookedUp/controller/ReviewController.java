@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Review;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
@@ -179,5 +180,36 @@ public class ReviewController {
 
         return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
     }
+
+    /* url: /api/reviews/unapproved GET */
+    @GetMapping(value = "/unapproved", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getUnapprovedReviews() {
+        Collection<Review> unapprovedReviews = reviewService.findAllUnapprovedReviews();
+        Collection<ReviewDTO> unapprovedReviewsDTO = unapprovedReviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(unapprovedReviewsDTO, HttpStatus.OK);
+    }
+
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping(value = "/{id}/confirmation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReviewDTO> approveReview(@PathVariable("id") Long id)
+            throws Exception {
+        Review review = reviewService.getById(id);
+        if (review == null){
+            return new ResponseEntity<ReviewDTO>(HttpStatus.NOT_FOUND);
+        }
+
+//        if (accommodation.getStatus() == AccommodationStatus.ACTIVE || accommodation.getStatus() == AccommodationStatus.REJECTED){
+//            return new ResponseEntity<AccommodationDTO>(HttpStatus.FORBIDDEN);
+//        }
+
+//        da li dodati proveru za manualnu
+
+        reviewService.approveReview(review);
+        return new ResponseEntity<ReviewDTO>(ReviewMapper.toDto(review), HttpStatus.OK);
+    }
+
 
 }

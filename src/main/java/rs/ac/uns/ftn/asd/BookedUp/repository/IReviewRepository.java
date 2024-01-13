@@ -31,10 +31,10 @@ public interface IReviewRepository extends JpaRepository<Review, Long> {
             "(r.accommodation.host.id = :hostId AND r.accommodation IS NOT NULL AND r.isReviewActive = true)")
     List<Review> findAllByHostId(@Param("hostId") Long hostId);
 
-
-
     @Query("SELECT r FROM Review r WHERE r.guest.id = :guestId AND r.isReviewActive = true")
     List<Review> findAllByGuestId(@Param("guestId") Long guestId);
 
+    @Query("SELECT r FROM Review r WHERE r.approved = false AND r.isReviewActive=true")
+    List<Review> findAllUnapprovedReviews();
 
 }

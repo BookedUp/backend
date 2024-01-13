@@ -105,4 +105,14 @@ public class ReviewService implements ServiceInterface<Review> {
     public List<Review> findAllByHostId(Long hostId) {
         return repository.findAllByHostId(hostId);
     }
+
+    public List<Review> findAllUnapprovedReviews() {
+        return repository.findAllUnapprovedReviews();
+    }
+
+
+    public void approveReview(Review review) {
+        review.setApproved(true);
+        repository.save(review);
+    }
 }
