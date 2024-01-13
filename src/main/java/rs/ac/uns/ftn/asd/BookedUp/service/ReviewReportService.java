@@ -2,14 +2,14 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
-import rs.ac.uns.ftn.asd.BookedUp.domain.ReviewReport;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewReportDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReviewReportMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewReportRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewReportService implements ServiceInterface<ReviewReport> {
@@ -56,5 +56,19 @@ public class ReviewReportService implements ServiceInterface<ReviewReport> {
     @Override
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    public Collection<Review> getAllReportedReviews() {
+        return repository.findAllReportedReviews();
+    }
+
+    public Collection<String> getReportReasonsForReview(Long reportReviewId) {
+        Collection<ReviewReport> reportReasonsForReview= getAll().stream()
+                .filter(reviewReport -> reviewReport.getReportedReview().getId().equals(reportReviewId))
+                .collect(Collectors.toList());
+
+        return reportReasonsForReview.stream()
+                .map(ReviewReport::getReason)
+                .collect(Collectors.toList());
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Review;
 import rs.ac.uns.ftn.asd.BookedUp.domain.ReviewReport;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
@@ -94,6 +95,26 @@ public class ReviewReportController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /*url: /api/review-reports/reported-reviews GET*/
+    @GetMapping(value = "/reported-reviews", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getAllReportedReviews() {
+        Collection<Review> reportedReviews = reviewReportService.getAllReportedReviews();
+        Collection<ReviewDTO> reportedReviewsDTO = reportedReviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reportedReviewsDTO, HttpStatus.OK);
+    }
+
+
+    /* url: /api/review-reports/reasons/{reportReviewId} GET */
+// UserReportController.java
+    @GetMapping(value = "/reasons/{reportReviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<String>> getReportReasons(@PathVariable("reportReviewId") Long reportReviewId) {
+        Collection<String> reportReasons = reviewReportService.getReportReasonsForReview(reportReviewId);
+        return new ResponseEntity<>(reportReasons, HttpStatus.OK);
     }
 
 }
