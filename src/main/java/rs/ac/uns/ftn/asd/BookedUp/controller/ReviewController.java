@@ -5,8 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Review;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
@@ -90,8 +94,8 @@ public class ReviewController {
         reviewForUpdate.setReview(reviewDTO.getReview());
         reviewForUpdate.setComment(reviewDTO.getComment());
         reviewForUpdate.setDate(reviewDTO.getDate());
-        reviewForUpdate.setHost(HostMapper.toEntity(reviewDTO.getHostDTO()));
-        reviewForUpdate.setAccommodation(AccommodationMapper.toEntity(reviewDTO.getAccommodationDTO()));
+        reviewForUpdate.setHost(HostMapper.toEntity(reviewDTO.getHost()));
+        reviewForUpdate.setAccommodation(AccommodationMapper.toEntity(reviewDTO.getAccommodation()));
         reviewForUpdate.setType(reviewDTO.getType());
 
         reviewForUpdate = reviewService.save(reviewForUpdate);
@@ -111,7 +115,101 @@ public class ReviewController {
         return new ResponseEntity<Review>(HttpStatus.NO_CONTENT);
     }
 
-    private boolean validateReviewDTO(ReviewDTO reviewDTO) {
-        return true;
+    /* url: /api/reviews/guest/{guestId} GET*/
+    @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getReviewsByGuestId(@PathVariable("guestId") Long guestId) {
+        Collection<Review> reviews = reviewService.findAllByGuestId(guestId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
     }
+
+    /* url: /api/reviews/guest/{guestId}/accommodation GET*/
+    @GetMapping(value = "/guest/{guestId}/accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getAccommodationReviewsByGuestId(@PathVariable("guestId") Long guestId) {
+        Collection<Review> reviews = reviewService.findAllAccommodationReviewsByGuestId(guestId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
+    /* url: /api/reviews/guest/{guestId}/host GET*/
+    @GetMapping(value = "/guest/{guestId}/host", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getHostReviewsByGuestId(@PathVariable("guestId") Long guestId) {
+        Collection<Review> reviews = reviewService.findAllHostReviewsByGuestId(guestId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
+    /* url: /api/reviews/host/{hostId}/accommodation GET*/
+    @GetMapping(value = "/host/{hostId}/accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getAccommodationReviewsByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Review> reviews = reviewService.findAllAccommodationReviewsByHostId(hostId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
+    /* url: /api/reviews/host/{hostId}/host GET*/
+    @GetMapping(value = "/host/{hostId}/host", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getHostReviewsByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Review> reviews = reviewService.findAllHostReviewsByHostId(hostId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
+    /* url: /api/reviews/host/{hostId} GET*/
+    @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getReviewsByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Review> reviews = reviewService.findAllByHostId(hostId);
+        Collection<ReviewDTO> reviewsDTO = reviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
+
+    /* url: /api/reviews/unapproved GET */
+    @GetMapping(value = "/unapproved", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReviewDTO>> getUnapprovedReviews() {
+        Collection<Review> unapprovedReviews = reviewService.findAllUnapprovedReviews();
+        Collection<ReviewDTO> unapprovedReviewsDTO = unapprovedReviews.stream()
+                .map(ReviewMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(unapprovedReviewsDTO, HttpStatus.OK);
+    }
+
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping(value = "/{id}/confirmation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReviewDTO> approveReview(@PathVariable("id") Long id)
+            throws Exception {
+        Review review = reviewService.getById(id);
+        if (review == null){
+            return new ResponseEntity<ReviewDTO>(HttpStatus.NOT_FOUND);
+        }
+
+//        if (accommodation.getStatus() == AccommodationStatus.ACTIVE || accommodation.getStatus() == AccommodationStatus.REJECTED){
+//            return new ResponseEntity<AccommodationDTO>(HttpStatus.FORBIDDEN);
+//        }
+
+//        da li dodati proveru za manualnu
+
+        reviewService.approveReview(review);
+        return new ResponseEntity<ReviewDTO>(ReviewMapper.toDto(review), HttpStatus.OK);
+    }
+
+
 }

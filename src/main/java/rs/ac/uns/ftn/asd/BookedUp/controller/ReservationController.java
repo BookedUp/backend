@@ -150,10 +150,15 @@ public class ReservationController {
             return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
         }
 
+        if (reservation.getStatus()  != ReservationStatus.CREATED){
+            return new ResponseEntity<ReservationDTO>(HttpStatus.FORBIDDEN);
+        }
+
         reservationService.cancelReservation(reservation);
 
         return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
     }
+
 
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     /*url: /api/reservations POST*/

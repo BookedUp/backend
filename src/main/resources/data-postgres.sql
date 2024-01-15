@@ -171,18 +171,18 @@ VALUES
     ('Hate speech', 4, true),
     ('Other', 7, false);
 
-INSERT INTO review (guest_id, review, comment, date, host_id, accommodation_id, type, is_review_active)
+INSERT INTO review (guest_id, review, comment, date, host_id, accommodation_id, type, is_review_active, approved)
 VALUES
-    (4, 4, 'Great experience! Highly recommended.', '2023-12-01T10:30:00', null, 1, 'ACCOMMODATION', true),
-    (5, 3, 'Good place, but could be better.', '2023-12-02T11:45:00', null, 2, 'ACCOMMODATION', true),
-    (6, 5, 'Amazing host and accommodation!', '2023-12-03T09:15:00', 2, null, 'HOST', true),
-    (7, 2, 'Not satisfied with the service.', '2023-12-04T08:00:00', null, 4, 'ACCOMMODATION', true),
-    (4, 4, 'Excellent stay, would come back!', '2023-12-05T14:20:00', null, 5, 'ACCOMMODATION', true),
-    (5, 2, 'Disappointing experience.', '2023-12-06T16:30:00', 3, null, 'HOST', true),
-    (6, 5, 'Host was very helpful and friendly.', '2023-12-07T12:10:00', null, 7, 'ACCOMMODATION', true),
-    (7, 3, 'Average place, nothing special.', '2023-12-08T13:45:00', null, 8, 'ACCOMMODATION', true),
-    (4, 4, 'Lovely accommodation with a great view.', '2023-12-09T18:00:00', 2, null, 'HOST', true),
-    (5, 1, 'Terrible experience, do not recommend.', '2023-12-10T22:00:00',null, 10, 'ACCOMMODATION', true);
+    (4, 4, 'Great experience! Highly recommended.', '2023-12-01T10:30:00', null, 1, 'ACCOMMODATION', true, false),
+    (5, 3, 'Good place, but could be better.', '2023-12-02T11:45:00', null, 2, 'ACCOMMODATION', true, false),
+    (6, 5, 'Amazing host and accommodation!', '2023-12-03T09:15:00', 2, null, 'HOST', true,false),
+    (7, 2, 'Not satisfied with the service.', '2023-12-04T08:00:00', null, 4, 'ACCOMMODATION', true,false),
+    (4, 4, 'Excellent stay, would come back!', '2023-12-05T14:20:00', null, 5, 'ACCOMMODATION', true,false),
+    (5, 2, 'Disappointing experience.', '2023-12-06T16:30:00', 3, null, 'HOST', true, false),
+    (6, 5, 'Host was very helpful and friendly.', '2023-12-07T12:10:00', null, 7, 'ACCOMMODATION', true, false),
+    (7, 3, 'Average place, nothing special.', '2023-12-08T13:45:00', null, 8, 'ACCOMMODATION', true, false),
+    (4, 4, 'Lovely accommodation with a great view.', '2023-12-09T18:00:00', 2, null, 'HOST', true, false),
+    (5, 1, 'Terrible experience, do not recommend.', '2023-12-10T22:00:00',null, 10, 'ACCOMMODATION', true, false);
 
 
 INSERT INTO review_report (reason, reported_review_id, status)
@@ -205,23 +205,22 @@ VALUES
     ('2023-12-11 09:30:00', '2024-02-15 13:00:00.000000', '2024-02-22 13:00:00.000000', 450.00, 3, 2, 5, 'COMPLETED', true),
     ('2023-12-12 10:45:00', '2024-03-20 13:00:00.000000', '2024-03-25 13:00:00.000000', 200.00, 1, 3, 6, 'REJECTED', true),
     ('2023-12-13 12:15:00', '2024-04-05 13:00:00.000000', '2024-04-15 13:00:00.000000', 600.00, 4, 4, 7, 'ACCEPTED', true),
-    ('2023-12-14 14:00:00', '2024-05-12 13:00:00.000000', '2024-05-20 13:00:00.000000', 350.00, 2, 5, 4, 'CANCELLED', true),
+    ('2023-12-14 14:00:00', '2024-05-12 13:00:00.000000', '2024-05-20 13:00:00.000000', 350.00, 2, 5, 4, 'COMPLETED', true),
     ('2023-12-15 16:30:00', '2024-06-18 13:00:00.000000', '2024-06-25 13:00:00.000000', 700.00, 3, 6, 5, 'COMPLETED', true),
-    ('2023-12-16 18:20:00', '2024-07-10 13:00:00.000000', '2024-07-15 13:00:00.000000', 250.00, 1, 7, 6, 'CREATED', true),
+    ('2023-12-16 18:20:00', '2024-07-10 13:00:00.000000', '2024-07-15 13:00:00.000000', 250.00, 1, 7, 6, 'COMPLETED', true),
     ('2023-12-17 20:45:00', '2024-08-22 13:00:00.000000', '2024-08-30 13:00:00.000000', 500.00, 2, 8, 7, 'REJECTED', true),
-    ('2023-12-18 22:10:00', '2024-09-05 13:00:00.000000', '2024-09-15 13:00:00.000000', 400.00, 3, 9, 4, 'REJECTED', true),
+    ('2023-12-18 22:10:00', '2024-09-05 13:00:00.000000', '2024-09-15 13:00:00.000000', 400.00, 3, 9, 4, 'COMPLETED', true),
     ('2023-12-19 23:55:00', '2024-10-12 13:00:00.000000', '2024-10-20 13:00:00.000000', 800.00, 4, 10, 5, 'REJECTED', true),
     ('2023-12-20 01:30:00', '2024-11-18 13:00:00.000000', '2024-11-25 13:00:00.000000', 300.00, 2, 1, 6, 'CANCELLED', true),
     ('2023-12-21 03:40:00', '2024-12-15 13:00:00.000000', '2025-01-02 13:00:00.000000', 600.00, 3, 2, 7, 'COMPLETED', true),
     ('2023-12-22 05:25:00', '2025-01-20 13:00:00.000000', '2025-02-01 13:00:00.000000', 350.00, 2, 3, 4, 'CREATED', true),
     ('2023-12-23 07:15:00', '2025-02-15 13:00:00.000000', '2025-02-22 13:00:00.000000', 450.00, 3, 4, 5, 'COMPLETED', true),
-    ('2023-12-24 09:00:00', '2025-03-20 13:00:00.000000', '2025-03-25 13:00:00.000000', 200.00, 1, 5, 6, 'REJECTED', true),
+    ('2023-12-24 09:00:00', '2025-03-20 13:00:00.000000', '2025-03-25 13:00:00.000000', 200.00, 1, 5, 6, 'COMPLETED', true),
     ('2023-12-25 11:30:00', '2025-04-05 13:00:00.000000', '2025-04-15 13:00:00.000000', 700.00, 4, 6, 7, 'ACCEPTED', true),
     ('2023-12-26 13:15:00', '2025-05-12 13:00:00.000000', '2025-05-20 13:00:00.000000', 350.00, 2, 7, 4, 'CANCELLED', true),
     ('2023-12-27 15:45:00', '2025-06-18 13:00:00.000000', '2025-06-25 13:00:00.000000', 800.00, 3, 8, 5, 'COMPLETED', true),
-    ('2023-12-28 17:30:00', '2025-07-10 13:00:00.000000', '2025-07-15 13:00:00.000000', 250.00, 1, 9, 6, 'CREATED', true),
+    ('2023-12-28 17:30:00', '2025-07-10 13:00:00.000000', '2025-07-15 13:00:00.000000', 250.00, 1, 9, 6, 'COMPLETED', true),
     ('2023-12-29 19:20:00', '2025-08-22 13:00:00.000000', '2025-08-30 13:00:00.000000', 500.00, 2, 10, 7, 'ACCEPTED', true);
-
 
 INSERT INTO notification (from_user_id, to_user_id, title, message, timestamp, type, active)
 VALUES

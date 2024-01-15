@@ -2,8 +2,8 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Review;
+import rs.ac.uns.ftn.asd.BookedUp.domain.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReviewMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
@@ -33,6 +33,9 @@ public class ReviewService implements ServiceInterface<Review> {
         if (review.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
+
+        review.setIsReviewActive(true);
+        review.setApproved(false);
         return  repository.save(review);
     }
 
@@ -64,11 +67,52 @@ public class ReviewService implements ServiceInterface<Review> {
 //    }
 
     @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public void delete(Long id) throws Exception  {
+
+        Review review = repository.findById(id).orElse(null);
+
+        if(review == null){
+            throw  new Exception("Review doesn't exist");
+        }
+
+        review.setIsReviewActive(false);
+        repository.save(review);
     }
 
     public List<Review> findAllByAccommodationId(Long id) {
         return repository.findAllByAccommodationId(id);
+    }
+    public List<Review> findAllAccommodationReviewsByGuestId(Long guestId) {
+        return repository.findAllAccommodationReviewsByGuestId(guestId);
+    }
+
+    public List<Review> findAllHostReviewsByGuestId(Long guestId) {
+        return repository.findAllHostReviewsByGuestId(guestId);
+    }
+
+    public List<Review> findAllByGuestId(Long guestId) {
+        return repository.findAllByGuestId(guestId);
+    }
+
+    public List<Review> findAllAccommodationReviewsByHostId(Long hostId) {
+        return repository.findAllAccommodationReviewsByHostId(hostId);
+    }
+
+    public List<Review> findAllHostReviewsByHostId(Long hostId) {
+        return repository.findAllHostReviewsByHostId(hostId);
+    }
+
+    public List<Review> findAllByHostId(Long hostId) {
+        return repository.findAllByHostId(hostId);
+    }
+
+    public List<Review> findAllUnapprovedReviews() {
+        return repository.findAllUnapprovedReviews();
+    }
+
+
+    public void approveReview(Review review) {
+        review.setApproved(true);
+        repository.save(review);
     }
 }

@@ -121,6 +121,7 @@ public class ReservationService implements ServiceInterface<Reservation> {
         }
         reservationToUpdate.setStatus(ReservationStatus.CANCELLED);
         repository.save(reservationToUpdate);
+
     }
 
     public void approveReservation(Reservation reservation) throws Exception {
