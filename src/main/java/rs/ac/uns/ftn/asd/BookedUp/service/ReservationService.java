@@ -114,14 +114,13 @@ public class ReservationService implements ServiceInterface<Reservation> {
         return overlappingReservations;
     }
 
-    public Reservation cancelReservation(Reservation reservation) throws Exception{
+    public void cancelReservation(Reservation reservation) throws Exception{
         Reservation reservationToUpdate = repository.findById(reservation.getId()).orElse(null);
         if (reservationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
         reservationToUpdate.setStatus(ReservationStatus.CANCELLED);
-        Reservation updatedReservation = repository.save(reservationToUpdate);
-        return updatedReservation;
+        repository.save(reservationToUpdate);
     }
 
     public void approveReservation(Reservation reservation) throws Exception {

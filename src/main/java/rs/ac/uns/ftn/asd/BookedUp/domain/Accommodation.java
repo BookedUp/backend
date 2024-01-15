@@ -68,11 +68,11 @@ public class Accommodation {
     @JoinColumn(name = "accommodation_id", nullable = true)
     private List<Photo> photos;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "accommodation_id", nullable = false)
     private List<DateRange> availability;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "accommodation_id", nullable = false)
     private List<PriceChange> priceChanges;
 
@@ -116,5 +116,6 @@ public class Accommodation {
         this.averageRating = accommodation.getAverageRating();
 
     }
+
 
 }

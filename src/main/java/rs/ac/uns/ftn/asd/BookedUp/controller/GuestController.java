@@ -93,35 +93,7 @@ public class GuestController {
             for(AccommodationDTO accommodationDTO : guestDTO.getFavourites())
                 favourites.add(AccommodationMapper.toEntity(accommodationDTO));
         }
-
-//        List<Reservation> reservations = new ArrayList<Reservation>();
-//        if(guestDTO.getReservations() != null) {
-//            for(ReservationDTO reservationDTO : guestDTO.getReservations())
-//                reservations.add(ReservationMapper.toEntity(reservationDTO));
-//        }
-
-//        List<Reservation> requests = new ArrayList<Reservation>();
-//        if(guestDTO.getRequests() != null) {
-//            for(ReservationDTO reservationDTO : guestDTO.getRequests())
-//                requests.add(ReservationMapper.toEntity(reservationDTO));
-//        }
-
-//        List<Review> reviews = new ArrayList<Review>();
-//        if(guestDTO.getReviews() != null) {
-//            for(ReviewDTO reviewDTO : guestDTO.getReviews())
-//                reviews.add(ReviewMapper.toEntity(reviewDTO));
-//        }
-
-//        List<Notification> notifications = new ArrayList<Notification>();
-//        if(guestDTO.getNotifications() != null) {
-//            for(NotificationDTO notificationDTO : guestDTO.getNotifications())
-//                notifications.add(NotificationMapper.toEntity(notificationDTO));
-//        }
-        //guestForUpdate.setRequests(requests);
-//        guestForUpdate.setReservations(reservations);
         guestForUpdate.setFavourites(favourites);
-//        guestForUpdate.setReviews(reviews);
-//        guestForUpdate.setNotifications(notifications);
         guestForUpdate.setNotificationEnable(guestDTO.isNotificationEnable());
 
         guestForUpdate = guestService.save(guestForUpdate);
@@ -148,27 +120,6 @@ public class GuestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/requests/search")
-    public ResponseEntity<?> searchReservations(
-            @RequestParam(required = false) String accommodationName,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-            @RequestParam(required = false) String status) {
-
-            try {
-                // Implementirajte logiku pretrage i filtriranja smeštaja koristeći AccommodationService
-//            List<AccommodationDTO> filteredAccommodations = accommodationService.searchAndFilterAccommodations(
-//                    location, guestsNumber, startDate, endDate, amenities, type, minPrice, maxPrice);
-
-                HashMap<String, String> response = new HashMap<>();
-                response.put("message", "Guest search completed successfully!");
-                return new ResponseEntity<>(response, HttpStatus.OK);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
 
     /* url: /api/guests/{id}/hosts GET */
     @GetMapping(value = "/{id}/hosts", produces = MediaType.APPLICATION_JSON_VALUE)
