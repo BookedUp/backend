@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.controller;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.PriceType;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
@@ -17,7 +20,11 @@ import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReservationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.ReservationService;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -147,14 +154,13 @@ public class ReservationController {
             return new ResponseEntity<ReservationDTO>(HttpStatus.FORBIDDEN);
         }
 
-//        da li dodati proveru za manualnu
-
         reservationService.cancelReservation(reservation);
 
         return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_GUEST')")
+
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     /*url: /api/reservations POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody  ReservationDTO reservationDTO) throws Exception {
@@ -207,4 +213,50 @@ public class ReservationController {
     }
 
 
+    @GetMapping("/search/{hostId}")
+    public ResponseEntity<List<ReservationDTO>> searchReservations(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @RequestParam(required = false) String accommodationName,
+            @PathVariable Long hostId
+    ) {
+        String lowercaseName = accommodationName.toLowerCase();
+        try {
+
+            System.out.println("Name " + lowercaseName);
+            System.out.println("StartDate " + startDate);
+            System.out.println("EndDate " + endDate);
+
+            ResponseEntity<Collection<ReservationDTO>> responseEntity = getReservationsByHostId(hostId);
+            Collection<ReservationDTO> reservationsCollection = responseEntity.getBody();
+            List<ReservationDTO> hostsReservations = new ArrayList<>();
+
+
+            if (reservationsCollection != null) {
+                hostsReservations = new ArrayList<>(reservationsCollection);
+            } else {
+                System.out.println("GRESKAA!");
+            }
+
+            List<ReservationDTO> filteredReservations = hostsReservations.stream()
+                    .filter(reservationDTO ->
+                            ((accommodationName.isEmpty() ||
+                                    reservationDTO.getAccommodation().getName().trim().toLowerCase().contains(lowercaseName)) &&
+                                    (startDate == null || endDate == null ||
+                                            (reservationDTO.getStartDate().compareTo(startDate) >= 0 && reservationDTO.getEndDate().compareTo(endDate) <= 0 && reservationDTO.getEndDate().compareTo(startDate) > 0 && reservationDTO.getStartDate().compareTo(endDate) < 0)))
+                    )
+                    .toList();
+
+            for (ReservationDTO  reservationDTO : filteredReservations){
+                System.out.println("Reservation " + reservationDTO.toString());
+            }
+
+            return new ResponseEntity<>(filteredReservations, HttpStatus.OK);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

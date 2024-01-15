@@ -40,6 +40,17 @@ public class AccommodationController {
     }
 
     @PreAuthorize("hasRole('ROLE_HOST')")
+    @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationDTO>> getAllByHostId(@PathVariable("hostId") Long hostId) {
+        Collection<Accommodation> accommodations = accommodationService.findAllByHostId(hostId);
+        Collection<AccommodationDTO> accommodationDTOS = accommodations.stream()
+                .map(AccommodationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllActiveByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Accommodation> accommodations = accommodationService.findAllActiveByHostId(hostId);
@@ -71,6 +82,8 @@ public class AccommodationController {
 
         return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
     }
+
+
 
     /* url: /api/accommodations/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -166,7 +179,7 @@ public class AccommodationController {
         }
 
 //        da li dodati proveru za manualnu
-        accommodationService.approveAccommodation(accommodation);
+        accommodationService.rejectAccommodation(accommodation);
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodation), HttpStatus.OK);
     }
 
@@ -218,8 +231,8 @@ public class AccommodationController {
     public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Integer guestsNumber,
-            @RequestParam(required = false)  Date startDate,
-            @RequestParam(required = false) Date endDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
             @RequestParam(required = false) List<Object> amenities,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
