@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.dto.LogInDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.TokenDTO;
 import rs.ac.uns.ftn.asd.BookedUp.security.jwt.JwtTokenUtil;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.http.MediaType;
+import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 
 
 @CrossOrigin
@@ -32,6 +34,9 @@ public class LogInController {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -50,6 +55,11 @@ public class LogInController {
 
         if (!userDetail.isEnabled()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        User user = userService.getByEmail(loginDto.getEmail());
+        if (user.isBlocked()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         String token = jwtTokenUtil.generateToken(userDetail);
