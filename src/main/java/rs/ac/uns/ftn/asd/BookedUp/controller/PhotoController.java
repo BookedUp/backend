@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.controller;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -58,8 +59,9 @@ public class PhotoController {
                 mediaType = MediaType.APPLICATION_OCTET_STREAM;
             }
 
-            Resource resource = new ClassPathResource(UPLOAD_DIR + imageName);
-
+//            Resource resource = new ClassPathResource(UPLOAD_DIR + imageName);
+            Path imagePath = Paths.get("src/main/resources/images/", imageName);
+            Resource resource = new PathResource(imagePath);
             byte[] imageBytes = Files.readAllBytes(resource.getFile().toPath());
             System.out.println(resource.getFile().toPath());
 
