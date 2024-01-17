@@ -78,7 +78,6 @@ public class NotificationController {
 
         try {
             createdNotification = notificationService.create(NotificationMapper.toEntity(notificationDTO));
-
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new NotificationDTO(),HttpStatus.BAD_REQUEST);
