@@ -109,7 +109,6 @@ public class NotificationService implements ServiceInterface<Notification> {
                 }else if(notification.getTo().getRole() == Role.HOST ){
                     Host host = this.hostService.getById(notification.getTo().getId());
 
-                    System.out.println("TU sam, pravim service");
                     if((notification.getType() == NotificationType.ACCOMMODATION_RATED) && host.isAccommodationRatingNotificationEnabled()){
                         results.add(notification);
                     }
