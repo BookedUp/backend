@@ -33,7 +33,6 @@ public class RegistrationController {
         User existingUser = userService.getByEmail(userDTO.getEmail());
 
         if (existingUser != null && !existingUser.isActive()) {
-            // Ako korisnik postoji i nije aktivan, ažuriraj postojećeg korisnika
             existingUser.setFirstName(userDTO.getFirstName());
             existingUser.setLastName(userDTO.getLastName());
             existingUser.setAddress(AddressMapper.toEntity(userDTO.getAddress()));
