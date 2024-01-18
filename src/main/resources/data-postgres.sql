@@ -140,7 +140,7 @@ VALUES
     (8, '2024-01-25 13:00:00.000000', 170.0),
     (8, '2024-02-05 13:00:00.000000', 190.0),
     (9, '2024-01-20 13:00:00.000000', 120.0),
-    (9, '2024-02-30 13:00:00.000000', 130.0),
+    (9, '2024-02-29 13:00:00.000000', 130.0),
     (10, '2024-01-18 13:00:00.000000', 110.0),
     (10, '2024-01-28 13:00:00.000000', 120.0);
 
@@ -243,5 +243,5 @@ VALUES
     (3, 4, 'Reservation Accepted', 'Congratulations Marko! Your reservation has been accepted by the host. Get ready for a fantastic stay!', '2023-12-14 14:20:00', 'RESERVATION_REQUEST_RESPONSE', true),
     (2, 4, 'Reservation Update: Rejected!', 'Hi Marko, unfortunately, the host has declined your reservation request. Do not worry, there are plenty of other great options available! Let us know if we can help you find another place!', '2023-12-14 14:20:00', 'RESERVATION_REQUEST_RESPONSE', true),
     (4, 2, 'New Review for Your Accommodation!', 'Heads up, Ana! A new review awaits your attention. Check it out and keep the positive vibes going!', '2023-12-10 08:30:00', 'ACCOMMODATION_RATED', true),
-    (4, 3, 'New Review for You!', 'Curious about the latest buzz? A new review is in-time to hear what your guests are saying about their experience!', '2023-12-10 08:30:00', 'HOST_RATED', true)
+    (4, 3, 'New Review for You!', 'Curious about the latest buzz? A new review is in-time to hear what your guests are saying about their experience!', '2023-12-10 08:30:00', 'HOST_RATED', true);
 
