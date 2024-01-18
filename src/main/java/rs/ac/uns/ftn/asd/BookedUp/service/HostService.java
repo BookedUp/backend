@@ -107,15 +107,7 @@ public class HostService implements ServiceInterface<Host>{
             photoRepository.save(profilePhoto);
         }
 
-//        List<Notification> notifications = host.getNotifications();
-//        if(!notifications.isEmpty()) {
-//            for (Notification notification : notifications) {
-//                notification.setActive(false);
-//                notificationRepository.save(notification);
-//            }
-//        }
-
-        List<Accommodation> accommodations = accommodationService.findAllActiveByHostId(id); //ko zna sta je ovo
+        List<Accommodation> accommodations = accommodationService.findAllByHostId(id); //ko zna sta je ovo
         if(!accommodations.isEmpty()) {
             for (Accommodation accommodation : accommodations) {
                 accommodation.setActive(false);
