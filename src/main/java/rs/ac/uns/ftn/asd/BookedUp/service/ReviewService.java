@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReviewType;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReviewMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
@@ -17,6 +18,12 @@ public class ReviewService implements ServiceInterface<Review> {
 
     @Autowired
     private IReviewRepository repository;
+
+    @Autowired
+    private AccommodationService accommodationService;
+
+    @Autowired
+    private HostService hostService;
 
     @Override
     public Collection<Review> getAll() {
@@ -82,6 +89,9 @@ public class ReviewService implements ServiceInterface<Review> {
     public List<Review> findAllByAccommodationId(Long id) {
         return repository.findAllByAccommodationId(id);
     }
+    public List<Review> findAllActiveByHostId(Long id) {
+        return repository.findAllActiveByHostId(id);
+    }
     public List<Review> findAllAccommodationReviewsByGuestId(Long guestId) {
         return repository.findAllAccommodationReviewsByGuestId(guestId);
     }
@@ -111,8 +121,16 @@ public class ReviewService implements ServiceInterface<Review> {
     }
 
 
-    public void approveReview(Review review) {
+    public void approveReview(Review review) throws Exception {
         review.setApproved(true);
         repository.save(review);
+
+
+        if (review.getType().equals(ReviewType.ACCOMMODATION)) {
+            accommodationService.calculateAndSaveAverageRating(review.getAccommodation().getId());
+        } else if (review.getType().equals(ReviewType.HOST)) {
+            hostService.calculateAndSaveAverageRating(review.getHost().getId());
+        }
+
     }
 }

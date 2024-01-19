@@ -543,5 +543,28 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         repository.save(accommodationForUpdate);
 
     }
+
+    public void calculateAndSaveAverageRating(Long id) throws Exception {
+        Accommodation accommodation = repository.findById(id).orElse(null);
+
+        if (accommodation == null)
+            throw new Exception("Accommodation doesn't exist");
+
+        List<Review> reviews = reviewService.findAllByAccommodationId(id);
+
+        double sumOfRatings = 0.0;
+        int numberOfReviews = reviews.size();
+
+        for (Review review : reviews) {
+            sumOfRatings += review.getReview();
+        }
+
+        double averageRating = (numberOfReviews > 0) ? (sumOfRatings / numberOfReviews) : 0.0;
+
+        // Setujte prosečnu ocenu u vašem smeštaju
+        accommodation.setAverageRating(averageRating);
+        repository.save(accommodation);
     }
+
+}
 

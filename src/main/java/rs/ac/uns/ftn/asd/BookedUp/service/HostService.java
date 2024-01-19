@@ -24,6 +24,10 @@ public class HostService implements ServiceInterface<Host>{
     @Autowired
     private INotificationRepository notificationRepository;
 
+
+    @Autowired
+    private ReviewService reviewService;
+
     @Autowired
     private AccommodationService accommodationService;
     @Override
@@ -162,5 +166,25 @@ public class HostService implements ServiceInterface<Host>{
     }
 
 
+    public void calculateAndSaveAverageRating(Long id) throws Exception {
+        Host host = repository.findById(id).orElse(null);
 
+        if (host == null)
+            throw new Exception("Host doesn't exist");
+
+        List<Review> reviews = reviewService.findAllActiveByHostId(id);
+
+        double sumOfRatings = 0.0;
+        int numberOfReviews = reviews.size();
+
+        for (Review review : reviews) {
+            sumOfRatings += review.getReview();
+        }
+
+        double averageRating = (numberOfReviews > 0) ? (sumOfRatings / numberOfReviews) : 0.0;
+
+        // Setujte prosečnu ocenu u vašem smeštaju
+        host.setAverageRating(averageRating);
+        repository.save(host);
+    }
 }
