@@ -21,7 +21,9 @@ import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.ReviewService;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -173,12 +175,21 @@ public class ReviewController {
     /* url: /api/reviews/host/{hostId} GET*/
     @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getReviewsByHostId(@PathVariable("hostId") Long hostId) {
-        Collection<Review> reviews = reviewService.findAllByHostId(hostId);
-        Collection<ReviewDTO> reviewsDTO = reviews.stream()
-                .map(ReviewMapper::toDto)
+        Collection<ReviewDTO> accommodationReviews = getAccommodationReviewsByHostId(hostId).getBody();
+        Collection<ReviewDTO> hostReviews = getHostReviewsByHostId(hostId).getBody();
+
+        if (accommodationReviews == null) {
+            accommodationReviews = Collections.emptyList();
+        }
+
+        if (hostReviews == null) {
+            hostReviews = Collections.emptyList();
+        }
+
+        Collection<ReviewDTO> mergedReviews = Stream.concat(accommodationReviews.stream(), hostReviews.stream())
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+        return new ResponseEntity<>(mergedReviews, HttpStatus.OK);
     }
 
     /* url: /api/reviews/unapproved GET */
