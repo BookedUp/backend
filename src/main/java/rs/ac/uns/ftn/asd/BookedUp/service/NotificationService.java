@@ -3,9 +3,14 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Notification;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.NotificationType;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
 import rs.ac.uns.ftn.asd.BookedUp.dto.NotificationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.NotificationMapper;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IGuestRepository;
+import rs.ac.uns.ftn.asd.BookedUp.repository.IHostRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.INotificationRepository;
 
 import java.util.ArrayList;
@@ -15,6 +20,15 @@ import java.util.Collection;
 public class NotificationService implements ServiceInterface<Notification> {
     @Autowired
     private INotificationRepository repository;
+
+    @Autowired
+    private IHostRepository hostRepository;
+    @Autowired
+    private IGuestRepository guestRepository;
+    @Autowired
+    private HostService hostService;
+    @Autowired
+    private GuestService guestService;
 
     @Override
     public Collection<Notification> getAll() {
@@ -73,6 +87,41 @@ public class NotificationService implements ServiceInterface<Notification> {
         for (Notification notification : notifications) {
             if (notification.getTo() != null && notification.getTo().getId().equals(id)) {
                 results.add(notification);
+            }
+        }
+
+        return results;
+
+    }
+
+    public Collection<Notification> getEnabledByUserId(Long id){
+        Collection<Notification> notifications = getAll();
+        Collection<Notification> results = new ArrayList<>();
+
+        for (Notification notification : notifications) {
+            if (notification.getTo() != null && notification.getTo().getId().equals(id)) {
+                if(notification.getTo().getRole() == Role.GUEST){
+                    Guest guest = this.guestService.getById(notification.getTo().getId());
+
+                    if((notification.getType() == NotificationType.RESERVATION_REQUEST_RESPONSE) && guest.isNotificationEnable()){
+                        results.add(notification);
+                    }
+                }else if(notification.getTo().getRole() == Role.HOST ){
+                    Host host = this.hostService.getById(notification.getTo().getId());
+
+                    if((notification.getType() == NotificationType.ACCOMMODATION_RATED) && host.isAccommodationRatingNotificationEnabled()){
+                        results.add(notification);
+                    }
+                    if((notification.getType() == NotificationType.HOST_RATED) && host.isHostRatingNotificationEnabled()){
+                        results.add(notification);
+                    }
+                    if((notification.getType() == NotificationType.RESERVATION_CANCELED) && host.isCancellationNotificationEnabled()){
+                        results.add(notification);
+                    }
+                    if((notification.getType() == NotificationType.RESERVATION_CREATED) && host.isReservationCreatedNotificationEnabled()){
+                        results.add(notification);
+                    }
+                }
             }
         }
 
