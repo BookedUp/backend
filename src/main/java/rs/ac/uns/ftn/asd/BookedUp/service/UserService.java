@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IUserRepository;
 
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 public class UserService implements ServiceInterface<User>{
     @Autowired
     private IUserRepository repository;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @Override
     public Collection<User> getAll() {
@@ -83,6 +87,10 @@ public class UserService implements ServiceInterface<User>{
 
     public void blockUser(User user) {
         user.setBlocked(true);
+
+        if(user.getRole()== Role.GUEST){
+            reservationService.rejectReservationsForGuest(user.getId());
+        }
         repository.save(user);
     }
 

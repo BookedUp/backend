@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
@@ -154,4 +155,16 @@ public class ReservationService implements ServiceInterface<Reservation> {
     public List<Reservation> getReservationsByHostId(Long hostId) {
         return repository.getReservationsByHostId(hostId);
     }
+
+    public void rejectReservationsForGuest(Long userId) {
+        List<Reservation> reservations = repository.getReservationsByGuestId(userId);
+
+        for (Reservation reservation : reservations) {
+            if (ReservationStatus.ACCEPTED.equals(reservation.getStatus()) || ReservationStatus.CREATED.equals(reservation.getStatus())) {
+                reservation.setStatus(ReservationStatus.REJECTED);
+                repository.save(reservation);
+            }
+        }
+    }
+
 }
