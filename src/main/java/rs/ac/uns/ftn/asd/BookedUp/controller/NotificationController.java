@@ -47,6 +47,18 @@ public class NotificationController {
         return new ResponseEntity<NotificationDTO>(NotificationMapper.toDto(notification), HttpStatus.OK);
     }
 
+    /* url: /api/notifications/user/1 GET*/
+    @GetMapping(value = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<NotificationDTO>> getNotificationsByUserId(@PathVariable("id") Long id) {
+        Collection<Notification> notifications = notificationService.getByUserId(id);
+
+        Collection<NotificationDTO> notificationsDTO = notifications.stream()
+                .map(NotificationMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(notificationsDTO, HttpStatus.OK);
+    }
+
     /*url: /api/notifications POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationDTO> createNotification(@RequestBody NotificationDTO notificationDTO) throws Exception {

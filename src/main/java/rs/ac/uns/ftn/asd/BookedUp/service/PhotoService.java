@@ -30,6 +30,9 @@ public class PhotoService implements ServiceInterface<Photo>{
         if (photo.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
+        photo.setActive(true);
+        photo.setWidth(0);
+        photo.setHeight(0);
         return repository.save(photo);
     }
 

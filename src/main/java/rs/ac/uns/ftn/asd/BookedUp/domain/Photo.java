@@ -19,13 +19,13 @@ public class Photo {
     @Column(nullable = false, unique = false)
     private String url;
 
-    @Column(nullable = false, unique = false)
+    @Column(nullable = true, unique = false)
     private String caption;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int width;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int height;
 
     @Column(nullable = false)

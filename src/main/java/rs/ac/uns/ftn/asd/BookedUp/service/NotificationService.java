@@ -65,4 +65,18 @@ public class NotificationService implements ServiceInterface<Notification> {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    public Collection<Notification> getByUserId(Long id){
+        Collection<Notification> notifications = getAll();
+        Collection<Notification> results = new ArrayList<>();
+
+        for (Notification notification : notifications) {
+            if (notification.getTo() != null && notification.getTo().getId().equals(id)) {
+                results.add(notification);
+            }
+        }
+
+        return results;
+
+    }
 }

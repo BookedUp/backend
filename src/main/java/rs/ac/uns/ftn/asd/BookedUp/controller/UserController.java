@@ -210,7 +210,7 @@ public class UserController {
             return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
         }
 
-        if (!user.isActive() || !user.isVerified() || user.isBlocked()){
+        if (!user.isActive() || user.isBlocked()){
             return new ResponseEntity<UserDTO>(HttpStatus.FORBIDDEN);
         }
 

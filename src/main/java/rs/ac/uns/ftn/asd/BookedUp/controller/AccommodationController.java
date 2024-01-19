@@ -231,8 +231,8 @@ public class AccommodationController {
     public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Integer guestsNumber,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @RequestParam(required = false)  Date startDate,
+            @RequestParam(required = false)  Date endDate,
             @RequestParam(required = false) List<Object> amenities,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
