@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
@@ -170,4 +172,34 @@ public class ReservationService implements ServiceInterface<Reservation> {
         }
     }
 
+    @Scheduled(cron = "0 0 15 * * ?") // expression triggers the method every day at 15:00
+    public void checkReservations() {
+        List<Reservation> reservations = repository.findAll();
+        Date today = new Date();
+
+        for (Reservation reservation : reservations) {
+            ReservationStatus status = reservation.getStatus();
+
+            if (status.equals(ReservationStatus.ACCEPTED)) {
+                // Check if the end date has passed
+                if (!reservation.getEndDate().after(today)) {
+                    System.out.println("Reservation ID COMPLETED " + reservation.getId());
+                    // Your logic for handling accepted reservations with end date passed
+                    reservation.setStatus(ReservationStatus.COMPLETED);
+                }
+            } else if (status.equals(ReservationStatus.CREATED)) {
+                if (!reservation.getEndDate().after(today)) {
+                    System.out.println("Reservation ID REJECTED " + reservation.getId());
+                    reservation.setStatus(ReservationStatus.REJECTED);
+                }
+            }
+        }
+        repository.saveAll(reservations);
+    }
+
+    @PostConstruct
+    public void onStartup() {
+        System.out.println("Checking reservations on startup");
+        checkReservations();
+    }
 }
