@@ -529,7 +529,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             List<DateRange> availability = accommodationDTO.getAvailability().stream()
                     .map(DateRangeMapper::toEntity)
                     .collect(Collectors.toList());
-            dateRangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
+            //dateRangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
             accommodationForUpdate.setAvailability(availability);
 
             accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
@@ -538,7 +538,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
                 for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
                     priceChanges.add(PriceChangeMapper.toEntity(dto));
             }
-            priceChangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
+            //priceChangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
             accommodationForUpdate.setPriceChanges(priceChanges);
 
             accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
