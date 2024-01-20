@@ -5,10 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationType;
@@ -17,10 +25,8 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.PriceChangeDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.AddressMapper;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.DateRangeMapper;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.PriceChangeMapper;
+import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.*;
 import rs.ac.uns.ftn.asd.BookedUp.repository.*;
 
 import java.io.IOException;
@@ -505,43 +511,89 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
     }
 
-    @Transactional
-    public void updateAccommodation(Accommodation accommodationForUpdate, AccommodationDTO accommodationDTO) {
-        accommodationForUpdate.setName(accommodationDTO.getName());
-        accommodationForUpdate.setDescription(accommodationDTO.getDescription());
-        accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
-        accommodationForUpdate.setAmenities(accommodationDTO.getAmenities());
-        List<Photo> photos = new ArrayList<Photo>();
-        if (accommodationDTO.getPhotos() != null) {
-            for (PhotoDTO photoDTO : accommodationDTO.getPhotos())
-                photos.add(PhotoMapper.toEntity(photoDTO));
+    public Accommodation updateAccommodation(Accommodation accommodationForUpdate, AccommodationDTO accommodationDTO) {
+
+            accommodationForUpdate.setName(accommodationDTO.getName());
+            accommodationForUpdate.setDescription(accommodationDTO.getDescription());
+            accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
+            accommodationForUpdate.setAmenities(accommodationDTO.getAmenities());
+            List<Photo> photos = new ArrayList<Photo>();
+            if (accommodationDTO.getPhotos() != null) {
+                for (PhotoDTO photoDTO : accommodationDTO.getPhotos())
+                    photos.add(PhotoMapper.toEntity(photoDTO));
+            }
+            accommodationForUpdate.setPhotos(photos);
+            accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
+            accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
+            accommodationForUpdate.setType(accommodationDTO.getType());
+            List<DateRange> availability = accommodationDTO.getAvailability().stream()
+                    .map(DateRangeMapper::toEntity)
+                    .collect(Collectors.toList());
+            dateRangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
+            accommodationForUpdate.setAvailability(availability);
+
+            accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
+            List<PriceChange> priceChanges = new ArrayList<PriceChange>();
+            if (accommodationDTO.getPriceChanges() != null) {
+                for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
+                    priceChanges.add(PriceChangeMapper.toEntity(dto));
+            }
+            priceChangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
+            accommodationForUpdate.setPriceChanges(priceChanges);
+
+            accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
+            accommodationForUpdate.setPrice(accommodationDTO.getPrice());
+            accommodationForUpdate.setCancellationDeadline(accommodationDTO.getCancellationDeadline());
+            accommodationForUpdate.setStatus(AccommodationStatus.CHANGED);
+
+            repository.save(accommodationForUpdate);
+
+            return accommodationForUpdate;
+    }
+
+    public void addAvailability(Accommodation accommodation, Date startDate, Date endDate) {
+        DateRange newDateRange = new DateRange(startDate, endDate);
+
+        List<DateRange> availability = accommodation.getAvailability();
+        availability.add(newDateRange);
+
+        List<DateRange> mergedAvailability = mergeOverlappingDateRanges(availability);
+
+        accommodation.setAvailability(mergedAvailability);
+        repository.save(accommodation);
+    }
+
+    public static List<DateRange> mergeOverlappingDateRanges(List<DateRange> dateRanges) {
+        Collections.sort(dateRanges, Comparator.comparing(DateRange::getStartDate));
+
+        List<DateRange> mergedRanges = new ArrayList<>();
+        DateRange currentRange = dateRanges.get(0);
+
+        for (int i = 1; i < dateRanges.size(); i++) {
+            //System.out.println("THis is date range: "+ dateRanges.get(i));
+            DateRange nextRange = dateRanges.get(i);
+
+            Date currentStartDate = currentRange.getStartDate();
+            Date currentEndDate = currentRange.getEndDate();
+            Date nextStartDate = nextRange.getStartDate();
+            Date nextEndDate = nextRange.getEndDate();
+
+            if (currentEndDate.compareTo(nextStartDate) >= 0) {
+                if (currentEndDate.compareTo(nextEndDate) >= 0) {
+                    continue;
+                } else {
+                    currentRange.setEndDate(nextRange.getEndDate());
+                }
+            } else {
+                //System.out.println("Ovde dodajem "+ currentRange);
+                mergedRanges.add(currentRange);
+                currentRange = nextRange;
+            }
         }
-        accommodationForUpdate.setPhotos(photos);
-        accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
-        accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
-//        accommodationForUpdate.setType(accommodationDTO.getType()); ???
-        List<DateRange> availability = accommodationDTO.getAvailability().stream()
-                .map(DateRangeMapper::toEntity)
-                .collect(Collectors.toList());
-        dateRangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
-        accommodationForUpdate.setAvailability(availability);
 
-        accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
-        List<PriceChange> priceChanges = new ArrayList<PriceChange>();
-        if (accommodationDTO.getPriceChanges() != null) {
-            for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
-                priceChanges.add(PriceChangeMapper.toEntity(dto));
-        }
-        priceChangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
-        accommodationForUpdate.setPriceChanges(priceChanges);
-
-        accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
-        accommodationForUpdate.setPrice(accommodationDTO.getPrice());
-        accommodationForUpdate.setCancellationDeadline(accommodationDTO.getCancellationDeadline());
-        accommodationForUpdate.setStatus(AccommodationStatus.CHANGED);
-
-        repository.save(accommodationForUpdate);
-
+        mergedRanges.add(currentRange);
+        //System.out.println("This is merging, "+ mergedRanges);
+        return mergedRanges;
     }
 
     public void calculateAndSaveAverageRating(Long id) throws Exception {
