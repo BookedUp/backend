@@ -37,6 +37,7 @@ public class ReservationController {
     private ReservationService reservationService;
 
     /*url: /api/reservations GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getReservations() {
         Collection<Reservation> reservations = reservationService.getAll();
@@ -92,6 +93,7 @@ public class ReservationController {
     }
 
     /* url: /api/reservations/1 GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> getReservation(@PathVariable("id") Long id) {
         Reservation reservation = reservationService.getById(id);
@@ -161,7 +163,6 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
     }
 
-
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     /*url: /api/reservations POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -179,9 +180,8 @@ public class ReservationController {
         return new ResponseEntity<>(ReservationMapper.toDto(createdReservation), HttpStatus.CREATED);
     }
 
-
-
     /* url: /api/reservations/1 PUT*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> updateReservation(@Valid @RequestBody ReservationDTO reservationDTO, @PathVariable Long id)
             throws Exception {
@@ -214,7 +214,7 @@ public class ReservationController {
         return new ResponseEntity<Reservation>(HttpStatus.NO_CONTENT);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping("/search/{hostId}")
     public ResponseEntity<List<ReservationDTO>> searchReservations(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
@@ -261,5 +261,4 @@ public class ReservationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
 }

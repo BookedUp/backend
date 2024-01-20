@@ -25,6 +25,7 @@ public class NotificationController {
     private NotificationService notificationService;
 
     /*url: /api/notifications GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<NotificationDTO>> getNotifications() {
         Collection<Notification> notifications = notificationService.getAll();
@@ -36,6 +37,7 @@ public class NotificationController {
     }
 
     /* url: /api/notifications/1 GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationDTO> getNotification(@PathVariable("id") Long id) {
         Notification notification = notificationService.getById(id);
@@ -48,6 +50,7 @@ public class NotificationController {
     }
 
     /* url: /api/notifications/user/1 GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<NotificationDTO>> getNotificationsByUserId(@PathVariable("id") Long id) {
         Collection<Notification> notifications = notificationService.getByUserId(id);
@@ -60,6 +63,7 @@ public class NotificationController {
     }
 
     /* url: /api/notifications/user/enabled/1 GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/user/enabled/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<NotificationDTO>> getEnabledNotificationsByUserId(@PathVariable("id") Long id) {
         Collection<Notification> notifications = notificationService.getEnabledByUserId(id);
@@ -72,6 +76,7 @@ public class NotificationController {
     }
 
     /*url: /api/notifications POST*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationDTO> createNotification(@RequestBody NotificationDTO notificationDTO) throws Exception {
         Notification createdNotification = null;
@@ -88,6 +93,7 @@ public class NotificationController {
 
 
     /* url: /api/notifications/1 PUT*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationDTO> updateNotification(@Valid @RequestBody NotificationDTO notificationDTO, @PathVariable Long id)
             throws Exception {
@@ -110,6 +116,7 @@ public class NotificationController {
     }
 
     /** url: /api/notifications/1 DELETE*/
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Notification> deleteNotification(@PathVariable("id") Long id) {
         try {
@@ -120,7 +127,4 @@ public class NotificationController {
         }
         return new ResponseEntity<Notification>(HttpStatus.NO_CONTENT);
     }
-
-
-
 }

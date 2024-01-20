@@ -30,6 +30,7 @@ public class ReviewReportController {
     private ReviewReportService reviewReportService;
 
     /*url: /api/review-reports GET*/
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewReportDTO>> getReviewReports() {
         Collection<ReviewReport> reviewReports = reviewReportService.getAll();
@@ -41,6 +42,7 @@ public class ReviewReportController {
     }
 
     /* url: /api/review-reports/1 GET*/
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewReportDTO> getReviewReport(@PathVariable("id") Long id) {
         ReviewReport reviewReport = reviewReportService.getById(id);
@@ -53,6 +55,7 @@ public class ReviewReportController {
     }
 
     /*url: /api/review-reports POST*/
+    @PreAuthorize("hasAuthority('ROLE_HOST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewReportDTO> createReviewReport(@Valid @RequestBody ReviewReportDTO reviewReportDTO) throws Exception {
         ReviewReport createdReviewReport = null;
@@ -69,6 +72,7 @@ public class ReviewReportController {
     }
 
     /* url: /api/review-reports/1 PUT*/
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewReportDTO> updateReviewReport(@Valid @RequestBody ReviewReportDTO reviewReportDTO, @PathVariable Long id)
             throws Exception {
@@ -87,6 +91,7 @@ public class ReviewReportController {
 
     /** url: /api/review-reports/1 DELETE*/
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewReport> deleteReviewReport(@PathVariable("id") Long id) {
         try {
             reviewReportService.delete(id);
@@ -98,6 +103,7 @@ public class ReviewReportController {
     }
 
     /*url: /api/review-reports/reported-reviews GET*/
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/reported-reviews", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getAllReportedReviews() {
         Collection<Review> reportedReviews = reviewReportService.getAllReportedReviews();
@@ -110,7 +116,7 @@ public class ReviewReportController {
 
 
     /* url: /api/review-reports/reasons/{reportReviewId} GET */
-// UserReportController.java
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/reasons/{reportReviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<String>> getReportReasons(@PathVariable("reportReviewId") Long reportReviewId) {
         Collection<String> reportReasons = reviewReportService.getReportReasonsForReview(reportReviewId);

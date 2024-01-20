@@ -83,8 +83,6 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
     }
 
-
-
     /* url: /api/accommodations/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> getAccommodation(@PathVariable("id") Long id) {
@@ -117,10 +115,8 @@ public class AccommodationController {
     /* url: /api/accommodations/1 PUT*/
     @PreAuthorize("hasAuthority('ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> updateAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
-            throws Exception {
+    public ResponseEntity<AccommodationDTO> updateAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id) throws Exception {
         Accommodation accommodationForUpdate = accommodationService.getById(id);
-        System.out.println("TU SAMMMMMMMMMMMMM U UPDATE");
         if (accommodationForUpdate == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -140,8 +136,8 @@ public class AccommodationController {
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
     }
 
-
     /** url: /api/accommodations/1 DELETE*/
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Accommodation> deleteAccommodation(@PathVariable("id") Long id) {
         try {
@@ -155,8 +151,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/confirmation", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> approveReservation(@PathVariable("id") Long id)
-            throws Exception {
+    public ResponseEntity<AccommodationDTO> approveReservation(@PathVariable("id") Long id) throws Exception {
         Accommodation accommodation = accommodationService.getById(id);
         if (accommodation == null){
             return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
@@ -174,8 +169,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/rejection", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> rejectReservation(@PathVariable("id") Long id)
-            throws Exception {
+    public ResponseEntity<AccommodationDTO> rejectReservation(@PathVariable("id") Long id)  throws Exception {
         Accommodation accommodation = accommodationService.getById(id);
         if (accommodation == null){
             return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);

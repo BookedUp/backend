@@ -67,6 +67,7 @@ public class GuestController {
     }
 
     /* url: /api/guests/1 PUT*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping("/{id}")
     public ResponseEntity<GuestDTO> updateGuest(@PathVariable Long id, @Valid @RequestBody GuestDTO guestDTO) throws Exception {
         Guest guestForUpdate = guestService.getById(id);
@@ -102,8 +103,8 @@ public class GuestController {
     }
 
     /** url: /api/guests/1 DELETE*/
-    @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteGuest(@PathVariable("id") Long id) {
 
         Guest guest = guestService.getById(id);
@@ -120,8 +121,8 @@ public class GuestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     /* url: /api/guests/{id}/hosts GET */
+    @PreAuthorize("hasRole('ROLE_GUEST')")
     @GetMapping(value = "/{id}/hosts", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<HostDTO>> getGuestHosts(@PathVariable("id") Long guestId) {
         try {
@@ -134,7 +135,8 @@ public class GuestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-  
+
+    @PreAuthorize("hasRole('ROLE_GUEST')")
     @PutMapping("/{guestId}/add-favourite/{accommodationId}")
     public ResponseEntity<Void> addFavouriteAccommodation(
             @PathVariable Long guestId,
@@ -149,6 +151,7 @@ public class GuestController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_GUEST')")
     @PutMapping("/{guestId}/remove-favourite/{accommodationId}")
     public ResponseEntity<Void> removeFavouriteAccommodation(
             @PathVariable Long guestId,
@@ -163,6 +166,7 @@ public class GuestController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_GUEST')")
     @GetMapping("/{guestId}/is-favourite/{accommodationId}")
     public ResponseEntity<Boolean> isFavouriteAccommodation(
             @PathVariable Long guestId,
@@ -176,5 +180,4 @@ public class GuestController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

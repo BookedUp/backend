@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
 import rs.ac.uns.ftn.asd.BookedUp.domain.UserReport;
@@ -26,6 +27,7 @@ public class UserReportController {
     private UserReportService userReportService;
 
     /*url: /api/user-reports GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<UserReportDTO>> getUserReports() {
         Collection<UserReport> userReports = userReportService.getAll();
@@ -37,6 +39,7 @@ public class UserReportController {
     }
 
     /* url: /api/user-reports/1 GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserReportDTO> getUserReport(@PathVariable("id") Long id) {
         UserReport userReport = userReportService.getById(id);
@@ -49,6 +52,7 @@ public class UserReportController {
     }
 
     /*url: /api/user-reports POST*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserReportDTO> createUserReport(@Valid @RequestBody UserReportDTO userReportDTO) throws Exception {
         UserReport createdUserReport = null;
@@ -65,6 +69,7 @@ public class UserReportController {
     }
 
     /* url: /api/user-reports/1 PUT*/
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserReportDTO> updateUserReport(@Valid @RequestBody UserReportDTO userReportDTO, @PathVariable Long id)
             throws Exception {
@@ -84,6 +89,7 @@ public class UserReportController {
 
     /** url: /api/user-reports/1 DELETE*/
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<UserReport> deleteUserReport(@PathVariable("id") Long id) {
         try {
             userReportService.delete(id);
@@ -95,6 +101,7 @@ public class UserReportController {
     }
 
     /*url: /api/user-reports/reported-users GET*/
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/reported-users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<UserDTO>> getAllReportedUsers() {
         Collection<User> reportedUsers = userReportService.getAllReportedUsers();
@@ -106,14 +113,10 @@ public class UserReportController {
     }
 
     /* url: /api/user-reports/reasons/{reportUserId} GET */
-// UserReportController.java
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/reasons/{reportUserId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<String>> getReportReasons(@PathVariable("reportUserId") Long reportUserId) {
         Collection<String> reportReasons = userReportService.getReportReasonsForUser(reportUserId);
         return new ResponseEntity<>(reportReasons, HttpStatus.OK);
     }
-
-
-
-
 }
