@@ -60,6 +60,7 @@ public class ReviewController {
         Collection<ReviewDTO> reviewsDTO = reviews.stream()
                 .map(ReviewMapper::toDto)
                 .collect(Collectors.toList());
+        System.out.println("SIZEEEEEEEEEEEEEEEEEEE " + reviewsDTO.size());
 
         return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
     }
@@ -166,6 +167,7 @@ public class ReviewController {
         Collection<ReviewDTO> reviewsDTO = reviews.stream()
                 .map(ReviewMapper::toDto)
                 .collect(Collectors.toList());
+        System.out.println("SIZEEEEEEEEEEEEEEEEEEE HOST " + reviewsDTO.size());
 
         return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
     }
@@ -177,6 +179,8 @@ public class ReviewController {
         Collection<ReviewDTO> reviewsDTO = reviews.stream()
                 .map(ReviewMapper::toDto)
                 .collect(Collectors.toList());
+
+
 
         return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
     }

@@ -75,8 +75,13 @@ public class PhotoController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadImage (@RequestParam("image") MultipartFile imageFile) throws Exception {
+        System.out.println("Received upload request");
+        System.out.println("Original Filename: " + imageFile.getOriginalFilename());
+
         String uploadDirectory = "src/main/resources/images";
         String uniqueFileName = imageFile.getOriginalFilename();
+
+
 
         Path uploadPath = Path.of(uploadDirectory);
         Path filePath = uploadPath.resolve(uniqueFileName);

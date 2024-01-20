@@ -43,6 +43,10 @@ public class UserController {
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());
 
+        for(UserDTO userDTO : usersDTO) {
+            System.out.println("User isBlocked " + userDTO.isBlocked());
+        }
+
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
 
@@ -79,6 +83,20 @@ public class UserController {
         Collection<UserDTO> usersDTO = users.stream()
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());
+
+        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
+    }
+
+    /** url: /api/users/unblocked-users GET*/
+    @GetMapping(value = "/unblocked-users",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<UserDTO>> getUnblockedUsers() {
+        Collection<User> users = userService.getUnblockedAll();
+
+        Collection<UserDTO> usersDTO = users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+
+        System.out.println("UBLOCKED USERS SIZE " + users.size());
 
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
@@ -215,6 +233,7 @@ public class UserController {
         }
 
         userService.blockUser(user);
+        System.out.println("Is BLOCKED " + user.isBlocked());
         return new ResponseEntity<UserDTO>(UserMapper.toDto(user), HttpStatus.OK);
     }
 

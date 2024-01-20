@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class ReviewDTO {
     private GuestDTO guest;
     private int review;
     private String comment;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date;
     private HostDTO host;
     private AccommodationDTO accommodation;

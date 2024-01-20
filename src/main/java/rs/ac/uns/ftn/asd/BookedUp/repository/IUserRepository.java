@@ -22,5 +22,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.isBlocked = TRUE")
     Collection<User> findAllBlockedUsers();
 
+    @Query("SELECT u FROM User u WHERE u.isBlocked = FALSE and u.active = TRUE")
+    Collection<User> findAllUnblockedUsers();
+
 
 }

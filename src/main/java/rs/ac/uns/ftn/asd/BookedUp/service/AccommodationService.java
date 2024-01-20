@@ -505,8 +505,8 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
     }
 
-    @Transactional
-    public void updateAccommodation(Accommodation accommodationForUpdate, AccommodationDTO accommodationDTO) {
+    public Accommodation updateAccommodation(Accommodation accommodationForUpdate, AccommodationDTO accommodationDTO) {
+
         accommodationForUpdate.setName(accommodationDTO.getName());
         accommodationForUpdate.setDescription(accommodationDTO.getDescription());
         accommodationForUpdate.setAddress(AddressMapper.toEntity(accommodationDTO.getAddress()));
@@ -519,11 +519,11 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
         accommodationForUpdate.setPhotos(photos);
         accommodationForUpdate.setMinGuests(accommodationDTO.getMinGuests());
         accommodationForUpdate.setMaxGuests(accommodationDTO.getMaxGuests());
-//        accommodationForUpdate.setType(accommodationDTO.getType()); ???
+        accommodationForUpdate.setType(accommodationDTO.getType());
         List<DateRange> availability = accommodationDTO.getAvailability().stream()
                 .map(DateRangeMapper::toEntity)
                 .collect(Collectors.toList());
-        dateRangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
+        //dateRangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
         accommodationForUpdate.setAvailability(availability);
 
         accommodationForUpdate.setPriceType(accommodationDTO.getPriceType());
@@ -532,7 +532,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
             for (PriceChangeDTO dto : accommodationDTO.getPriceChanges())
                 priceChanges.add(PriceChangeMapper.toEntity(dto));
         }
-        priceChangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
+        //priceChangeRepository.deleteByAccommodationId(accommodationForUpdate.getId());
         accommodationForUpdate.setPriceChanges(priceChanges);
 
         accommodationForUpdate.setAutomaticReservationAcceptance(accommodationDTO.isAutomaticReservationAcceptance());
@@ -542,6 +542,7 @@ public class AccommodationService implements ServiceInterface<Accommodation>{
 
         repository.save(accommodationForUpdate);
 
+        return accommodationForUpdate;
     }
     }
 

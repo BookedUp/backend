@@ -19,8 +19,7 @@ public class UserService implements ServiceInterface<User>{
 
     @Override
     public Collection<User> getAll() {
-        Collection<User> users = repository.findAll();
-        return users;
+        return repository.findAll();
     }
 
     @Override
@@ -139,5 +138,9 @@ public class UserService implements ServiceInterface<User>{
                 .collect(Collectors.toList());
 
         return reportedUsers;
+    }
+
+    public Collection<User> getUnblockedAll() {
+        return repository.findAllUnblockedUsers();
     }
 }

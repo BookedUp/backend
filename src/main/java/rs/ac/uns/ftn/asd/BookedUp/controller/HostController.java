@@ -152,28 +152,6 @@ public class HostController {
     }
 
 
-    @GetMapping("/{id}/reservations/search")
-    public ResponseEntity<?> searchReservations(
-            @RequestParam(required = false) String accommodationName,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-            @RequestParam(required = false) String status) {
-
-        try {
-            // Implementirajte logiku pretrage i filtriranja smeštaja koristeći AccommodationService
-//            List<AccommodationDTO> filteredAccommodations = accommodationService.searchAndFilterAccommodations(
-//                    location, guestsNumber, startDate, endDate, amenities, type, minPrice, maxPrice);
-
-            HashMap<String, String> response = new HashMap<>();
-            response.put("message", "Host search completed successfully!");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     /* url: /api/hosts/{id}/guests GET */
     @GetMapping(value = "/{id}/guests", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<GuestDTO>> getHostGuests(@PathVariable("id") Long hostId) {
