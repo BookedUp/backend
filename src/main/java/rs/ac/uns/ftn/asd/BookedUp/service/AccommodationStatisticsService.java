@@ -3,11 +3,9 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.AccommodationStatistics;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationStatisticsDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationStatisticsMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IAccommodationStatisticsRepository;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Service

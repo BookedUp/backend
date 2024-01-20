@@ -3,18 +3,16 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.AccommodationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
 import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IUserRepository;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
 
-import javax.net.ssl.SSLSession;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements ServiceInterface<User>{
+public class UserService implements ServiceInterface<User> {
     @Autowired
     private IUserRepository repository;
 

@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.asd.BookedUp.service;
+package rs.ac.uns.ftn.asd.BookedUp.service.interfaces;
 
 import rs.ac.uns.ftn.asd.BookedUp.domain.ConfirmationToken;
 

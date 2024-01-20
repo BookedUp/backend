@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.ConfirmationToken;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IConfirmationTokenRepository;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.IConfirmationTokenService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class ConfirmationTokenService implements IConfirmationTokenService{
+public class ConfirmationTokenService implements IConfirmationTokenService {
 
     @Autowired
     IConfirmationTokenRepository confirmationTokenRepository;

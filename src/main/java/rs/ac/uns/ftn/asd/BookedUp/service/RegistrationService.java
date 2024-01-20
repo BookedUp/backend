@@ -1,12 +1,12 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.asd.BookedUp.domain.ConfirmationToken;
 import rs.ac.uns.ftn.asd.BookedUp.domain.User;
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.IEmailService;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.IRegistrationService;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

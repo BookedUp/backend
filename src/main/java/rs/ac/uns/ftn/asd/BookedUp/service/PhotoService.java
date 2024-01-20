@@ -2,17 +2,14 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Photo;
-import rs.ac.uns.ftn.asd.BookedUp.dto.PhotoDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.PhotoMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IPhotoRepository;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class PhotoService implements ServiceInterface<Photo>{
+public class PhotoService implements ServiceInterface<Photo> {
     @Autowired
     private IPhotoRepository repository;
     @Override

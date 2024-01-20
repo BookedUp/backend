@@ -10,6 +10,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.IEmailService;
+
 @Service
 public class EmailService implements IEmailService {
 

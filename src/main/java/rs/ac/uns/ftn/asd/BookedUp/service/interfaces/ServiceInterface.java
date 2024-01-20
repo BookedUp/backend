@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.asd.BookedUp.service;
+package rs.ac.uns.ftn.asd.BookedUp.service.interfaces;
 
 import java.util.Collection;
 import java.util.List;

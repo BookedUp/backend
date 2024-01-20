@@ -7,13 +7,14 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.GuestMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.*;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GuestService implements ServiceInterface<Guest>{
+public class GuestService implements ServiceInterface<Guest> {
     @Autowired
     private IGuestRepository repository;
 
