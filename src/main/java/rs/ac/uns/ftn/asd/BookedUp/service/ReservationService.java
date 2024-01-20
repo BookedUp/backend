@@ -3,11 +3,14 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.DateRange;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Guest;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.dto.AccommodationDTO;
 import rs.ac.uns.ftn.asd.BookedUp.dto.ReservationDTO;
+import rs.ac.uns.ftn.asd.BookedUp.mapper.AccommodationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.mapper.ReservationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 
@@ -120,9 +123,15 @@ public class ReservationService implements ServiceInterface<Reservation> {
         if (reservationToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
+
+        if(reservationToUpdate.getStatus() == ReservationStatus.ACCEPTED){
+            Accommodation accommodation = reservationToUpdate.getAccommodation();
+
+            accommodationService.addAvailability(accommodation, reservationToUpdate.getStartDate(), reservationToUpdate.getEndDate());
+        }
+
         reservationToUpdate.setStatus(ReservationStatus.CANCELLED);
         repository.save(reservationToUpdate);
-
     }
 
     public void approveReservation(Reservation reservation) throws Exception {
