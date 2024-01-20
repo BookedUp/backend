@@ -120,6 +120,7 @@ public class AccommodationController {
     public ResponseEntity<AccommodationDTO> updateAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
             throws Exception {
         Accommodation accommodationForUpdate = accommodationService.getById(id);
+        System.out.println("TU SAMMMMMMMMMMMMM U UPDATE");
         if (accommodationForUpdate == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -127,6 +128,12 @@ public class AccommodationController {
         if (accommodationService.hasActiveReservations(accommodationForUpdate.getId())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+
+        accommodationDTO.setId(id);
+        Long idAdress = accommodationForUpdate.getAddress().getId();
+        AddressDTO address = accommodationDTO.getAddress();
+        address.setId(idAdress);
+        accommodationDTO.setAddress(address);
 
         accommodationForUpdate = this.accommodationService.updateAccommodation(accommodationForUpdate, accommodationDTO);
 
