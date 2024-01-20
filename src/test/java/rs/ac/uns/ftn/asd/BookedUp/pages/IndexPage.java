@@ -28,6 +28,9 @@ public class IndexPage {
     @FindBy(id = "reservationsNavItem")
     private WebElement reservationsNavItem;
 
+    @FindBy(id = "signOut")
+    private WebElement signOut;
+
 
     // Add more @FindBy annotations for other elements as needed
 
@@ -52,12 +55,29 @@ public class IndexPage {
 
     }
 
+    public void openMenuGuest() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        Actions actions = new Actions(driver);
+        wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer)).isDisplayed();
+        actions.moveToElement(profilePicture).perform();
+        profilePicture.click();
+
+    }
+
     public void selectReservationsHost() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement hostDropdown = wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer));
         Actions actions = new Actions(driver);
         actions.moveToElement(hostDropdown).perform();
         reservationsNavItem.click();
+    }
+
+    public void logoutHost() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement hostDropdown = wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(hostDropdown).perform();
+        signOut.click();
     }
 
 }
