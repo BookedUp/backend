@@ -155,7 +155,7 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/host/{hostId}/accommodation GET*/
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getAccommodationReviewsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Review> reviews = reviewService.findAllAccommodationReviewsByHostId(hostId);
@@ -167,7 +167,7 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/host/{hostId}/host GET*/
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/host", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getHostReviewsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Review> reviews = reviewService.findAllHostReviewsByHostId(hostId);
@@ -179,7 +179,7 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/host/{hostId} GET*/
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getReviewsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<ReviewDTO> accommodationReviews = getAccommodationReviewsByHostId(hostId).getBody();
