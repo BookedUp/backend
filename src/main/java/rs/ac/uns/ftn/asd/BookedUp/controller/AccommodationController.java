@@ -128,7 +128,7 @@ public class AccommodationController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        this.accommodationService.updateAccommodation(accommodationForUpdate, accommodationDTO);
+        accommodationForUpdate = this.accommodationService.updateAccommodation(accommodationForUpdate, accommodationDTO);
 
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
     }
