@@ -154,7 +154,7 @@ public class ReservationController {
             return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        if (reservation.getStatus()  != ReservationStatus.CREATED){
+        if (reservation.getStatus()  != ReservationStatus.ACCEPTED){
             return new ResponseEntity<ReservationDTO>(HttpStatus.FORBIDDEN);
         }
 
