@@ -70,7 +70,7 @@ public class ReservationController {
         return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getReservationsByStatusAndHostId(@PathVariable("hostId") Long hostId, @RequestParam(required = true) ReservationStatus reservationStatus) {
         Collection<Reservation> reservations = reservationService.getReservationsByStatusAndHostId(hostId, reservationStatus);
@@ -81,7 +81,7 @@ public class ReservationController {
         return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getReservationsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Reservation> reservations = reservationService.getReservationsByHostId(hostId);
