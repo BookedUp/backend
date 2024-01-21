@@ -35,6 +35,8 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT a FROM Accommodation a WHERE  a.status = 'CHANGED' OR a.status='CREATED'")
     List<Accommodation> findAllModified();
 
+    @Query("SELECT a FROM Accommodation a WHERE  a.status = 'ACTIVE' AND a.active = true")
+    List<Accommodation> findAllActive();
 
     @Query("SELECT a, COALESCE(COUNT(r.id), 0) AS reservationCount FROM Accommodation a " +
             "LEFT JOIN a.reservations r " +

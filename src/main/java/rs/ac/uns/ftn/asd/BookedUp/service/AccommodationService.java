@@ -265,7 +265,8 @@ public class AccommodationService implements ServiceInterface<Accommodation> {
     }
 
     public List<Accommodation> searchAccommodations(String location, Integer guestsNumber, Date startDate, Date endDate){
-        List<Accommodation> accommodations = repository.findAll();
+        //List<Accommodation> accommodations = repository.findAll();
+        List<Accommodation> accommodations = repository.findAllActive();
         boolean isStartDateAndEndToday = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isEqual(LocalDate.now()) && endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isEqual(LocalDate.now());
         List<Accommodation> filteredAccommodations = new ArrayList<Accommodation>();
         if (isStartDateAndEndToday){
