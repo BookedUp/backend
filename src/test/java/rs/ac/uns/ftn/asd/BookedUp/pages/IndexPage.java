@@ -36,44 +36,38 @@ public class IndexPage {
 
     public IndexPage(WebDriver driver) {
         this.driver = driver;
-        driver.get(PAGE_URL);
+//        driver.get(PAGE_URL);
         PageFactory.initElements(driver, this);
     }
 
     public boolean isPageOpened() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         WebElement element = wait.until(ExpectedConditions.visibilityOf(searchBox));
         return element.isDisplayed();
     }
 
     public void openMenuHost() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         Actions actions = new Actions(driver);
-        wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer)).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(profilePicture)).isDisplayed();
         actions.moveToElement(profilePicture).perform();
         profilePicture.click();
 
     }
 
-    public void openMenuGuest() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        Actions actions = new Actions(driver);
-        wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer)).isDisplayed();
-        actions.moveToElement(profilePicture).perform();
-        profilePicture.click();
-
-    }
 
     public void selectReservationsHost() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         WebElement hostDropdown = wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer));
         Actions actions = new Actions(driver);
         actions.moveToElement(hostDropdown).perform();
         reservationsNavItem.click();
     }
 
+
+
     public void logoutHost() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver,15);
         WebElement hostDropdown = wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer));
         Actions actions = new Actions(driver);
         actions.moveToElement(hostDropdown).perform();

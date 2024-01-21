@@ -43,7 +43,7 @@ public class LoginPage {
 
 
     public boolean isPageOpened() {
-        WebElement titleElement = (new WebDriverWait(driver, Duration.ofSeconds(10)))
+        WebElement titleElement = (new WebDriverWait(driver, 15))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("title-login")));
 
         String titleText = titleElement.findElement(By.className("sign-in6")).getText();
@@ -52,7 +52,7 @@ public class LoginPage {
 
 
     public void inputUsername(String username) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         wait.until(ExpectedConditions.visibilityOf(emailInput));
 //        emailInput.click();
         emailInput.clear();
@@ -60,7 +60,7 @@ public class LoginPage {
     }
 
     public void inputPassword(String password) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         wait.until(ExpectedConditions.visibilityOf(passwordInput));
 //        passwordInput.click();
         passwordInput.clear();
@@ -68,11 +68,13 @@ public class LoginPage {
     }
 
     public void clickLoginBtn() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         Actions actions = new Actions(driver);
         wait.until(ExpectedConditions.visibilityOf(continueWithEmailButton));
         actions.moveToElement(continueWithEmailButton).perform();
+//        WebElement model = wait.until(ExpectedConditions.visibilityOf(continueWithEmailButton));
         continueWithEmailButton.click();
+//        continueWithEmailButton.click();
     }
 
     public void clickForgotPasswordLink() {
