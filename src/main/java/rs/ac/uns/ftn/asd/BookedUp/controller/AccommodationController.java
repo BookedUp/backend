@@ -228,8 +228,8 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/search-filter")
-    public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
+    @GetMapping("/search-filters")
+    public ResponseEntity<List<AccommodationDTO>> searchAccommodationsFilters(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Integer guestsNumber,
             @RequestParam(required = false)  Date startDate,
