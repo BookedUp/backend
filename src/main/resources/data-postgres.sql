@@ -237,18 +237,18 @@ VALUES
     (4, 4, 'Great host, made the stay enjoyable.', '2023-09-20 16:45:00', 3, null, 'HOST', true, true),
 
     -- Not Active
-    (7, 5, 'Absolutely terrible! Would not recommend to anyone.', '2024-01-22 10:30:00', null, 2, 'ACCOMMODATION', true, false),
-    (4, 1, 'Unhygienic and unsafe, had a horrible experience.', '2024-01-23 11:45:00', null, 3, 'ACCOMMODATION', true, false),
-    (5, 2, 'False advertising, nothing as described.', '2024-01-24 12:15:00', null, 10, 'ACCOMMODATION', true, false),
-    (7, 5, 'Absolutely amazing! Best accommodation ever.', '2024-01-28 10:30:00', null, 10, 'ACCOMMODATION', true, false),
-    (4, 4, 'Beautiful place with excellent amenities.', '2024-01-29 11:45:00', null, 9, 'ACCOMMODATION', true, false),
-    (5, 5, 'Breathtaking views and top-notch service.', '2024-01-30 12:15:00', null, 4, 'ACCOMMODATION', true, false),
-    (6, 5, 'Host was rude and unhelpful, ruined the stay.', '2024-01-25 09:00:00', 2, null, 'HOST', true, false),
-    (7, 1, 'False promises and lack of professionalism.', '2024-01-26 14:30:00', 2, null, 'HOST', true, false),
-    (4, 2, 'Misleading information, worst host ever.', '2024-01-27 16:45:00', 3, null, 'HOST', true, false),
-    (6, 5, 'Host was incredibly helpful and friendly.', '2024-01-31 09:00:00', 3, null, 'HOST', true, false),
-    (7, 4, 'Fantastic host, made our stay memorable.', '2024-02-01 14:30:00', 2, null, 'HOST', true, false),
-    (4, 5, 'Warm hospitality and great recommendations.', '2024-02-02 16:45:00', 2, null, 'HOST', true, false);
+    (7, 5, 'Absolutely terrible! Would not recommend to anyone.', '2024-01-12 10:30:00', null, 2, 'ACCOMMODATION', true, false),
+    (4, 1, 'Unhygienic and unsafe, had a horrible experience.', '2024-01-13 11:45:00', null, 3, 'ACCOMMODATION', true, false),
+    (5, 2, 'False advertising, nothing as described.', '2024-01-14 12:15:00', null, 10, 'ACCOMMODATION', true, false),
+    (7, 5, 'Absolutely amazing! Best accommodation ever.', '2024-01-18 10:30:00', null, 10, 'ACCOMMODATION', true, false),
+    (4, 4, 'Beautiful place with excellent amenities.', '2024-01-19 11:45:00', null, 9, 'ACCOMMODATION', true, false),
+    (5, 5, 'Breathtaking views and top-notch service.', '2024-01-10 12:15:00', null, 4, 'ACCOMMODATION', true, false),
+    (6, 5, 'Host was rude and unhelpful, ruined the stay.', '2024-01-15 09:00:00', 2, null, 'HOST', true, false),
+    (7, 1, 'False promises and lack of professionalism.', '2024-01-16 14:30:00', 2, null, 'HOST', true, false),
+    (4, 2, 'Misleading information, worst host ever.', '2024-01-11 16:45:00', 3, null, 'HOST', true, false),
+    (6, 5, 'Host was incredibly helpful and friendly.', '2024-01-11 09:00:00', 3, null, 'HOST', true, false),
+    (7, 4, 'Fantastic host, made our stay memorable.', '2024-02-16 14:30:00', 2, null, 'HOST', true, false),
+    (4, 5, 'Warm hospitality and great recommendations.', '2024-01-12 16:45:00', 2, null, 'HOST', true, false);
 
 INSERT INTO review_report (reason, reported_review_id, status)
 VALUES
