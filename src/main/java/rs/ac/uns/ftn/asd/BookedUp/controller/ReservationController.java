@@ -224,7 +224,10 @@ public class ReservationController {
     ) {
         String lowercaseName = accommodationName.toLowerCase();
         try {
-
+            if (startDate != null && endDate != null) {
+                startDate.setHours(13);
+                endDate.setHours(13);
+            }
             System.out.println("Name " + lowercaseName);
             System.out.println("StartDate " + startDate);
             System.out.println("EndDate " + endDate);
@@ -245,7 +248,7 @@ public class ReservationController {
                             ((accommodationName.isEmpty() ||
                                     reservationDTO.getAccommodation().getName().trim().toLowerCase().contains(lowercaseName)) &&
                                     (startDate == null || endDate == null ||
-                                            (reservationDTO.getStartDate().compareTo(startDate) >= 0 && reservationDTO.getEndDate().compareTo(endDate) <= 0 && reservationDTO.getEndDate().compareTo(startDate) > 0 && reservationDTO.getStartDate().compareTo(endDate) < 0)))
+                                            (startDate.compareTo(reservationDTO.getStartDate()) <= 0 && startDate.compareTo(reservationDTO.getEndDate()) < 0 && endDate.compareTo(reservationDTO.getEndDate()) >= 0 && endDate.compareTo(reservationDTO.getStartDate()) > 0)))
                     )
                     .toList();
 
