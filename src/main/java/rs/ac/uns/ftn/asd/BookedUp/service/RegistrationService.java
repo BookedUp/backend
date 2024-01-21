@@ -44,7 +44,7 @@ public class RegistrationService implements IRegistrationService {
 
         ConfirmationToken token = generateToken(user);
         confirmationTokenService.saveConfirmationToken(token);
-        String link = "http://192.168.0.14:8080/api/registration?token=" + token.getToken();
+        String link = "http://192.168.0.2:8080/api/registration?token=" + token.getToken();
 
         emailSender.send(
                 user.getEmail(),
