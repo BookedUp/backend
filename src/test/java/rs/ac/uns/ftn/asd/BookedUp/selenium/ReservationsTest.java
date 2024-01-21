@@ -53,7 +53,7 @@ public class ReservationsTest extends TestBase {
         loginPage.clickLoginBtn();
 
         //Index
-        IndexPage indexPage = new IndexPage(driver);
+        IndexPage indexPage = new IndexPage(driver,true);
         assertTrue(indexPage.isPageOpened());
         indexPage.openMenuHost();
         indexPage.selectReservationsHost();
@@ -89,7 +89,7 @@ public class ReservationsTest extends TestBase {
         reservationRequestsPage.clickLogo();
 
         //Index
-        IndexPage indexPage1 = new IndexPage(driver);
+        IndexPage indexPage1 = new IndexPage(driver,true);
         assertTrue(indexPage1.isPageOpened());
         indexPage1.openMenuHost();
         indexPage1.logoutHost();
@@ -112,7 +112,7 @@ public class ReservationsTest extends TestBase {
         loginPage.clickLoginBtn();
 
         //Index
-        IndexPage indexPage = new IndexPage(driver);
+        IndexPage indexPage = new IndexPage(driver,true);
         assertTrue(indexPage.isPageOpened());
         indexPage.openMenuHost();
         indexPage.selectReservationsHost();
@@ -149,7 +149,7 @@ public class ReservationsTest extends TestBase {
         reservationsPage.clickLogo();
 
         //Index
-        IndexPage indexPage1 = new IndexPage(driver);
+        IndexPage indexPage1 = new IndexPage(driver,true);
         assertTrue(indexPage1.isPageOpened());
         indexPage1.openMenuHost();
         indexPage1.logoutHost();
