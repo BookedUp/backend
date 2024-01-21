@@ -100,15 +100,15 @@ public class ReservationsTest extends TestBase {
     }
 
     @Test
-    @DisplayName("#01-Test: View and Cancel Reservation - Guest")
+    @DisplayName("#02-Test: View and Cancel Reservation - Guest")
     @Sql("classpath:data.sql")
     @DirtiesContext
     public void testViewAndCancelReservationGuest() {
         //Login
         LoginPage loginPage = new LoginPage(driver);
         assertTrue(loginPage.isPageOpened());
-        loginPage.inputUsername("jovana.jovanovic@example.com");
-        loginPage.inputPassword("jovanapass");
+        loginPage.inputUsername("mila.milicevic@example.com");
+        loginPage.inputPassword("milinpass");
         loginPage.clickLoginBtn();
 
         //Index
@@ -117,26 +117,44 @@ public class ReservationsTest extends TestBase {
         indexPage.openMenuHost();
         indexPage.selectReservationsHost();
 
-//        //Reservations
-//        int initialReservationCount = reservationService.getReservationsByHostId(userService.getByEmail("jovana.jovanovic@example.com").getId()).size();
-//
+        //Reservations
         ReservationsPage reservationsPage = new ReservationsPage(driver);
         assertTrue(reservationsPage.isPageOpened());
-//        assertEquals(initialReservationCount, 10,
-//                "Number of reservations did not decrease after accepting a reservation");
+
+        int initialReservationCountOnPage = reservationsPage.getNumberOfReservations();
+        assertEquals(initialReservationCountOnPage, 5, "Number of reservations on the ReservationRequestsPage is not as expected");
+
+        reservationsPage.clickOnCancelled();
+        initialReservationCountOnPage = reservationsPage.getNumberOfReservations();
+        assertEquals(initialReservationCountOnPage, 0, "Number of reservations on the ReservationRequestsPage is not as expected");
+
+        reservationsPage.clickOnAccepted();
+        initialReservationCountOnPage = reservationsPage.getNumberOfReservations();
+        assertEquals(initialReservationCountOnPage, 3, "Number of reservations on the ReservationRequestsPage is not as expected");
+
+//        reservationsPage.clickViewDetailsButton(String.valueOf(4L));
+
+//        List<Reservation> overlappingReservations = reservationService.getOverlappingReservations(hostId, ReservationStatus.WAITING_FOR_APPROVAL, acceptedReservation);
+//        assertEquals(overlappingReservations.size(), 2, "Number of overlapping reservations is not as expected");
 //
-//
+//        for (Reservation overlappingReservation : overlappingReservations) {
+//            assertEquals(overlappingReservation.getStatus(), ReservationStatus.REJECTED, "Overlapping reservation was not automatically rejected");
+//        }
+
 //        reservationRequestsPage.clickOnWaitingForApproval();
-//        reservationRequestsPage.acceptReservation();
-//        assertTrue(reservationRequestsPage.isReservationSuccessfullyAccepted());
-//        reservationRequestsPage.clickConfirmButton();
-//        reservationRequestsPage.clickLogo();
+//
+//        initialReservationCountOnPage = reservationRequestsPage.getNumberOfReservations();
+//        assertEquals(initialReservationCountOnPage, 3, "Number of reservations on the ReservationRequestsPage is not as expected");
+
+        reservationsPage.clickLogo();
 
         //Index
         IndexPage indexPage1 = new IndexPage(driver);
         assertTrue(indexPage1.isPageOpened());
         indexPage1.openMenuHost();
         indexPage1.logoutHost();
+
+        System.out.println("Finished test: Host Approve Reservation");
 
 
     }

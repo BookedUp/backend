@@ -19,8 +19,11 @@ public class ReservationsPage {
     @FindBy(id = "sort-bar")
     private WebElement sortBar;
 
-    @FindBy(className = "waiting-reservation")
-    private WebElement waitingForApprovalButton;
+    @FindBy(id = "cancelledReservations")
+    private WebElement cancelledReservationsButton;
+
+    @FindBy(id = "acceptedReservations")
+    private WebElement acceptedReservationsButton;
 
     @FindBy(id = "accept-button")
     private WebElement acceptButton;
@@ -52,35 +55,20 @@ public class ReservationsPage {
         return reservationElements.size();
     }
 
-    public void clickOnWaitingForApproval() {
+    public void clickOnCancelled() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
         Actions actions = new Actions(driver);
-        wait.until(ExpectedConditions.visibilityOf(waitingForApprovalButton)).isDisplayed();
-        actions.moveToElement(waitingForApprovalButton).perform();
-        waitingForApprovalButton.click();
+        wait.until(ExpectedConditions.visibilityOf(cancelledReservationsButton)).isDisplayed();
+        actions.moveToElement(cancelledReservationsButton).perform();
+        cancelledReservationsButton.click();
     }
 
-    public void acceptReservation() {
+    public void clickOnAccepted() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
         Actions actions = new Actions(driver);
-        wait.until(ExpectedConditions.visibilityOf(acceptButton)).isDisplayed();
-        actions.moveToElement(acceptButton).perform();
-        acceptButton.click();
-    }
-
-    public boolean isReservationSuccessfullyAccepted() {
-        boolean isPoppupShowed = (new WebDriverWait(driver, 15))
-                .until(ExpectedConditions.textToBePresentInElement(successPopup, "Reservation Approved!"));
-
-        return isPoppupShowed;
-    }
-
-    public void clickConfirmButton() {
-        WebDriverWait wait = new WebDriverWait(driver, 15);
-        Actions actions = new Actions(driver);
-        wait.until(ExpectedConditions.visibilityOf(successPopup)).isDisplayed();
-        actions.moveToElement(confirmButton).perform();
-        confirmButton.click();
+        wait.until(ExpectedConditions.visibilityOf(acceptedReservationsButton)).isDisplayed();
+        actions.moveToElement(acceptedReservationsButton).perform();
+        acceptedReservationsButton.click();
     }
 
     public void clickLogo() {
@@ -90,5 +78,18 @@ public class ReservationsPage {
         actions.moveToElement(logo).perform();
         visibleLogo.click();
     }
+    public void clickViewDetailsButton(String reservationId) {
+        String selector = String.format(".acc-frame[routerLink='/reservation-details/%s'] .view-details-button", reservationId);
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        Actions actions = new Actions(driver);
+        WebElement viewDetailsButton = driver.findElement(By.cssSelector(selector));
+        wait.until(ExpectedConditions.visibilityOf(viewDetailsButton)).isDisplayed();
+        actions.moveToElement(viewDetailsButton).perform();
+        viewDetailsButton.click();
+    }
+
+
+
+
 }
 
