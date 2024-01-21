@@ -288,5 +288,66 @@ public class AccommodationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/search-filter")
+    public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Integer guestsNumber,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @RequestParam(required = false) List<Object> amenities,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Double customMaxBudget,
+            @RequestParam(required = false) Object selectedType,
+            @RequestParam(required = false) String name
+    ) {
+        String lowercaseName = name.toLowerCase();
+        try {
+            //SEARCH
+            List<Accommodation> searchedAccommodations = accommodationService.searchAccommodations(
+                    location, guestsNumber, startDate, endDate);
+            for (Accommodation accommodation : searchedAccommodations) {
+                accommodationService.updatePrice(accommodation);
+                System.out.println(accommodation.getPrice());
+            }
+
+            List<AccommodationDTO> results = searchedAccommodations.stream()
+                    .map(AccommodationMapper::toDto)
+                    .collect(Collectors.toList());
+
+            long differenceInMilliseconds = endDate.getTime() - startDate.getTime();
+            long daysBetween = TimeUnit.DAYS.convert(differenceInMilliseconds, TimeUnit.MILLISECONDS);
+
+            for (AccommodationDTO accommodationDTO : results){
+                if (accommodationDTO.getPriceType().equals(PriceType.PER_NIGHT)) {
+                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, endDate, (int)daysBetween, 1);
+                    accommodationDTO.setTotalPrice(totalPrice);
+                } else {
+                    double totalPrice = accommodationService.calculateTotalPrice(AccommodationMapper.toEntity(accommodationDTO), startDate, endDate, (int)daysBetween,guestsNumber);
+                    accommodationDTO.setTotalPrice(totalPrice);
+                }
+            }
+//            //FILTER
+            List<AccommodationDTO> filteredAccommodations = results.stream()
+                    .filter(accommodationDTO ->
+                            ((customMaxBudget == null || customMaxBudget == 0 || accommodationDTO.getTotalPrice() <= customMaxBudget) &&
+                                    (amenities == null || amenities.isEmpty() || amenities.stream().allMatch(amenity -> accommodationDTO.getAmenities().stream().anyMatch(accAmenity -> accAmenity instanceof Amenity && ((Amenity) accAmenity).name().equals((String) amenity)))) &&
+                                    (minPrice == null || minPrice == 0 || (accommodationDTO.getTotalPrice() >= minPrice)) &&
+                                    (maxPrice == null || maxPrice == 0 || (accommodationDTO.getTotalPrice() <= maxPrice)) &&
+                                    (selectedType == null || selectedType.equals("null") || accommodationDTO.getType().name().equals(selectedType)) &&
+                                    (name == null || name.isEmpty() || (accommodationDTO.getName().trim().toLowerCase().contains(lowercaseName)))))
+                    .collect(Collectors.toList());
+
+            if (!filteredAccommodations.isEmpty() || (amenities != null || minPrice != 0.0 || maxPrice != 0.0 || customMaxBudget > 0.0 || !selectedType.equals("null") || !name.isEmpty())) {
+                return new ResponseEntity<>(filteredAccommodations, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(results, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
 
