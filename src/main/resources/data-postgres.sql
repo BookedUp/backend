@@ -247,7 +247,7 @@ VALUES
     (7, 1, 'False promises and lack of professionalism.', '2024-01-16 14:30:00', 2, null, 'HOST', true, false),
     (4, 2, 'Misleading information, worst host ever.', '2024-01-11 16:45:00', 3, null, 'HOST', true, false),
     (6, 5, 'Host was incredibly helpful and friendly.', '2024-01-11 09:00:00', 3, null, 'HOST', true, false),
-    (7, 4, 'Fantastic host, made our stay memorable.', '2024-02-16 14:30:00', 2, null, 'HOST', true, false),
+    (7, 4, 'Fantastic host, made our stay memorable.', '2024-01-16 14:30:00', 2, null, 'HOST', true, false),
     (4, 5, 'Warm hospitality and great recommendations.', '2024-01-12 16:45:00', 2, null, 'HOST', true, false);
 
 INSERT INTO review_report (reason, reported_review_id, status)
