@@ -1,18 +1,18 @@
 package rs.ac.uns.ftn.asd.BookedUp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.repository.*;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
 @Service
-public class HostService implements ServiceInterface<Host>{
+public class HostService implements ServiceInterface<Host> {
     @Autowired
     private IHostRepository repository;
 

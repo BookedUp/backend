@@ -74,6 +74,7 @@ public class HostController {
     }
 
     /* url: /api/hosts/1 PUT*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HostDTO> updateHost(@Valid @RequestBody HostDTO hostDTO, @PathVariable Long id)
             throws Exception {
@@ -134,8 +135,8 @@ public class HostController {
     }
 
     /** url: /api/hosts/1 DELETE*/
-    @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteHost(@PathVariable("id") Long id) {
         Host host = hostService.getById(id);
         if( host == null ){
@@ -152,6 +153,7 @@ public class HostController {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping("/{id}/reservations/search")
     public ResponseEntity<?> searchReservations(
             @RequestParam(required = false) String accommodationName,
@@ -175,6 +177,7 @@ public class HostController {
     }
 
     /* url: /api/hosts/{id}/guests GET */
+    @PreAuthorize("hasAuthority('ROLE_HOST')")
     @GetMapping(value = "/{id}/guests", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<GuestDTO>> getHostGuests(@PathVariable("id") Long hostId) {
         try {
@@ -187,7 +190,4 @@ public class HostController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
-
 }

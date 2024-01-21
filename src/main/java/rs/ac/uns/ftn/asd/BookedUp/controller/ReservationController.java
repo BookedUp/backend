@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
@@ -35,6 +37,7 @@ public class ReservationController {
     private ReservationService reservationService;
 
     /*url: /api/reservations GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getReservations() {
         Collection<Reservation> reservations = reservationService.getAll();
@@ -67,7 +70,7 @@ public class ReservationController {
         return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getReservationsByStatusAndHostId(@PathVariable("hostId") Long hostId, @RequestParam(required = true) ReservationStatus reservationStatus) {
         Collection<Reservation> reservations = reservationService.getReservationsByStatusAndHostId(hostId, reservationStatus);
@@ -78,7 +81,7 @@ public class ReservationController {
         return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_HOST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getReservationsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Reservation> reservations = reservationService.getReservationsByHostId(hostId);
@@ -90,6 +93,7 @@ public class ReservationController {
     }
 
     /* url: /api/reservations/1 GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> getReservation(@PathVariable("id") Long id) {
         Reservation reservation = reservationService.getById(id);
@@ -150,7 +154,7 @@ public class ReservationController {
             return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        if (reservation.getStatus()  != ReservationStatus.CREATED){
+        if (reservation.getStatus()  != ReservationStatus.ACCEPTED){
             return new ResponseEntity<ReservationDTO>(HttpStatus.FORBIDDEN);
         }
 
@@ -158,7 +162,6 @@ public class ReservationController {
 
         return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
     }
-
 
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     /*url: /api/reservations POST*/
@@ -177,9 +180,8 @@ public class ReservationController {
         return new ResponseEntity<>(ReservationMapper.toDto(createdReservation), HttpStatus.CREATED);
     }
 
-
-
     /* url: /api/reservations/1 PUT*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> updateReservation(@Valid @RequestBody ReservationDTO reservationDTO, @PathVariable Long id)
             throws Exception {
@@ -212,7 +214,7 @@ public class ReservationController {
         return new ResponseEntity<Reservation>(HttpStatus.NO_CONTENT);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping("/search/{hostId}")
     public ResponseEntity<List<ReservationDTO>> searchReservations(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,

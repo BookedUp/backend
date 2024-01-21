@@ -21,7 +21,9 @@ import rs.ac.uns.ftn.asd.BookedUp.mapper.UserMapper;
 import rs.ac.uns.ftn.asd.BookedUp.service.ReviewService;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -65,6 +67,7 @@ public class ReviewController {
     }
 
     /*url: /api/reviews POST*/
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) throws Exception {
         Review createdReview = null;
@@ -80,9 +83,8 @@ public class ReviewController {
         return new ResponseEntity<>(ReviewMapper.toDto(createdReview), HttpStatus.CREATED);
     }
 
-
-
     /* url: /api/reviews/1 PUT*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> updateReview(@Valid @RequestBody ReviewDTO reviewDTO, @PathVariable Long id)
             throws Exception {
@@ -104,6 +106,7 @@ public class ReviewController {
     }
 
     /** url: /api/reviews/1 DELETE*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Review> deleteReview(@PathVariable("id") Long id) {
         try {
@@ -116,6 +119,7 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/guest/{guestId} GET*/
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getReviewsByGuestId(@PathVariable("guestId") Long guestId) {
         Collection<Review> reviews = reviewService.findAllByGuestId(guestId);
@@ -127,6 +131,7 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/guest/{guestId}/accommodation GET*/
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     @GetMapping(value = "/guest/{guestId}/accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getAccommodationReviewsByGuestId(@PathVariable("guestId") Long guestId) {
         Collection<Review> reviews = reviewService.findAllAccommodationReviewsByGuestId(guestId);
@@ -138,6 +143,7 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/guest/{guestId}/host GET*/
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     @GetMapping(value = "/guest/{guestId}/host", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getHostReviewsByGuestId(@PathVariable("guestId") Long guestId) {
         Collection<Review> reviews = reviewService.findAllHostReviewsByGuestId(guestId);
@@ -149,6 +155,7 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/host/{hostId}/accommodation GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getAccommodationReviewsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Review> reviews = reviewService.findAllAccommodationReviewsByHostId(hostId);
@@ -160,6 +167,7 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/host/{hostId}/host GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}/host", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getHostReviewsByHostId(@PathVariable("hostId") Long hostId) {
         Collection<Review> reviews = reviewService.findAllHostReviewsByHostId(hostId);
@@ -171,17 +179,28 @@ public class ReviewController {
     }
 
     /* url: /api/reviews/host/{hostId} GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/host/{hostId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getReviewsByHostId(@PathVariable("hostId") Long hostId) {
-        Collection<Review> reviews = reviewService.findAllByHostId(hostId);
-        Collection<ReviewDTO> reviewsDTO = reviews.stream()
-                .map(ReviewMapper::toDto)
+        Collection<ReviewDTO> accommodationReviews = getAccommodationReviewsByHostId(hostId).getBody();
+        Collection<ReviewDTO> hostReviews = getHostReviewsByHostId(hostId).getBody();
+
+        if (accommodationReviews == null) {
+            accommodationReviews = Collections.emptyList();
+        }
+
+        if (hostReviews == null) {
+            hostReviews = Collections.emptyList();
+        }
+
+        Collection<ReviewDTO> mergedReviews = Stream.concat(accommodationReviews.stream(), hostReviews.stream())
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+        return new ResponseEntity<>(mergedReviews, HttpStatus.OK);
     }
 
     /* url: /api/reviews/unapproved GET */
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/unapproved", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getUnapprovedReviews() {
         Collection<Review> unapprovedReviews = reviewService.findAllUnapprovedReviews();
@@ -192,7 +211,7 @@ public class ReviewController {
         return new ResponseEntity<>(unapprovedReviewsDTO, HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/confirmation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> approveReview(@PathVariable("id") Long id)
             throws Exception {
@@ -201,15 +220,7 @@ public class ReviewController {
             return new ResponseEntity<ReviewDTO>(HttpStatus.NOT_FOUND);
         }
 
-//        if (accommodation.getStatus() == AccommodationStatus.ACTIVE || accommodation.getStatus() == AccommodationStatus.REJECTED){
-//            return new ResponseEntity<AccommodationDTO>(HttpStatus.FORBIDDEN);
-//        }
-
-//        da li dodati proveru za manualnu
-
         reviewService.approveReview(review);
         return new ResponseEntity<ReviewDTO>(ReviewMapper.toDto(review), HttpStatus.OK);
     }
-
-
 }

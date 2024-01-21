@@ -26,7 +26,6 @@ public class WebSocketController {
     @MessageMapping("/send/message")
     @SendTo("/topic/messages")
     public String sendMessage(String userId) {
-        // Process the message or access userId as needed
         return userId;
     }
 }

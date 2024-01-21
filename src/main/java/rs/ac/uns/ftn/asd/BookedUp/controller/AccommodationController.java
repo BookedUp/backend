@@ -83,8 +83,6 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
     }
 
-
-
     /* url: /api/accommodations/1 GET*/
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> getAccommodation(@PathVariable("id") Long id) {
@@ -117,8 +115,7 @@ public class AccommodationController {
     /* url: /api/accommodations/1 PUT*/
     @PreAuthorize("hasAuthority('ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> updateAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id)
-            throws Exception {
+    public ResponseEntity<AccommodationDTO> updateAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id) throws Exception {
         Accommodation accommodationForUpdate = accommodationService.getById(id);
         if (accommodationForUpdate == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -128,13 +125,19 @@ public class AccommodationController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        this.accommodationService.updateAccommodation(accommodationForUpdate, accommodationDTO);
+        accommodationDTO.setId(id);
+        Long idAdress = accommodationForUpdate.getAddress().getId();
+        AddressDTO address = accommodationDTO.getAddress();
+        address.setId(idAdress);
+        accommodationDTO.setAddress(address);
+
+        accommodationForUpdate = this.accommodationService.updateAccommodation(accommodationForUpdate, accommodationDTO);
 
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodationForUpdate), HttpStatus.OK);
     }
 
-
     /** url: /api/accommodations/1 DELETE*/
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Accommodation> deleteAccommodation(@PathVariable("id") Long id) {
         try {
@@ -148,8 +151,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/confirmation", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> approveReservation(@PathVariable("id") Long id)
-            throws Exception {
+    public ResponseEntity<AccommodationDTO> approveReservation(@PathVariable("id") Long id) throws Exception {
         Accommodation accommodation = accommodationService.getById(id);
         if (accommodation == null){
             return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
@@ -167,8 +169,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/rejection", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> rejectReservation(@PathVariable("id") Long id)
-            throws Exception {
+    public ResponseEntity<AccommodationDTO> rejectReservation(@PathVariable("id") Long id)  throws Exception {
         Accommodation accommodation = accommodationService.getById(id);
         if (accommodation == null){
             return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
@@ -227,8 +228,8 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/search-filter")
-    public ResponseEntity<List<AccommodationDTO>> searchAccommodations(
+    @GetMapping("/search-filters")
+    public ResponseEntity<List<AccommodationDTO>> searchAccommodationsFilters(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Integer guestsNumber,
             @RequestParam(required = false)  Date startDate,

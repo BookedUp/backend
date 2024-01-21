@@ -3,13 +3,10 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.*;
-import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Amenity;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReviewType;
-import rs.ac.uns.ftn.asd.BookedUp.dto.ReviewDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.ReviewMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReviewRepository;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 

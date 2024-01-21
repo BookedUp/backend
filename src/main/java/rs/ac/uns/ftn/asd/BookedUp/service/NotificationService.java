@@ -7,11 +7,10 @@ import rs.ac.uns.ftn.asd.BookedUp.domain.Host;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Notification;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.NotificationType;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.Role;
-import rs.ac.uns.ftn.asd.BookedUp.dto.NotificationDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.NotificationMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IGuestRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IHostRepository;
 import rs.ac.uns.ftn.asd.BookedUp.repository.INotificationRepository;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
 
 import java.util.ArrayList;
 import java.util.Collection;

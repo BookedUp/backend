@@ -84,6 +84,7 @@ public class UserController {
     }
 
     /** url: /api/users/reported-users GET*/
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @GetMapping(value = "/reported-users",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<UserDTO>> getReportedUsers() {
         Collection<User> users = userService.getReportedAll();
@@ -111,6 +112,7 @@ public class UserController {
 
         return new ResponseEntity<>(UserMapper.toDto(createdUser), HttpStatus.CREATED);
     }
+
     /** url: /api/users/1 PUT*/
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -142,7 +144,6 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(UserMapper.toDto(userForUpdate), HttpStatus.OK);
     }
-
 
     /** url: /api/users/1 DELETE*/
     @PreAuthorize("hasAnyRole('HOST', 'GUEST')")
@@ -202,6 +203,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_HOST')")
     @PutMapping(value = "/{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> blockUser(@PathVariable("id") Long id)
             throws Exception {
@@ -218,7 +220,7 @@ public class UserController {
         return new ResponseEntity<UserDTO>(UserMapper.toDto(user), HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping(value = "/{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> unblockUser(@PathVariable("id") Long id)
             throws Exception {
@@ -234,5 +236,4 @@ public class UserController {
         userService.unblockUser(user);
         return new ResponseEntity<UserDTO>(UserMapper.toDto(user), HttpStatus.OK);
     }
-
 }

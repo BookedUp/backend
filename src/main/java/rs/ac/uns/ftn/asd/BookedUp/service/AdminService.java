@@ -3,16 +3,13 @@ package rs.ac.uns.ftn.asd.BookedUp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Admin;
-import rs.ac.uns.ftn.asd.BookedUp.dto.AdminDTO;
-import rs.ac.uns.ftn.asd.BookedUp.dto.UserDTO;
-import rs.ac.uns.ftn.asd.BookedUp.mapper.AdminMapper;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IAdminRepository;
+import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class AdminService implements ServiceInterface<Admin>{
+public class AdminService implements ServiceInterface<Admin> {
     @Autowired
     private IAdminRepository repository;
 
