@@ -1,8 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -13,8 +11,6 @@ import java.util.List;
 
 public class ReservationsPage {
     private WebDriver driver;
-
-    private final static String PAGE_URL = "http://localhost:4200/reservation-requests";
 
     @FindBy(id = "sort-bar")
     private WebElement sortBar;
@@ -34,6 +30,8 @@ public class ReservationsPage {
     @FindBy(css = ".swal2-confirm.swal2-styled")
     private WebElement confirmButton;
 
+    @FindBy(css = ".acc-frame")
+    private WebElement accFrame;
     @FindBy(id = "logo")
     private WebElement logo;
 
@@ -51,24 +49,45 @@ public class ReservationsPage {
 
     public int getNumberOfReservations() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
-        List<WebElement> reservationElements = driver.findElements(By.cssSelector(".acc-frame"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("main-content")));
+
+        WebElement mainContent = driver.findElement(By.id("main-content"));
+        List<WebElement> reservationElements = mainContent.findElements(By.cssSelector(".acc-frame"));
+
         return reservationElements.size();
     }
 
+
     public void clickOnCancelled() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
+        WebElement cancelButton = wait.until(ExpectedConditions.visibilityOf(cancelledReservationsButton));
         Actions actions = new Actions(driver);
-        wait.until(ExpectedConditions.visibilityOf(cancelledReservationsButton)).isDisplayed();
-        actions.moveToElement(cancelledReservationsButton).perform();
-        cancelledReservationsButton.click();
+        actions.moveToElement(cancelButton).perform();
+        cancelButton.click();
+        wait.until(ExpectedConditions.visibilityOf(accFrame)).isDisplayed();
+
+
+    }
+
+    public void clickOnCancelled1() {
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        WebElement cancelButton = wait.until(ExpectedConditions.visibilityOf(cancelledReservationsButton));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(cancelButton).perform();
+        cancelButton.click();
+        wait.until(ExpectedConditions.visibilityOf(accFrame)).isDisplayed();
+
+
     }
 
     public void clickOnAccepted() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
+        WebElement acceptButton = wait.until(ExpectedConditions.visibilityOf(acceptedReservationsButton));
         Actions actions = new Actions(driver);
-        wait.until(ExpectedConditions.visibilityOf(acceptedReservationsButton)).isDisplayed();
-        actions.moveToElement(acceptedReservationsButton).perform();
-        acceptedReservationsButton.click();
+        actions.moveToElement(acceptButton).perform();
+        acceptButton.click();
+        wait.until(ExpectedConditions.visibilityOf(accFrame)).isDisplayed();
+
     }
 
     public void clickLogo() {
@@ -87,6 +106,28 @@ public class ReservationsPage {
         actions.moveToElement(viewDetailsButton).perform();
         viewDetailsButton.click();
     }
+
+    public void clickViewDetailsButton(int accFrameIndex) {
+        List<WebElement> accFrames = driver.findElements(By.cssSelector(".acc-frame"));
+        if (accFrameIndex >= 0 && accFrameIndex < accFrames.size()) {
+            WebElement accFrame = accFrames.get(accFrameIndex);
+            WebElement viewDetailsButton = accFrame.findElement(By.cssSelector(".view-details-button"));
+            viewDetailsButton.click();
+        } else {
+            throw new NoSuchElementException("Invalid acc frame index: " + accFrameIndex);
+        }
+    }
+
+    // Metoda za proveru vidljivosti "Cancel" dugmeta u detaljima
+//    public boolean isCancelVisible() {
+//        try {
+//            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cancel-button"))); // Prilagodite id ako je drugačiji
+//            return true;
+//        } catch (NoSuchElementException | TimeoutException e) {
+//            return false;
+//        }
+//    }
+
 
 
 

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.asd.BookedUp.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -10,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.Date;
 
 public class IndexPage {
     private WebDriver driver;
@@ -28,6 +30,8 @@ public class IndexPage {
     @FindBy(id = "reservationsNavItem")
     private WebElement reservationsNavItem;
 
+    @FindBy(id = "accommodationsNavItem")
+    private WebElement accommodationsNavItem;
     @FindBy(id = "signOut")
     private WebElement signOut;
 
@@ -73,6 +77,13 @@ public class IndexPage {
         profilePicture.click();
 
     }
+    public void selectAccommodationsHost() {
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        WebElement hostDropdown = wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(hostDropdown).perform();
+        accommodationsNavItem.click();
+    }
 
 
     public void selectReservationsHost() {
@@ -99,16 +110,30 @@ public class IndexPage {
         locationInput.sendKeys(location);
     }
 
-    public void inputFromDate(String fromDate) {
+    public void inputFromDate() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
-        wait.until(ExpectedConditions.visibilityOf(fromDateInput)).clear();
-        fromDateInput.sendKeys(fromDate);
+        wait.until(ExpectedConditions.elementToBeClickable(fromDateInput)).clear();
+
+        // Formatirajte datum u željeni format (npr. MM/dd/yyyy)
+        String formattedDate = "01/30/2024"; // Prilagodite ovu vrednost prema vašim potrebama
+
+        // Izvršite JavaScript kako biste postavili vrednost input polja
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+        jsExecutor.executeScript("arguments[0].value='" + formattedDate + "';", fromDateInput);
     }
 
-    public void inputToDate(String toDate) {
+
+
+    public void inputToDate() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
-        wait.until(ExpectedConditions.visibilityOf(toDateInput)).clear();
-        toDateInput.sendKeys(toDate);
+        wait.until(ExpectedConditions.elementToBeClickable(toDateInput)).clear();
+
+        // Formatirajte datum u željeni format (npr. MM/dd/yyyy)
+        String formattedDate = "02/02/2024"; // Prilagodite ovu vrednost prema vašim potrebama
+
+        // Izvršite JavaScript kako biste postavili vrednost input polja
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+        jsExecutor.executeScript("arguments[0].value='" + formattedDate + "';", toDateInput);
     }
 
     public void inputGuest(String guestNumber) {
