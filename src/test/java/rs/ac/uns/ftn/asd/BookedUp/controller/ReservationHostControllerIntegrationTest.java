@@ -67,7 +67,7 @@ public class ReservationHostControllerIntegrationTest {
     @Rollback
     public void approveReservation_ShouldBeApproved() throws ParseException {
 
-        ResponseEntity<ReservationDTO> responseEntity = restTemplate.exchange("/api/reservations/" + 2L + "/confirmation",
+        ResponseEntity<ReservationDTO> responseEntity = restTemplate.exchange("/api/reservations/" + 1L + "/confirmation",
                 HttpMethod.PUT,
                 new HttpEntity<>(getHttpHeaders()),
                 new ParameterizedTypeReference<ReservationDTO>() {

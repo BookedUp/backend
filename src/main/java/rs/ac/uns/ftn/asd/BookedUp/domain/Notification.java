@@ -43,6 +43,16 @@ public class Notification {
     @Column(nullable = false)
     private boolean active;
 
+    public Notification(User from, User to, String title, String message, Date timestamp, NotificationType type, boolean active) {
+        this.from = from;
+        this.to = to;
+        this.title = title;
+        this.message = message;
+        this.timestamp = timestamp;
+        this.type = type;
+        this.active = active;
+    }
+
     public void copyValues(Notification notification) {
         this.id = notification.getId();
         this.from = notification.getFrom();

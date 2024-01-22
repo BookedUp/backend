@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -33,5 +34,16 @@ public class PriceChange {
 //    private boolean active = true;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PriceChange that = (PriceChange) o;
+        return Double.compare(newPrice, that.newPrice) == 0 && Objects.equals(id, that.id) && Objects.equals(changeDate, that.changeDate);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, changeDate, newPrice);
+    }
 }

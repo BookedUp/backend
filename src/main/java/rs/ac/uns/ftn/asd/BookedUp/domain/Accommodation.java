@@ -21,42 +21,42 @@ public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //private Host host;
-    @Column(unique = false, nullable = false)
+
+    @Column(unique = false)
     private String name;
 
-    @Column(unique = false, nullable = true)
+    @Column(unique = false)
     private String description;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", unique = true)
     private Address address;
 
-    @Column(unique = false, nullable = false)
+    @Column(unique = false)
     private double price;
 
-    @Column(unique = false, nullable = true)
+    @Column(unique = false)
     private int minGuests;
 
-    @Column(unique = false, nullable = true)
+    @Column(unique = false)
     private int maxGuests;
 
-    @Column(unique = false, nullable = true)
+    @Column(unique = false)
     private int cancellationDeadline;
 
-    @Column(nullable = false)
+    @Column()
     private boolean automaticReservationAcceptance;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column()
     private AccommodationStatus status;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column()
     private PriceType priceType;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column()
     private AccommodationType type;
 
     @ElementCollection(targetClass = Amenity.class)
@@ -69,11 +69,11 @@ public class Accommodation {
     private List<Photo> photos;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "accommodation_id", nullable = false)
+    @JoinColumn(name = "accommodation_id")
     private List<DateRange> availability;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "accommodation_id", nullable = false)
+    @JoinColumn(name = "accommodation_id")
     private List<PriceChange> priceChanges;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accommodation")
@@ -82,16 +82,15 @@ public class Accommodation {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accommodation")
     private List<Review> reviews;
 
-    @Column(unique = false, nullable = true)
+    @Column(unique = false)
     private double averageRating;
 
     @ManyToOne
-    @JoinColumn(name = "host_id", nullable = false)
+    @JoinColumn(name = "host_id")
     private Host host;
 
-    @Column(nullable = false)
+    @Column()
     private boolean active = true;
-
 
 
     public void copyValues(Accommodation accommodation) {

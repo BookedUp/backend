@@ -44,13 +44,11 @@ public class ReservationGuestControllerIntegrationTest {
     @BeforeEach
     public void loginHost() {
 
-        // Assuming the test user's email and password
         String email = "mila.milicevic@example.com";
         String password = "milinpass";
 
         LogInDTO logInDTO = new LogInDTO(email, password);
 
-        // Perform the login request
         ResponseEntity<TokenDTO> responseEntity = restTemplate.exchange("/api/login",
                 HttpMethod.POST,
                 new HttpEntity<>(logInDTO),
@@ -85,14 +83,11 @@ public class ReservationGuestControllerIntegrationTest {
 
         System.out.println("Reservation" + reservationDTO.toString());
 
-        // Assert HTTP Status
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
-        // Assert returned ReservationDTO
         ReservationDTO returnedReservation = responseEntity.getBody();
         assertThat(reservationDTO).usingRecursiveComparison().ignoringFields("id", "reservationStatus").isEqualTo(returnedReservation);
 
-        // Assert that the reservation status is set to Pending
         assertEquals(ReservationStatus.CREATED, returnedReservation.getStatus());
     }
 
@@ -116,12 +111,10 @@ public class ReservationGuestControllerIntegrationTest {
 
         System.out.println("Reservation" + reservationDTO.toString());
 
-        // Assert HTTP Status
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
-        // Assert returned ReservationDTO
         ReservationDTO returnedReservation = responseEntity.getBody();
-        // Assert that the reservation status is set to Accepted
+
         assertEquals(ReservationStatus.ACCEPTED, returnedReservation.getStatus());
     }
 
@@ -142,7 +135,6 @@ public class ReservationGuestControllerIntegrationTest {
 
         System.out.println("Reservation" + reservationDTO.toString());
 
-        // Assert HTTP Status
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     }

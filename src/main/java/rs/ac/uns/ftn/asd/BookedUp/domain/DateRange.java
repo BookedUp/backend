@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -29,4 +30,16 @@ public class DateRange {
         this.endDate = end;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DateRange dateRange = (DateRange) o;
+        return Objects.equals(id, dateRange.id) && Objects.equals(startDate, dateRange.startDate) && Objects.equals(endDate, dateRange.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startDate, endDate);
+    }
 }

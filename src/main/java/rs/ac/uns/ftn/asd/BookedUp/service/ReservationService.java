@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Accommodation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.Notification;
 import rs.ac.uns.ftn.asd.BookedUp.domain.Reservation;
+import rs.ac.uns.ftn.asd.BookedUp.domain.enums.NotificationType;
 import rs.ac.uns.ftn.asd.BookedUp.domain.enums.ReservationStatus;
 import rs.ac.uns.ftn.asd.BookedUp.repository.IReservationRepository;
 import rs.ac.uns.ftn.asd.BookedUp.service.interfaces.ServiceInterface;
@@ -23,6 +25,9 @@ public class ReservationService implements ServiceInterface<Reservation> {
 
     @Autowired
     private AccommodationService accommodationService ;
+
+    @Autowired
+    private NotificationService notificationService ;
     @Override
     public Collection<Reservation> getAll() {
         return repository.findAll();
@@ -42,9 +47,26 @@ public class ReservationService implements ServiceInterface<Reservation> {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
         if (reservation.getStatus().equals(ReservationStatus.ACCEPTED)) {
+            sendNotificationForAcceptedReservation(reservation);
             accommodationService.updateAvailibility(reservation.getAccommodation(), reservation.getStartDate(), reservation.getEndDate());
         }
+        sendNotificationForCreatedReservation(reservation);
         return repository.save(reservation);
+    }
+
+    private void sendNotificationForAcceptedReservation(Reservation reservation) throws Exception {
+        Notification notification = new Notification(null, reservation.getGuest(), "Reservation accepted", "Reservation accepted automatically!", new Date(), NotificationType.RESERVATION_REQUEST_RESPONSE, true);
+        notificationService.create(notification);
+    }
+
+    private void sendNotificationForCreatedReservation(Reservation reservation) throws Exception {
+        Notification notification = new Notification(null, reservation.getAccommodation().getHost(), "Created reservation", "Reservation created successfully!", new Date(), NotificationType.RESERVATION_CREATED, true);
+        notificationService.create(notification);
+    }
+
+    private void sendNotificationForRejectedReservation(Reservation reservation) throws Exception {
+        Notification notification = new Notification(null, reservation.getGuest(), "Reservation rejected", "Reservation rejected successfully!", new Date(), NotificationType.RESERVATION_REQUEST_RESPONSE, true);
+        notificationService.create(notification);
     }
 
     @Override
@@ -89,30 +111,6 @@ public class ReservationService implements ServiceInterface<Reservation> {
         repository.deleteById(id);
     }
 
-    public List<Reservation> getOverlappingReservations(Reservation reservation) {
-        Date startDate = reservation.getStartDate();
-        Date endDate = reservation.getEndDate();
-
-        List<Reservation> allReservations = new ArrayList<>(repository.findAll());
-        List<Reservation> overlappingReservations = new ArrayList<>();
-
-        for (Reservation existingReservation : allReservations) {
-            if (!existingReservation.getId().equals(reservation.getId())) {
-                Date existingStartDate = existingReservation.getStartDate();
-                Date existingEndDate = existingReservation.getEndDate();
-                boolean overlap = false;
-                if (existingReservation.getStatus().equals(ReservationStatus.CREATED)) {
-                    overlap = (existingStartDate.compareTo(startDate) >= 0 && existingStartDate.compareTo(endDate) <= 0) || (existingEndDate.compareTo(startDate) >= 0 && existingEndDate.compareTo(endDate) <= 0);
-                }
-
-                if (overlap ) {
-                    overlappingReservations.add(existingReservation);
-                }
-            }
-        }
-
-        return overlappingReservations;
-    }
 
     public void cancelReservation(Reservation reservation) throws Exception{
         Reservation reservationToUpdate = repository.findById(reservation.getId()).orElse(null);
@@ -139,11 +137,36 @@ public class ReservationService implements ServiceInterface<Reservation> {
         accommodationService.updateAvailibility(reservation.getAccommodation(), reservation.getStartDate(), reservation.getEndDate());
         repository.save(reservation);
 
+        sendNotificationForAcceptedReservation(reservation);
         return reservation;
     }
 
-    public void rejectReservation(Reservation reservation) {
+    public List<Reservation> getOverlappingReservations(Reservation reservation) {
+        Date startDate = reservation.getStartDate();
+        Date endDate = reservation.getEndDate();
+
+        List<Reservation> allReservations = new ArrayList<>(repository.findAll());
+        List<Reservation> overlappingReservations = new ArrayList<>();
+
+        for (Reservation existingReservation : allReservations) {
+                Date existingStartDate = existingReservation.getStartDate();
+                Date existingEndDate = existingReservation.getEndDate();
+                boolean overlap = false;
+                if (existingReservation.getStatus().equals(ReservationStatus.CREATED)) {
+                    overlap = (existingStartDate.compareTo(startDate) >= 0 && existingStartDate.compareTo(endDate) <= 0) || (existingEndDate.compareTo(startDate) >= 0 && existingEndDate.compareTo(endDate) <= 0);
+                }
+
+                if (overlap ) {
+                    overlappingReservations.add(existingReservation);
+                }
+        }
+
+        return overlappingReservations;
+    }
+
+    public void rejectReservation(Reservation reservation) throws Exception {
         reservation.setStatus(ReservationStatus.REJECTED);
+        sendNotificationForRejectedReservation(reservation);
         repository.save(reservation);
     }
 
