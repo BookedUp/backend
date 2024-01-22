@@ -116,6 +116,6 @@ public class AccommodationControllerIntegrationTest {
                 });
 
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
-        
+
     }
 }
