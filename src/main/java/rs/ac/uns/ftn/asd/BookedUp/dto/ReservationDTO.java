@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -26,6 +27,30 @@ public class ReservationDTO {
     private int guestsNumber;
     private AccommodationDTO accommodation;
     private GuestDTO guest;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private ReservationStatus status;
 
+    public ReservationDTO(Date startDate, Date endDate, double totalPrice, int guestsNumber, AccommodationDTO accommodation, GuestDTO guest, ReservationStatus status) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalPrice = totalPrice;
+        this.guestsNumber = guestsNumber;
+        this.accommodation = accommodation;
+        this.guest = guest;
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "ReservationDTO{" +
+                "id=" + id +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", totalPrice=" + totalPrice +
+                ", guestsNumber=" + guestsNumber +
+                ", accommodation=" + accommodation +
+                ", guest=" + guest +
+                ", status=" + status +
+                '}';
+    }
 }

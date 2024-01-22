@@ -130,7 +130,7 @@ public class ReservationService implements ServiceInterface<Reservation> {
         repository.save(reservationToUpdate);
     }
 
-    public void approveReservation(Reservation reservation) throws Exception {
+    public Reservation approveReservation(Reservation reservation) throws Exception {
         reservation.setStatus(ReservationStatus.ACCEPTED);
         List<Reservation> overlapping = getOverlappingReservations(reservation);
         for (Reservation res : overlapping){
@@ -138,6 +138,8 @@ public class ReservationService implements ServiceInterface<Reservation> {
         }
         accommodationService.updateAvailibility(reservation.getAccommodation(), reservation.getStartDate(), reservation.getEndDate());
         repository.save(reservation);
+
+        return reservation;
     }
 
     public void rejectReservation(Reservation reservation) {

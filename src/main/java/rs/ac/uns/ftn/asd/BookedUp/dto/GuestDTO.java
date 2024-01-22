@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope=GuestDTO.class)
 public class GuestDTO extends UserDTO {
 
@@ -26,5 +27,11 @@ public class GuestDTO extends UserDTO {
         this.notificationEnable = notificationEnable;
     }
 
-
+    @Override
+    public String toString() {
+        return "GuestDTO{" +
+                "favourites=" + favourites +
+                ", notificationEnable=" + notificationEnable +
+                '}';
+    }
 }

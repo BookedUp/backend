@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.asd.BookedUp.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
@@ -120,9 +121,9 @@ public class ReservationController {
 
 //        da li dodati proveru za manualnu
 
-        reservationService.approveReservation(reservation);
+        Reservation approvedReservation = reservationService.approveReservation(reservation);
 
-        return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(reservation), HttpStatus.OK);
+        return new ResponseEntity<ReservationDTO>(ReservationMapper.toDto(approvedReservation), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_HOST')")
@@ -134,7 +135,7 @@ public class ReservationController {
             return new ResponseEntity<ReservationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        if (reservation.getStatus()  != ReservationStatus.CREATED){
+        if (reservation.getStatus() != ReservationStatus.CREATED){
             return new ResponseEntity<ReservationDTO>(HttpStatus.FORBIDDEN);
         }
 
@@ -166,15 +167,17 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     /*url: /api/reservations POST*/
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody  ReservationDTO reservationDTO) throws Exception {
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody  ReservationDTO reservationDTO) throws Exception {
         Reservation createdReservation = null;
 
         try {
+            System.out.println(reservationDTO.toString());
+
             createdReservation = reservationService.create(ReservationMapper.toEntity(reservationDTO));
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(new ReservationDTO(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ReservationDTO(), HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(ReservationMapper.toDto(createdReservation), HttpStatus.CREATED);

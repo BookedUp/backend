@@ -56,4 +56,29 @@ public class AccommodationDTO {
         this.status = dto.getStatus();
         this.host = dto.getHost();
     }
+
+    @Override
+    public String toString() {
+        return "AccommodationDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", address=" + address +
+                ", amenities=" + amenities +
+                ", photos=" + photos +
+                ", minGuests=" + minGuests +
+                ", maxGuests=" + maxGuests +
+                ", type=" + type +
+                ", availability=" + availability +
+                ", priceType=" + priceType +
+                ", priceChanges=" + priceChanges +
+                ", automaticReservationAcceptance=" + automaticReservationAcceptance +
+                ", status=" + status +
+                ", host=" + host +
+                ", price=" + price +
+                ", totalPrice=" + totalPrice +
+                ", averageRating=" + averageRating +
+                ", cancellationDeadline=" + cancellationDeadline +
+                '}';
+    }
 }

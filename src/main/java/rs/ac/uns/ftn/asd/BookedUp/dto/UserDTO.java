@@ -23,7 +23,7 @@ public class UserDTO {
     private Integer phone;
     private String email;
     private String password;
-    private boolean blocked;
+    private boolean isBlocked;
     private boolean verified;
     private boolean active = true;
     private PhotoDTO profilePicture;
@@ -64,7 +64,7 @@ public class UserDTO {
         this.phone = phone;
         this.email = email;
         this.password = password;
-        this.blocked = isBlocked;
+        this.isBlocked = isBlocked;
         this.verified = verified;
         this.profilePicture = profilePicture;
         this.role = role;
