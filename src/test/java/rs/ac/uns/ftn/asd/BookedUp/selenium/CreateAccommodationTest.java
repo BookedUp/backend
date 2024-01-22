@@ -7,14 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
-import rs.ac.uns.ftn.asd.BookedUp.pages.AccommodationsPage;
-import rs.ac.uns.ftn.asd.BookedUp.pages.CreateAccommodationPage;
-import rs.ac.uns.ftn.asd.BookedUp.pages.IndexPage;
-import rs.ac.uns.ftn.asd.BookedUp.pages.LoginPage;
+import rs.ac.uns.ftn.asd.BookedUp.pages.*;
 import rs.ac.uns.ftn.asd.BookedUp.service.AccommodationService;
 import rs.ac.uns.ftn.asd.BookedUp.service.ReservationService;
 import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -22,7 +20,7 @@ public class CreateAccommodationTest extends TestBase {
 
 
     @Test
-    @DisplayName("#01-Test: Update Availability And Price Accommodations")
+    @DisplayName("#01-Test: Create Accommodation -  Define Availability And Price ")
     public void testSearchAndFilterAccommodation() throws InterruptedException {
 
         //Login
@@ -47,21 +45,49 @@ public class CreateAccommodationTest extends TestBase {
         CreateAccommodationPage createAccommodationPage = new CreateAccommodationPage(driver);
         assertTrue(createAccommodationPage.isPageOpened());
 
-        createAccommodationPage.fillAccommodationDetails("proradi", "molim", "te", "proradi", "21000", "200", "molim teeeeeee", "1", "2", "3");
+        String price = "200";
+
+        createAccommodationPage.fillAccommodationDetails("Hotel Moskva", "Trg Duska Trifunovica 4", "Crvenka", "Srbija", "25220", price, "Opis ovog hotela", "1", "2", "3");
 
         createAccommodationPage.addAvailability(25, 30);
         createAccommodationPage.deleteAvailability(27,29);
 
-        createAccommodationPage.applyCustomPrice(25,30);
+        createAccommodationPage.applyCustomPrice("5",25,30);
         createAccommodationPage.waitForAndClickOkButton();
         createAccommodationPage.clickAddNewAccommodationButton();
         createAccommodationPage.clickOkButton();
 
+        //Index
         IndexPage indexPage2 = new IndexPage(driver, true);
         indexPage2.isPageOpened();
+        indexPage2.openMenuHost();
+        indexPage2.selectAccommodationsHost();
 
+        //Accommodations
+        AccommodationsPage accommodationsPage2 = new AccommodationsPage(driver);
+        assertTrue(accommodationsPage2.isPageOpened());
+        accommodationsPage2.clickOnWaitingForApproval();
+        accommodationsPage2.clickLastViewDetailsButton();
 
-        System.out.println("Finished test: Update Availability And Price Accommodations");
+        //AccommodationDetails
+        AccommodationDetailsPage accommodationDetailsPage = new AccommodationDetailsPage(driver);
+        assertTrue(accommodationDetailsPage.isPageOpened());
+
+        assertTrue(accommodationDetailsPage.isDateAvailable("25"));
+        assertFalse(accommodationDetailsPage.isDateAvailable("28"));
+
+        assertTrue(accommodationDetailsPage.isPriceCorrectForDate("17", price));
+        assertFalse(accommodationDetailsPage.isPriceCorrectForDate("25", price));
+
+        accommodationDetailsPage.clickLogo();
+
+        //Index
+        IndexPage indexPage1 = new IndexPage(driver,true);
+        assertTrue(indexPage1.isPageOpened());
+        indexPage1.openMenuHost();
+        indexPage1.logoutHost();
+
+        System.out.println("Finished test:  Create Accommodation -  Define Availability And Price ");
 
 
     }

@@ -163,7 +163,7 @@ public class CreateAccommodationPage {
     }
 
 
-    public void applyCustomPrice(int... selectedDays) {
+    public void applyCustomPrice(String price, int... selectedDays) {
         // Select specified days in the calendar
         List<WebElement> dateElements = driver.findElements(By.cssSelector(".date"));
 
@@ -179,7 +179,7 @@ public class CreateAccommodationPage {
         // Set custom price
         WebElement customPriceInput = driver.findElement(By.id("customPriceInput"));
         customPriceInput.clear();
-        customPriceInput.sendKeys("5");
+        customPriceInput.sendKeys(price);
 
         // Click on the "Apply Custom Price" button
         driver.findElement(By.id("applyPrice")).click();

@@ -241,6 +241,7 @@ public class AccommodationController {
             @RequestParam(required = false) Object selectedType,
             @RequestParam(required = false) String name
     ) {
+
         String lowercaseName = name.toLowerCase();
         try {
             //SEARCH

@@ -10,23 +10,20 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-import java.util.Date;
 import java.util.List;
 
-public class AccommodationsPage {
+public class AccommodationDetailsPage{
     private WebDriver driver;
 
     private final static String PAGE_URL = "http://localhost:4200";
 
-    @FindBy(className = "requests-accommodations")
-    private WebElement waitingForApprovalButton;
-
-    @FindBy(id = "sort-bar")
-    private WebElement sortBar;
+    @FindBy(id = "apartmentName")
+    private WebElement apartmentName;
 
     @FindBy(id = "profile-picture-host")
     private WebElement profilePicture;
+    @FindBy(id = "logo")
+    private WebElement logo;
 
     @FindBy(id = "hostDropdownContainer")
     private WebElement hostDropdownContainer;
@@ -58,14 +55,14 @@ public class AccommodationsPage {
 
     // Add more @FindBy annotations for other elements as needed
 
-    public AccommodationsPage(WebDriver driver) {
+    public AccommodationDetailsPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
     public boolean isPageOpened() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
-        WebElement element = wait.until(ExpectedConditions.visibilityOf(sortBar));
+        WebElement element = wait.until(ExpectedConditions.visibilityOf(apartmentName));
         return element.isDisplayed();
     }
 
@@ -96,6 +93,7 @@ public class AccommodationsPage {
 
 
 
+
     public void logoutHost() {
         WebDriverWait wait = new WebDriverWait(driver,15);
         WebElement hostDropdown = wait.until(ExpectedConditions.visibilityOf(hostDropdownContainer));
@@ -110,12 +108,12 @@ public class AccommodationsPage {
         locationInput.sendKeys(location);
     }
 
-    public void inputFromDate() {
+    public void inputFromDate(String formattedDate) {
         WebDriverWait wait = new WebDriverWait(driver, 15);
         wait.until(ExpectedConditions.elementToBeClickable(fromDateInput)).clear();
 
         // Formatirajte datum u željeni format (npr. MM/dd/yyyy)
-        String formattedDate = "01/30/2024"; // Prilagodite ovu vrednost prema vašim potrebama
+//        String formattedDate = "01/30/2024"; // Prilagodite ovu vrednost prema vašim potrebama
 
         // Izvršite JavaScript kako biste postavili vrednost input polja
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
@@ -124,12 +122,12 @@ public class AccommodationsPage {
 
 
 
-    public void inputToDate() {
+    public void inputToDate(String formattedDate) {
         WebDriverWait wait = new WebDriverWait(driver, 15);
         wait.until(ExpectedConditions.elementToBeClickable(toDateInput)).clear();
 
         // Formatirajte datum u željeni format (npr. MM/dd/yyyy)
-        String formattedDate = "02/02/2024"; // Prilagodite ovu vrednost prema vašim potrebama
+//        String formattedDate = "02/02/2024"; // Prilagodite ovu vrednost prema vašim potrebama
 
         // Izvršite JavaScript kako biste postavili vrednost input polja
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
@@ -147,35 +145,48 @@ public class AccommodationsPage {
         wait.until(ExpectedConditions.elementToBeClickable(searchButton)).click();
     }
 
-    public void clickAddAccommodationButton() {
-        WebDriverWait wait = new WebDriverWait(driver, 15);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        WebElement addAccommodationButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("addAccommodationButton")));
-        scrollIntoView(js, addAccommodationButton);
-        addAccommodationButton.click();
-    }
+    public boolean isDateAvailable(String date) throws InterruptedException {
+        List<WebElement> dateElements = driver.findElements(By.cssSelector(".calendar .date"));
+        List<WebElement> unavailableDateElements = driver.findElements(By.cssSelector(".date.already-picked"));
 
-    private void scrollIntoView(JavascriptExecutor js, WebElement element) {
-        js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center', behavior: 'smooth'});", element);
-    }
+        for (WebElement dateElement : dateElements) {
+            String dayText = dateElement.findElement(By.xpath(".//div[1]")).getText();
 
-    public void clickLastViewDetailsButton() {
-        List<WebElement> viewDetailsButtons = driver.findElements(By.id("view-details-button"));
-
-        if (!viewDetailsButtons.isEmpty()) {
-            WebElement lastViewDetailsButton = viewDetailsButtons.get(viewDetailsButtons.size() - 1);
-            lastViewDetailsButton.click();
-        } else {
-            System.out.println("Nije pronađeno nijedno dugme za prikaz detalja.");
+            if (date.equals(dayText) && !unavailableDateElements.contains(dateElement)) {
+                return true;
+            }
         }
+        return false;
+
     }
 
+    public boolean isPriceCorrectForDate(String date, String expectedPrice) {
+        List<WebElement> alreadyPickedDateElements = driver.findElements(By.cssSelector(".date.already-picked"));
 
-    public void clickOnWaitingForApproval() {
+        for (WebElement dateElement : alreadyPickedDateElements) {
+            String dayText = dateElement.findElement(By.xpath(".//div[1]")).getText();
+            String actualPriceText = dateElement.findElement(By.cssSelector(".price-text")).getText().replace("$", "");
+
+            if (date.equals(dayText) && expectedPrice.equals(actualPriceText)) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", dateElement);
+
+                return true; // Cena se podudara za određeni datum
+            }
+        }
+
+        return false; // Cena nije pronađena ili se ne podudara za određeni datum
+    }
+
+    public void clickLogo() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
         Actions actions = new Actions(driver);
-        wait.until(ExpectedConditions.visibilityOf(waitingForApprovalButton)).isDisplayed();
-        actions.moveToElement(waitingForApprovalButton).perform();
-        waitingForApprovalButton.click();
+        WebElement visibleLogo = wait.until(ExpectedConditions.visibilityOf(logo));
+        actions.moveToElement(logo).perform();
+        visibleLogo.click();
     }
+
+
+
+
 }
+

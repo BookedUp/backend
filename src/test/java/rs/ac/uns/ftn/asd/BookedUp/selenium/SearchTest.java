@@ -18,14 +18,10 @@ import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-@SpringBootTest
-@TestPropertySource("classpath:application.properties")
 public class SearchTest extends TestBase {
 
     @Test
     @DisplayName("#01-Test: Search And Filter Accommodations")
-    @Sql("classpath:data.sql")
-    @DirtiesContext
     public void testSearchAndFilterAccommodation() throws InterruptedException {
 
         //Index
@@ -33,8 +29,8 @@ public class SearchTest extends TestBase {
         assertTrue(indexPage.isPageOpened());
 
         indexPage.inputLocationTxt("Italy");
-        indexPage.inputFromDate();
-        indexPage.inputToDate();
+        indexPage.inputFromDate("01/30/2024");
+        indexPage.inputToDate("02/02/2024");
         indexPage.inputGuest("2");
 
         indexPage.clickSearchButton();
@@ -81,8 +77,8 @@ public class SearchTest extends TestBase {
 
         assertTrue(searchPage.isUnitPriceDisplayed());
 
-        searchPage.inputFromDate();
-        searchPage.inputToDate();
+        searchPage.inputFromDate("03/02/2024");
+        searchPage.inputToDate("06/02/2024");
         searchPage.clickSearchButton();
         assertEquals(5, searchPage.getNumberOfSearchResults());
 

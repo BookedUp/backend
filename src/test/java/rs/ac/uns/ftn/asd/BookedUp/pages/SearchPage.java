@@ -176,12 +176,12 @@ public class SearchPage {
     }
 
 
-    public void inputFromDate() {
+    public void inputFromDate(String formattedDate) {
         WebDriverWait wait = new WebDriverWait(driver, 15);
         wait.until(ExpectedConditions.elementToBeClickable(fromDateInput)).clear();
 
         // Formatirajte datum u željeni format (npr. MM/dd/yyyy)
-        String formattedDate = "03/02/2024"; // Prilagodite ovu vrednost prema vašim potrebama
+//        String formattedDate = "03/02/2024"; // Prilagodite ovu vrednost prema vašim potrebama
 
         // Izvršite JavaScript kako biste postavili vrednost input polja
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
@@ -190,12 +190,12 @@ public class SearchPage {
 
 
 
-    public void inputToDate() {
+    public void inputToDate(String formattedDate) {
         WebDriverWait wait = new WebDriverWait(driver, 15);
         wait.until(ExpectedConditions.elementToBeClickable(toDateInput)).clear();
 
         // Formatirajte datum u željeni format (npr. MM/dd/yyyy)
-        String formattedDate = "06/02/2024"; // Prilagodite ovu vrednost prema vašim potrebama
+//        String formattedDate = "06/02/2024"; // Prilagodite ovu vrednost prema vašim potrebama
 
         // Izvršite JavaScript kako biste postavili vrednost input polja
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
